@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="KevinYang&#39;s blog" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="KevinYang&#39;s blog" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse  menu-item-active" rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-overview-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner index posts-expand">
+      
+
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/slice-in-go.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="slice as function parameter in golang">
+      <meta itemprop="description" content="The slice in golang is very similar to the list in python, but there are many differences. This article summarizes some features when the parameter of a function is a slice type.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/slice-in-go.html" itemprop="url" class="post-title-link">slice as function parameter in golang</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-10-15 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2021-10-15 00:00:00 &#43;0000 UTC">2021-10-15</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>The slice in golang is very similar to the list in python, but there are many differences. This article summarizes some features when the parameter of a function is a slice type.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/slice-in-go.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/use-selenium-opt-electron.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use selenium to operate electron applications">
+      <meta itemprop="description" content="In a recent automated test project, there is a requirement for testing internal IM communication software. After understanding the implementation of the corresponding technology stack of each client, the application in the mac uses the electron technology. We also conduct research on the corresponding technology. The article records the automated testing of electron applications.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/use-selenium-opt-electron.html" itemprop="url" class="post-title-link">Use selenium to operate electron applications</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-10-14 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2021-10-14 00:00:00 &#43;0000 UTC">2021-10-14</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In a recent automated test project, there is a requirement for testing internal IM communication software. After understanding the implementation of the corresponding technology stack of each client, the application in the mac uses the electron technology. We also conduct research on the corresponding technology. The article records the automated testing of electron applications.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/use-selenium-opt-electron.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/bitmap-in-test.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Application of bitmap algorithm in test system">
+      <meta itemprop="description" content="In our test platform, there are many test mobile phones. For some mobile phones, we expect that it can only run specific tasks, or a mobile phone will have some specific states, such as charging, manual operation, mobile phone cleaning, when the mobile phone In different states, there will be some different processing actions. What solutions do we have at this time?
+The first thing that comes to mind should be to tag, create a new field in the database, such as tag, and modify the status of a mobile phone, just modify the tag field.
+But here is a question, if a phone has two or more tags, for example, the phone is charging, and it is manually operated, how much should this tag be set to? If this field can be set to charging, oping in mysql, but it is a little troublesome when we search. For example, if I want to filter out the mobile phone that is charging, the sql statement is probably like this">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/bitmap-in-test.html" itemprop="url" class="post-title-link">Application of bitmap algorithm in test system</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-08-02 16:38:51 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2021-08-02 16:38:51 &#43;0800 CST">2021-08-02</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/web.html" itemprop="url" rel="index">
+      <span itemprop="name">web</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In our test platform, there are many test mobile phones. For some mobile phones, we expect that it can only run specific tasks, or a mobile phone will have some specific states, such as charging, manual operation, mobile phone cleaning, when the mobile phone In different states, there will be some different processing actions. What solutions do we have at this time?</p>
+<p>The first thing that comes to mind should be to tag, create a new field in the database, such as tag, and modify the status of a mobile phone, just modify the tag field.</p>
+<p>But here is a question, if a phone has two or more tags, for example, the phone is charging, and it is manually operated, how much should this tag be set to? If this field can be set to <code>charging, oping</code> in mysql, but it is a little troublesome when we search. For example, if I want to filter out the mobile phone that is charging, the sql statement is probably like this</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/bitmap-in-test.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/hexo-to-hugo.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="hexo migrate hugo">
+      <meta itemprop="description" content="Finally I can&rsquo;t stand hexo anymore. I changed the computer. Basically, the original things can&rsquo;t be migrated. The node version, the dependencies of various plug-ins, and different versions will be different. I encounter various compilation errors and the compilation is slow. . . .
+I couldn&rsquo;t take it anymore, and finally decided to migrate my blog from hexo to hugo. I was a little hesitant at first, but after I turned it over, it was really fragrant!">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/hexo-to-hugo.html" itemprop="url" class="post-title-link">hexo migrate hugo</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-05-31 22:03:53 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2021-05-31 22:03:53 &#43;0800 CST">2021-05-31</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/web.html" itemprop="url" rel="index">
+      <span itemprop="name">web</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>Finally I can&rsquo;t stand hexo anymore. I changed the computer. Basically, the original things can&rsquo;t be migrated. The node version, the dependencies of various plug-ins, and different versions will be different. I encounter various compilation errors and the compilation is slow. . . .</p>
+<p>I couldn&rsquo;t take it anymore, and finally decided to migrate my blog from hexo to hugo. I was a little hesitant at first, but after I turned it over, it was really fragrant!</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/hexo-to-hugo.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/hello-page-with-beego.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use beego to build the project homepage">
+      <meta itemprop="description" content="I recently tried to use beego to initialize a project, and follow the documentation step by step.
+Since the first attempt to use golang to build
+Here I also record the problems and solutions I encountered during initialization.
+Since I am also a novice, the problems encountered may be relatively low-level, but this is also used as some basis for the future use of the framework.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/hello-page-with-beego.html" itemprop="url" class="post-title-link">Use beego to build the project homepage</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-05-29 15:29:57 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2021-05-29 15:29:57 &#43;0800 CST">2021-05-29</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>I recently tried to use beego to initialize a project, and follow the documentation step by step.
+Since the first attempt to use golang to build
+Here I also record the problems and solutions I encountered during initialization.
+Since I am also a novice, the problems encountered may be relatively low-level, but this is also used as some basis for the future use of the framework.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/hello-page-with-beego.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/use-socketio-in-tornado.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tornado integrates socketio (1)">
+      <meta itemprop="description" content="In the project I am working on recently, I need to send the video stream or audio stream from the mobile phone to the server, and then the server will forward it to the browser. At first, I used redis as a relay to send the data to redis, and then the redis server Publish and subscribe function, the overall structure is as follows
+
+It mainly uses the pub/sub function of redis. There is no problem with this solution, but the overall performance bottleneck is affected by redis.
+I recently came into contact with socketio and found that this requirement can be achieved by using it, but I found some information on the Internet. In the use of python, it is mainly flask-socketio and native applications. Since the current project uses Tornado to build, I use it. Fusion of socketio and Tornado for a few days.
+This tutorial will be introduced in several parts, mainly the following chapters
+
+Introduction to socketio and the construction of scaffolding
+Define message processing events
+Use of namespaces
+Message release and response
+Use of room
+Use socketio in front-end vue to communicate with back-end
+">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/use-socketio-in-tornado.html" itemprop="url" class="post-title-link">Tornado integrates socketio (1)</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-05-18 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2021-05-18 00:00:00 &#43;0000 UTC">2021-05-18</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In the project I am working on recently, I need to send the video stream or audio stream from the mobile phone to the server, and then the server will forward it to the browser. At first, I used redis as a relay to send the data to redis, and then the redis server Publish and subscribe function, the overall structure is as follows</p>
+<p><img src="https://yyxbloguse.oss-cn-beijing.aliyuncs.com/img/image-20210519225715299.png" alt="image-20210519225715299"></p>
+<p>It mainly uses the pub/sub function of redis. There is no problem with this solution, but the overall performance bottleneck is affected by redis.</p>
+<p>I recently came into contact with socketio and found that this requirement can be achieved by using it, but I found some information on the Internet. In the use of python, it is mainly flask-socketio and native applications. Since the current project uses Tornado to build, I use it. Fusion of socketio and Tornado for a few days.</p>
+<p>This tutorial will be introduced in several parts, mainly the following chapters</p>
+<ol>
+<li>Introduction to socketio and the construction of scaffolding</li>
+<li>Define message processing events</li>
+<li>Use of namespaces</li>
+<li>Message release and response</li>
+<li>Use of room</li>
+<li>Use socketio in front-end vue to communicate with back-end</li>
+</ol>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/use-socketio-in-tornado.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/python-aiomysql.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="The use of aiomysql and sqlalchemy">
+      <meta itemprop="description" content="I have been using tornado for projects before, and the database has been mostly using mongo and redis. With its excellent asynchronous features, it works very stably and efficiently. The recent project needs to use mysql, because moto and aioredis are used when using mongo and redis before. The database operation is performed asynchronously, so the database of asynchronous operation mysql is queried on the Internet. This article records the problems encountered in asynchronous operation and the corresponding solutions.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/python-aiomysql.html" itemprop="url" class="post-title-link">The use of aiomysql and sqlalchemy</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-02-23 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2021-02-23 00:00:00 &#43;0000 UTC">2021-02-23</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>I have been using tornado for projects before, and the database has been mostly using mongo and redis. With its excellent asynchronous features, it works very stably and efficiently. The recent project needs to use mysql, because moto and aioredis are used when using mongo and redis before. The database operation is performed asynchronously, so the database of asynchronous operation mysql is queried on the Internet. This article records the problems encountered in asynchronous operation and the corresponding solutions.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/python-aiomysql.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/python-aiolog.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Send logs asynchronously to a remote server in python">
+      <meta itemprop="description" content="The most common way to use logs in python is to output logs in the console and files. The logging module also provides the corresponding classes very well, which is very convenient to use, but sometimes we may have some requirements, such as Send the log to the remote, or write directly to the database, how to achieve this requirement?">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/python-aiolog.html" itemprop="url" class="post-title-link">Send logs asynchronously to a remote server in python</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2020-09-23 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2020-09-23 00:00:00 &#43;0000 UTC">2020-09-23</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>The most common way to use logs in python is to output logs in the console and files. The logging module also provides the corresponding classes very well, which is very convenient to use, but sometimes we may have some requirements, such as Send the log to the remote, or write directly to the database, how to achieve this requirement?</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/python-aiolog.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/useage-partial.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="functools.partial usage in python">
+      <meta itemprop="description" content="I often see some code using functools.partial to wrap a function. I didn&rsquo;t know much about its usage before, but I just wrote it according to other people&rsquo;s code. I took a closer look at its usage today. The basic usage is still very simple. .">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/useage-partial.html" itemprop="url" class="post-title-link">functools.partial usage in python</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2020-09-20 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2020-09-20 00:00:00 &#43;0000 UTC">2020-09-20</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>I often see some code using <code>functools.partial</code> to wrap a function. I didn&rsquo;t know much about its usage before, but I just wrote it according to other people&rsquo;s code. I took a closer look at its usage today. The basic usage is still very simple. .</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/useage-partial.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/namespace-k8s.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use dns to access services in kubernetes">
+      <meta itemprop="description" content="In the previous article Communication between pods in kubernetes , we use environment variables to resolve the IP of the service, but you can use environment variables such as A limitation, all pods must be in one namespace, that is to say, pods in the same namespace will share environment variables. How to access them if they are not in the same namespace? Let&rsquo;s take a python flask application as an example.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/namespace-k8s.html" itemprop="url" class="post-title-link">Use dns to access services in kubernetes</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2020-02-11 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2020-02-11 00:00:00 &#43;0000 UTC">2020-02-11</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/k8s.html" itemprop="url" rel="index">
+      <span itemprop="name">k8s</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  In the previous article Communication between pods in kubernetes , we use environment variables to resolve the IP of the service, but you can use environment variables such as A limitation, all pods must be in one namespace, that is to say, pods in the same namespace will share environment variables. How to access them if they are not in the same namespace? Let&rsquo;s take a python flask application as an example.
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/namespace-k8s.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<nav class="pagination">
+  <a class="extend prev" rel="prev" href="/page/2.html">
+    <i class="fa fa-angle-left"></i>
+  </a>
+        <a class="page-number" href="/">1</a>
+        <a class="page-number" href="/page/2.html">2</a>
+        <span class="page-number current">3</span>
+        <a class="page-number" href="/page/4.html">4</a>
+        <a class="page-number" href="/page/5.html">5</a>
+        <a class="page-number" href="/page/6.html">6</a>
+        <a class="page-number" href="/page/7.html">7</a>
+        <a class="page-number" href="/page/8.html">8</a>
+  <a class="extend next" rel="next" href="/page/4.html">
+    <i class="fa fa-angle-right"></i>
+  </a>
+</nav>
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="How does go mod import local packages?" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="How does go mod import local packages?" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/go-mod-import-localpkg.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2022-08-03 23:15:51 &#43;0800 CST" />
+<meta property="article:modified_time" content="2022-08-03 23:15:51 &#43;0800 CST" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>How does go mod import local packages? - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#not-a-go-mod-project">Not a go mod project</a></li>
+        <li><a href="#import-the-go-mod-package">Import the go mod package</a></li>
+        <li><a href="#note-on-the-problem">Note on the problem</a></li>
+        <li><a href="#reference-articles">Reference articles</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/go-mod-import-localpkg.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="How does go mod import local packages?">
+      <meta itemprop="description" content="When we use go development, we often use a lot of third-party packages, most of which are available for download in the form of open source, such as hosting on github, we only need to use go get github.com/xxx/xxxx Download to, it&rsquo;s very convenient.
+But we often encounter packages that are not open source. For example, packages developed by other departments in the company are not open source, but are only used internally. If we want to use the package, we can no longer use go get. Explain in detail how to import local packages and the pits that may be encountered in the process.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">How does go mod import local packages? </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2022-08-03 23:15:51 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-08-03 23:15:51 &#43;0800 CST">2022-08-03</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>853</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>5min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>When we use go development, we often use a lot of third-party packages, most of which are available for download in the form of open source, such as hosting on github, we only need to use <code>go get github.com/xxx/xxxx</code> Download to, it&rsquo;s very convenient.
+But we often encounter packages that are not open source. For example, packages developed by other departments in the company are not open source, but are only used internally. If we want to use the package, we can no longer use go get. Explain in detail how to import local packages and the pits that may be encountered in the process.</p>
+<p>This kind of package that needs to be imported is divided into two cases according to whether it is managed by go mod</p>
+<h2 id="not-a-go-mod-project">Not a go mod project</h2>
+<p>First create our own project, use the go mod method, and create a main.go file with the project name modtest</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜ modtest tree
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>├── go.mod
+</span></span><span style="display:flex;"><span>├── main.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In go.mod this time is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>module modtest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">go</span> <span style="color:#bd93f9">1.17</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this time, we put the third-party package directly into the project. Of course, we can also create another directory. Here I put the project package directly in the root directory of my main project. The following is the directory structure</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜ modtest tree
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>├── go.mod
+</span></span><span style="display:flex;"><span>├── main.go
+</span></span><span style="display:flex;"><span>└── project
+</span></span><span style="display:flex;"><span>    └── pkg
+</span></span><span style="display:flex;"><span>        └── p.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>A simple Show function is defined in the p.go file</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> pkg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">Show</span>(name <span style="color:#8be9fd">string</span>) {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;in project: &#34;</span>, name)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this point, how to call the Show function here in main.go of the main project? It&rsquo;s very simple here, just import the pkg package according to the directory structure</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;modtest/project/pkg&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;hi~&#34;</span>)
+</span></span><span style="display:flex;"><span>    pkg.<span style="color:#50fa7b">Show</span>(<span style="color:#f1fa8c">&#34;Yang Yanxing&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In fact, this case is relatively simple. The third-party package imported here is the same as the file in the main project. Just imagine, if not, you need to create directories and corresponding files layer by layer, and then write functions to perform transfer.</p>
+<h2 id="import-the-go-mod-package">Import the go mod package</h2>
+<p>Compared with the above, it will be relatively complicated to create and package using go mod, but this situation will be more common. We can think that this third-party package and the main project to be developed by ourselves are not the same project, or the above , but this time the project also uses <code>go mod init project</code> to become a different project from the main project.
+The directory structure at this time is as follows</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>➜ modtest tree
+</span></span><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>├── go.mod
+</span></span><span style="display:flex;"><span>├── main.go
+</span></span><span style="display:flex;"><span>└── project
+</span></span><span style="display:flex;"><span>    ├── go.mod
+</span></span><span style="display:flex;"><span>    └── pkg
+</span></span><span style="display:flex;"><span>        └── p.go
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The outermost go.mod remains unchanged, or</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>module modtest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">go</span> <span style="color:#bd93f9">1.17</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The go.mod in the project directory is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>module project
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">go</span> <span style="color:#bd93f9">1.17</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this point, if we want to use the Show function in the project project, we need to modify the go.mod file of the main project and import it manually.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>module modtest
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">go</span> <span style="color:#bd93f9">1.17</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>require project v0<span style="color:#bd93f9">.0.1</span>
+</span></span><span style="display:flex;"><span>replace project =&gt; .<span style="color:#ff79c6">/</span>project
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The first <code>require project v0.0.1</code> defines the imported package name. The package name here can be arbitrarily named. It does not have to be the same as the internal package name, but it is generally the same, and a version number is written after it. .
+Then write <code>replace project =&gt; ./project</code> to define the location of the third-party package directory. This location is relative to the go.mod file. Of course, it can also be an absolute path, but it is not recommended, because if you work overtime at home , the path of your computer at home may not be the same as the computer at work, don&rsquo;t make trouble for yourself.
+The next step is how to call, modify the main.go file of the main project</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;project/pkg&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;hi~&#34;</span>)
+</span></span><span style="display:flex;"><span>    pkg.<span style="color:#50fa7b">Show</span>(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that when we import the package, it is <code>&quot;project/pkg&quot;</code>, <code>project</code> is the name defined in go.mod, and pkg is the package path in the project project.</p>
+<h2 id="note-on-the-problem">Note on the problem</h2>
+<ol>
+<li>Define the version number of the package</li>
+</ol>
+<p>Above I used <code>require project v0.0.1</code>, the version number is <code>v0.0.1</code>, there must be at least two dots <code>.</code>, if there is only one dot, or no dot, it will report <code>malformed module path &quot;project&quot;: missing dot in first path element</code></p>
+<ol start="2">
+<li>Don&rsquo;t write the main package name when calling</li>
+</ol>
+<p>In the first case, when we import the package, the imported path is <code>&quot;modtest/project/pkg&quot;</code>, and the module name of the main project needs to be added at the front, and for the second case, the imported path is <code>&quot;modtest/project/pkg&quot;</code>. The situation is that the main module name is no longer needed, <code>&quot;project/pkg&quot;</code></p>
+<h2 id="reference-articles">Reference articles</h2>
+<p>
+<a href="https://blog.golangstack.com/post/go-mod-import-local-package/" title="3 minutes take you to master go mod import local package" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    3 minutes take you to master go mod import local package
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/go.html">
+    Go
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      How does go mod import local packages?
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/go-mod-import-localpkg.html" title="How does go mod import local packages?">https://enblog.yangyanxing.com/article/go-mod-import-localpkg.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/cros-build-in-go.html" rel="next" title="An example to explain the application of go build tag tags in cross-compilation">
+      <i class="fa fa-chevron-left"></i> An example to explain the application of go build tag tags in cross-compilation
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/socketio-gin-experience.html" rel="prev" title="The pit that Socket.io stepped on in gin">
+      The pit that Socket.io stepped on in gin
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

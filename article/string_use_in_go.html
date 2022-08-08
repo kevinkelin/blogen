@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="A summary of the use of strings in the go language" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="A summary of the use of strings in the go language" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/string_use_in_go.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-08-27 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-08-27 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>A summary of the use of strings in the go language - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#string">string</a></li>
+    <li><a href="#string-to-other-types-of-conversions">String to other types of conversions</a></li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/string_use_in_go.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="A summary of the use of strings in the go language">
+      <meta itemprop="description" content="string
+
+Strings can only be defined with double quotes,
+If the single and double quotes in go are not passed, you can use the   ` sign to define the original output without escaping, which is equivalent to the triple quotes in python
+">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">A summary of the use of strings in the go language </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-08-27 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-08-27 00:00:00 &#43;0000 UTC">2019-08-27</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1216</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>6min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <h1 id="string">string</h1>
+<ol>
+<li>Strings can only be defined with double quotes,</li>
+<li>If the single and double quotes in go are not passed, you can use the <code> </code> ` sign to define the original output without escaping, which is equivalent to the triple quotes in python</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">148
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">149
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">150
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">151
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">152
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">153
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">154
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">155
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">156
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">157
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">158
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">159
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">160
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">161
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">162
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">163
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">164
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">165
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">166
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">167
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">168
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">169
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">170
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">171
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">172
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">173
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">174
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">175
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">176
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">177
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">178
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">179
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">180
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">181
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">182
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">183
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">184
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">185
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">186
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">187
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">188
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">189
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">190
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">191
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">192
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">193
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">194
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">195
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">196
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">197
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">198
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">199
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">200
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">201
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">202
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">203
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">204
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">205
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">206
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">207
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">208
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">209
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">210
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">211
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">212
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">213
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">214
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">215
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">216
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">217
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">218
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">219
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">220
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">221
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">222
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">223
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">224
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">225
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">226
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">227
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">228
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">229
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">230
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">231
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">232
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">233
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">234
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">235
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">236
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">237
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">238
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">239
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">240
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">241
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">242
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">243
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">244
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">245
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">246
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">247
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">248
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">249
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">250
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">251
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">252
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>    <span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>        name <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;Yang Yanxing\n&#34;</span>
+</span></span><span style="display:flex;"><span>        s <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">`Yang
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        adgfgfg
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        \n\t
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        `</span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(name,s)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    output
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    Yang Yanxing
+</span></span><span style="display:flex;"><span>    Young
+</span></span><span style="display:flex;"><span>        adgfgfg
+</span></span><span style="display:flex;"><span>        \n\t
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">3. Strings are immutable
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    When we say that a string is immutable, we mean that the string internally uses a pointer to point to a UTF-8 byte array, and the pointed byte array cannot be changed individually. doesn&#39;t mean the string points to a new UTF-8 array
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">var</span> name <span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">var</span> name1 = []<span style="color:#8be9fd;font-style:italic">byte</span>(<span style="color:#f1fa8c">&#34;yangyanxing Chinese characters&#34;</span>)
+</span></span><span style="display:flex;"><span>        name = <span style="color:#8be9fd;font-style:italic">string</span>(name1)
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name,name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        name = <span style="color:#f1fa8c">&#34;Yang Yanxing&#34;</span> <span style="color:#6272a4">//This is ok
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name) <span style="color:#6272a4">//name&#39;s address will not change
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">//illegal
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        <span style="color:#6272a4">//name[0] = &#34;a&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    If you want to change the value in the string, you need to first convert the string to a byte array (\[\]byte) or a character array (\[\]rune), and use a character array in the case of Chinese
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">var</span> name = <span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name,name)
+</span></span><span style="display:flex;"><span>        names <span style="color:#ff79c6">:=</span> []<span style="color:#8be9fd;font-style:italic">byte</span>(name)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">//Byte arrays need to use single quotes, double quotes are strings
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        names[<span style="color:#bd93f9">0</span>] = <span style="color:#f1fa8c">&#39;f&#39;</span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name,<span style="color:#8be9fd;font-style:italic">string</span>(names))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        name = <span style="color:#f1fa8c">&#34;Yang Yanxing&#34;</span> <span style="color:#6272a4">//This is ok
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        <span style="color:#6272a4">//If there are Chinese characters, you need to use a character array
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        namer <span style="color:#ff79c6">:=</span> []<span style="color:#8be9fd;font-style:italic">rune</span>(name)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// need to use single quotes
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        namer[<span style="color:#bd93f9">0</span>] = &#39;rice&#39;
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">//name&#39;s address will not change
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name,<span style="color:#8be9fd;font-style:italic">string</span>(namer))
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">4. Convert between strings, byte arrays and character arrays
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">var</span> name = <span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name,name)
+</span></span><span style="display:flex;"><span>        names <span style="color:#ff79c6">:=</span> []<span style="color:#8be9fd;font-style:italic">byte</span>(name)
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%T\n&#34;</span>,names)
+</span></span><span style="display:flex;"><span>        names[<span style="color:#bd93f9">0</span>] = <span style="color:#f1fa8c">&#39;f&#39;</span> <span style="color:#6272a4">//byte array needs to use single quotes, double quotes are strings
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        name = <span style="color:#8be9fd;font-style:italic">string</span>(names)
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name,name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        name = <span style="color:#f1fa8c">&#34;Yang Yanxing&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">//If there are Chinese characters, you need to use a character array
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        namer <span style="color:#ff79c6">:=</span> []<span style="color:#8be9fd;font-style:italic">rune</span>(name)
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%T\n&#34;</span>,namer)
+</span></span><span style="display:flex;"><span>        namer[<span style="color:#bd93f9">0</span>] = &#39;rice&#39;
+</span></span><span style="display:flex;"><span>        name = <span style="color:#8be9fd;font-style:italic">string</span>(namer)
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">&amp;</span>name,name) <span style="color:#6272a4">//The address of name will not change
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">5. Traversal of strings
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Strings can be traversed by bytes or characters
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">var</span> name = <span style="color:#f1fa8c">&#34;yang Yang Yanxing&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// loop through bytes
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        <span style="color:#ff79c6">for</span> i<span style="color:#ff79c6">:=</span><span style="color:#bd93f9">0</span>;i&lt;<span style="color:#8be9fd;font-style:italic">len</span>(name);i<span style="color:#ff79c6">++</span>{
+</span></span><span style="display:flex;"><span>            fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%v %T:%v\n&#34;</span>,i,name[i],name[i])
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// Traverse by character
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        <span style="color:#ff79c6">for</span> _,r <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">range</span> name{
+</span></span><span style="display:flex;"><span>            <span style="color:#6272a4">//%c is the Unicode character represented by the output value, without single quotes such as y
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>            <span style="color:#6272a4">//%q outputs the Unicode character (with single quotes) represented by the value, such as &#39;yang&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>            fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%c&#34;</span>,r)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    The result is
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">0</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">121</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">1</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">97</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">2</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">110</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">3</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">103</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">4</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">230</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">5</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">157</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">6</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">168</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">7</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">229</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">8</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">189</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">9</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">166</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">10</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">230</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">11</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">152</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#bd93f9">12</span> <span style="color:#8be9fd">uint8</span>:<span style="color:#bd93f9">159</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    yang Yang Yanxing
+</span></span><span style="display:flex;"><span>    Process finished with exit code <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">6. String concatenation
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    You can use `</span> <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">` to concatenate directly
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// Strings can be concatenated with +
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        <span style="color:#8be9fd;font-style:italic">var</span> name = <span style="color:#f1fa8c">&#34;yang&#34;</span> <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;yan&#34;</span> <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;xing&#34;</span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(name)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">//Use += to append a string to the original string
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        name <span style="color:#ff79c6">+=</span> <span style="color:#f1fa8c">&#34;Yang Yanxing&#34;</span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// + cannot be at the beginning of the line, only at the end of the line, just like the else in if else
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        s <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;BeiJing&#34;</span> <span style="color:#ff79c6">+</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;TongZhou&#34;</span>
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(s)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    Joining with the + sign in a loop is not efficient, you can use the `</span>strings.Join<span style="color:#f1fa8c">` method
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    ```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">var</span> names = []<span style="color:#8be9fd">string</span>{<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#f1fa8c">&#34;fan&#34;</span>,<span style="color:#f1fa8c">&#34;zhang&#34;</span>,<span style="color:#f1fa8c">&#34;li&#34;</span>,<span style="color:#f1fa8c">&#34;chen&#34;</span>}
+</span></span><span style="display:flex;"><span>        n <span style="color:#ff79c6">:=</span> strings. <span style="color:#50fa7b">Join</span>(names,<span style="color:#f1fa8c">&#34; &#34;</span>)
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(n)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        s <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;yang&amp;aaa&amp;bbb&amp;ccc&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">// split by &amp;
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>        str <span style="color:#ff79c6">:=</span> strings.<span style="color:#50fa7b">Split</span>(s,<span style="color:#f1fa8c">&#34;&amp;&#34;</span>)
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(str)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">```
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &gt;yang fan zhang li chen
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    [yang aaa bbb ccc]
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"># Common methods of the strings package
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">This package provides common methods for string manipulation
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">```</span><span style="color:#ff79c6">go</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>    s <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;yang&amp;yan&amp;xing&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//HasPrefix determines whether the string s starts with prefix
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">HasPrefix</span>(s,<span style="color:#f1fa8c">&#34;y&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//HasSuffix determines whether the string s ends with suffix
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">HasSuffix</span>(s,<span style="color:#f1fa8c">&#34;aaa&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//Contains determines whether the string s contains substr
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">Contains</span>(s,<span style="color:#f1fa8c">&#34;yang&#34;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//Replace replace the string, the last parameter is the number, -1 is to replace all
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">Replace</span>(s,<span style="color:#f1fa8c">&#34;y&#34;</span>,<span style="color:#f1fa8c">&#34;Y&#34;</span>,<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//ToLower converts all Unicode characters in the string to the corresponding lowercase characters
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    ss <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;AAA Yang Yanxing BbbbB&#34;</span>
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">ToLower</span>(ss))
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//ToUpper converts all Unicode characters in the string to the corresponding uppercase characters
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">ToUpper</span>(ss))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//strings.TrimSpace(s) to strip whitespace at the beginning and end of the string
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#6272a4">//The middle one cannot be deleted
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    sp <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34; aaa bbb ccc &#34;</span>
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">TrimSpace</span>(sp))
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//You can also remove the specified characters at the beginning or end
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    ssp <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;aaa Hey, how are you George?aaaa&#34;</span>
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">TrimLeft</span>(ssp,<span style="color:#f1fa8c">&#34;He&#34;</span>))
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">TrimRight</span>(ssp,<span style="color:#f1fa8c">&#34;ge&#34;</span>))
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">Trim</span>(ssp,<span style="color:#f1fa8c">&#34;aaa&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//strings.Fields(s) will use
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#6272a4">//strings.Split(s, sep) is used to customize the split symbol to split the specified string
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    sp2 <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34; aa a b bb ccc &#34;</span>
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">Fields</span>(sp2))
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">Split</span>(sp2,<span style="color:#f1fa8c">&#34; &#34;</span>)) <span style="color:#6272a4">//Use spaces to split
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//Join is used to concatenate slices whose element type is string using the split symbol to form a string
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    sp3 <span style="color:#ff79c6">:=</span> []<span style="color:#8be9fd">string</span>{<span style="color:#f1fa8c">&#34;aa&#34;</span>,<span style="color:#f1fa8c">&#34;a&#34;</span>,<span style="color:#f1fa8c">&#34;b&#34;</span>,<span style="color:#f1fa8c">&#34;bb&#34;</span>,<span style="color:#f1fa8c">&#34;ccc&#34;</span>}
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strings.<span style="color:#50fa7b">Join</span>(sp3,<span style="color:#f1fa8c">&#34;$$$&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>result</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">false</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">true</span>
+</span></span><span style="display:flex;"><span>Yang&amp; Yan&amp;xing
+</span></span><span style="display:flex;"><span>aaa Yang Yanxing bbbbb
+</span></span><span style="display:flex;"><span>AAA Yang Yanxing BBBBB
+</span></span><span style="display:flex;"><span>aaa bbb ccc
+</span></span><span style="display:flex;"><span>aaa Hey, how are you George?aaaa
+</span></span><span style="display:flex;"><span>aaa Hey, how are you George?aaaa
+</span></span><span style="display:flex;"><span>Hey, how are you George?
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[</span>aa a b bb ccc<span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[</span> aa a b bb ccc <span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span>aa<span style="color:#8be9fd;font-style:italic">$$$a$$$b$$$bb$$$ccc</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="string-to-other-types-of-conversions">String to other types of conversions</h1>
+<p>Use the methods in the strconv package to convert strings to other types</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;strconv&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">//Itoa converts numbers to strings
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    fmt.<span style="color:#50fa7b">Println</span>(strconv.<span style="color:#50fa7b">Itoa</span>(<span style="color:#bd93f9">35</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">// Atoi converting strings to other types may not be successful
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    fmt.<span style="color:#50fa7b">Println</span>(strconv.<span style="color:#50fa7b">Atoi</span>(<span style="color:#f1fa8c">&#34;100&#34;</span>))
+</span></span><span style="display:flex;"><span>    fmt.<span style="color:#50fa7b">Println</span>(strconv.<span style="color:#50fa7b">ParseBool</span>(<span style="color:#f1fa8c">&#34;true&#34;</span>)) <span style="color:#6272a4">//Can succeed
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    v,e <span style="color:#ff79c6">:=</span> strconv.<span style="color:#50fa7b">ParseBool</span>(<span style="color:#f1fa8c">&#34;trues&#34;</span>)<span style="color:#6272a4">//There will be err
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#ff79c6">if</span> e<span style="color:#ff79c6">!=</span><span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(e.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>    }<span style="color:#ff79c6">else</span>{
+</span></span><span style="display:flex;"><span>        fmt.<span style="color:#50fa7b">Println</span>(v)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/go.html">
+    Go
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      A summary of the use of strings in the go language
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/string_use_in_go.html" title="A summary of the use of strings in the go language">https://enblog.yangyanxing.com/article/string_use_in_go.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/use_venv_in_python.html" rel="next" title="Using virtual environment in python">
+      <i class="fa fa-chevron-left"></i> Using virtual environment in python
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/file_path_in_go.html" rel="prev" title="Summary of the use of file paths in the go language">
+      Summary of the use of file paths in the go language
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

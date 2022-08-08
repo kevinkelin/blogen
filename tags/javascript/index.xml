@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>javascript on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/javascript.html</link>
+    <description>Recent content in javascript on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 14 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Use selenium to operate electron applications</title>
+      <link>https://enblog.yangyanxing.com/article/use-selenium-opt-electron.html</link>
+      <pubDate>Thu, 14 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-selenium-opt-electron.html</guid>
+      <description>&lt;p&gt;In a recent automated test project, there is a requirement for testing internal IM communication software. After understanding the implementation of the corresponding technology stack of each client, the application in the mac uses the electron technology. We also conduct research on the corresponding technology. The article records the automated testing of electron applications.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

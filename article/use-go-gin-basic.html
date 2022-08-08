@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Use gin to build the framework of the API background system" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Use gin to build the framework of the API background system" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/use-go-gin-basic.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2021-12-15 00:06:04 &#43;0800 CST" />
+<meta property="article:modified_time" content="2021-12-15 00:06:04 &#43;0800 CST" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Use gin to build the framework of the API background system - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#download-gin">download gin</a></li>
+        <li><a href="#build-http-service">Build http service</a></li>
+        <li><a href="#404-configuration">404 Configuration</a></li>
+        <li><a href="#routing-group">routing group</a></li>
+        <li><a href="#handling-class-encapsulation">Handling class encapsulation</a></li>
+        <li><a href="#start-the-service-using-httpserver">Start the service using http.Server</a></li>
+        <li><a href="#web-page-jump">web page jump</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/use-go-gin-basic.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use gin to build the framework of the API background system">
+      <meta itemprop="description" content="Gin is a popular framework in golang. Many systems are developed under this framework. This framework feels to me like Tornado&rsquo;s position in python. It has basic functions, but if you want to use it well, I still need to develop a lot of my own functions and middleware. After reading a lot of tutorials, I want to record the learning process.
+This series simply implements some usable methods for background services, such as obtaining parameters, database query, etc. The overall project is not about the structure, at most it is a quick start, and the directory structure is not so particular, because beginners, So there will definitely be a lot of questions. Later, I will practice a little bit of repair.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Use gin to build the framework of the API background system </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-12-15 00:06:04 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2021-12-15 00:06:04 &#43;0800 CST">2021-12-15</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1231</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>6min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>Gin is a popular framework in golang. Many systems are developed under this framework. This framework feels to me like Tornado&rsquo;s position in python. It has basic functions, but if you want to use it well, I still need to develop a lot of my own functions and middleware. After reading a lot of tutorials, I want to record the learning process.</p>
+<p>This series simply implements some usable methods for background services, such as obtaining parameters, database query, etc. The overall project is not about the structure, at most it is a quick start, and the directory structure is not so particular, because beginners, So there will definitely be a lot of questions. Later, I will practice a little bit of repair.</p>
+<h2 id="download-gin">download gin</h2>
+<p>The first one, simpler, build the framework first and write a hello world.</p>
+<p>The project is based on the go module method. Run <code>go mod init gintest</code> in an empty directory to initialize the project, and go will automatically generate a go.mod file</p>
+<p>Add gin to go.mod file</p>
+<pre tabindex="0"><code>module gintest
+
+go 1.15
+
+require (
+github.com/gin-gonic/gin v1.7.4
+)
+</code></pre><p>Then use the <code>go mod download</code> command to download.</p>
+<p>Or run the <code>go get github.com/gin-gonic/gin@v1.7.4</code> command directly in the project directory, the gin package will also be downloaded and added to the go.mod file automatically.</p>
+<h2 id="build-http-service">Build http service</h2>
+<p>Create a new server.go file and write the following code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">:=</span> gin.<span style="color:#50fa7b">Default</span>()
+</span></span><span style="display:flex;"><span>    r.<span style="color:#50fa7b">GET</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, <span style="color:#8be9fd;font-style:italic">func</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>        c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">200</span>, gin.H{
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;Msg&#34;</span>:<span style="color:#f1fa8c">&#34;Hello World&#34;</span>,
+</span></span><span style="display:flex;"><span>        })
+</span></span><span style="display:flex;"><span>    })
+</span></span><span style="display:flex;"><span>    r.<span style="color:#50fa7b">Run</span>(<span style="color:#f1fa8c">&#34;:8080&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The code is very simple, running <code>go run server.go</code> will start an http service on port 8080, and using a browser to access <code>http://127.0.0.1:8080/</code> will return json data</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  Msg: <span style="color:#ff79c6">&#34;Hello world&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In the above code, <code>gin.Default()</code> is used to create a default gin application, which initializes a lot of settings at the bottom of the application, so I won&rsquo;t explore it in depth here.</p>
+<p>A route is registered here, <code>/</code>, its processing is handled by an anonymous function, and the GET method in gin is defined as</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#6272a4">// GET is a shortcut for router. Handle(&#34;GET&#34;, path, handle).
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">func</span> (group <span style="color:#ff79c6">*</span>RouterGroup) <span style="color:#50fa7b">GET</span>(relativePath <span style="color:#8be9fd">string</span>, handlers <span style="color:#ff79c6">...</span> HandlerFunc) IRoutes {
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">return</span> group.<span style="color:#50fa7b">handle</span>(http.MethodGet, relativePath, handlers)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>handler is the processing method, which is defined as</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> HandlerFunc <span style="color:#8be9fd;font-style:italic">func</span>(<span style="color:#ff79c6">*</span>Context)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>So here you need a function with a parameter of (*Context), which is used in the above code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>  c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">200</span>, gin.H{
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;Msg&#34;</span>:<span style="color:#f1fa8c">&#34;Hello World&#34;</span>,
+</span></span><span style="display:flex;"><span>  })
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This anonymous function handles <code>/</code> GET requests.</p>
+<p>Here you can also define methods such as POST, DELETE, PUT, etc., so that you can easily write restful-style APIs.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>r.<span style="color:#50fa7b">POST</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, <span style="color:#8be9fd;font-style:italic">func</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>  c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">200</span>, gin.H{
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;Msg&#34;</span>:<span style="color:#f1fa8c">&#34;Hello world POST&#34;</span>,
+</span></span><span style="display:flex;"><span>  })
+</span></span><span style="display:flex;"><span>})
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="404-configuration">404 Configuration</h2>
+<p>The default 404 processing will print 404 not found. More often, we want to customize the processing of 404 pages, which can be achieved by setting the <code>r.NoRoute</code> method</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>r.<span style="color:#50fa7b">NoRoute</span>(<span style="color:#8be9fd;font-style:italic">func</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>  c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">404</span>, gin.H{
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;Msg&#34;</span>: <span style="color:#f1fa8c">&#34;The page not found&#34;</span>,
+</span></span><span style="display:flex;"><span>  })
+</span></span><span style="display:flex;"><span>})
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In this case, custom content will be displayed when accessing a non-existing route.</p>
+<h2 id="routing-group">routing group</h2>
+<p>In many cases, we have such a requirement that the route to be accessed has a uniform prefix, such as <code>/api/v1</code>, or <code>/user</code>, of course, you can write the prefix uniformly when defining the route, but this kind of way, if the prefix is ​​modified later, it will be changed in many places. The concept of routing groups can be used here.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>r <span style="color:#ff79c6">:=</span> gin.<span style="color:#50fa7b">Default</span>()
+</span></span><span style="display:flex;"><span>r.<span style="color:#50fa7b">GET</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, <span style="color:#8be9fd;font-style:italic">func</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>	c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">200</span>, gin.H{
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;Msg&#34;</span>: <span style="color:#f1fa8c">&#34;Hello world&#34;</span>,
+</span></span><span style="display:flex;"><span>	})
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>apiv1 <span style="color:#ff79c6">:=</span> r.<span style="color:#50fa7b">Group</span>(<span style="color:#f1fa8c">&#34;/api/v1&#34;</span>)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	apiv1.<span style="color:#50fa7b">GET</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, <span style="color:#8be9fd;font-style:italic">func</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>		c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">200</span>, gin.H{<span style="color:#f1fa8c">&#34;msg&#34;</span>: <span style="color:#f1fa8c">&#34;hello api v1&#34;</span>})
+</span></span><span style="display:flex;"><span>	})
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>r.<span style="color:#50fa7b">Run</span>(<span style="color:#f1fa8c">&#34;:8080&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above code defines a routing group, <code>/api/v1</code>, and then defines the corresponding processing method under the routing group. Here, the url of <code>http://127.0.0.1:8080/</code> returns <code>&quot;Msg &quot;: &quot;Hello world&quot;</code>, <code>/api/v1/</code> This route returns <code>&quot;msg&quot;: &quot;hello api v1&quot;</code></p>
+<h2 id="handling-class-encapsulation">Handling class encapsulation</h2>
+<p>The above routing processing classes all use anonymous functions. If the processing logic is relatively simple, you can write it like this, but it is still not recommended to write an anonymous function for processing. Later, as the project grows larger, the routing definitions here will become more and more The more, if there are a large number of anonymous functions, it will look more messy.</p>
+<p>Here we can encapsulate the processing handler.</p>
+<p>First create a handlers folder and write the following code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> handlers
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> ApiV1 <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> (ApiV1) <span style="color:#50fa7b">Get</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>	c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">200</span>, gin.H{<span style="color:#f1fa8c">&#34;msg&#34;</span>: <span style="color:#f1fa8c">&#34;handlers get request!&#34;</span>})
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>A structure of ApiV1 is defined here, and then a Get method is defined, and then in the entry server.go file, the original code is modified,</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	r <span style="color:#ff79c6">:=</span> gin.<span style="color:#50fa7b">Default</span>()
+</span></span><span style="display:flex;"><span>	apiv1_h <span style="color:#ff79c6">:=</span> handlers.ApiV1{}
+</span></span><span style="display:flex;"><span>	r.<span style="color:#50fa7b">GET</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, <span style="color:#8be9fd;font-style:italic">func</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>		c.<span style="color:#50fa7b">JSON</span>(<span style="color:#bd93f9">200</span>, gin.H{
+</span></span><span style="display:flex;"><span>			<span style="color:#f1fa8c">&#34;Msg&#34;</span>: <span style="color:#f1fa8c">&#34;Hello world&#34;</span>,
+</span></span><span style="display:flex;"><span>		})
+</span></span><span style="display:flex;"><span>	})
+</span></span><span style="display:flex;"><span>	apiv1 <span style="color:#ff79c6">:=</span> r.<span style="color:#50fa7b">Group</span>(<span style="color:#f1fa8c">&#34;/api/v1&#34;</span>)
+</span></span><span style="display:flex;"><span>	{
+</span></span><span style="display:flex;"><span>		apiv1.<span style="color:#50fa7b">GET</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, apiv1_h.Get)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	r.<span style="color:#50fa7b">Run</span>(<span style="color:#f1fa8c">&#34;:8080&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Use <code>apiv1_h := handlers.ApiV1{}</code> to initialize an ApiV1 structure object. When the route is defined later, you can directly use the Get method of the object. It is best to put the same prefix in a bracket <code>{} </code>, method view</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  apiv1.<span style="color:#50fa7b">GET</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, apiv1_h.Get)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note here that the handler is <code>apiv1_h.Get</code> , not <code>apiv1_h.Get(c, *gin.Context)</code></p>
+<h2 id="start-the-service-using-httpserver">Start the service using http.Server</h2>
+<p>The above code starts the service in the way of <code>r.run(&quot;:8080&quot;)</code>, but sometimes we want to do some personalized settings, such as some read and write timeouts, of course, we can also call <code>gin.New() The </code> method can be set in the object obtained, or you can directly use the definition in <code>http.Server</code>.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	r <span style="color:#ff79c6">:=</span> gin.<span style="color:#50fa7b">Default</span>()
+</span></span><span style="display:flex;"><span>	apiv1_h <span style="color:#ff79c6">:=</span> handlers.ApiV1{}
+</span></span><span style="display:flex;"><span>	apiv1 <span style="color:#ff79c6">:=</span> r.<span style="color:#50fa7b">Group</span>(<span style="color:#f1fa8c">&#34;/api/v1&#34;</span>)
+</span></span><span style="display:flex;"><span>	{
+</span></span><span style="display:flex;"><span>		apiv1.<span style="color:#50fa7b">GET</span>(<span style="color:#f1fa8c">&#34;/&#34;</span>, apiv1_h.Get)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	s <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">&amp;</span>http.Server{
+</span></span><span style="display:flex;"><span>		Addr: <span style="color:#f1fa8c">&#34;:8080&#34;</span>,
+</span></span><span style="display:flex;"><span>		Handler: r,
+</span></span><span style="display:flex;"><span>		ReadTimeout: <span style="color:#bd93f9">10</span><span style="color:#ff79c6">*</span>time.Second,
+</span></span><span style="display:flex;"><span>		WriteTimeout: <span style="color:#bd93f9">10</span><span style="color:#ff79c6">*</span>time.Second,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	err <span style="color:#ff79c6">:=</span> s.<span style="color:#50fa7b">ListenAndServe</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">return</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="web-page-jump">web page jump</h2>
+<p>The above code returns json data when processing requests. Since the mainstream development uses the front-end and back-end separation mode, the html template method is not used here to return data.</p>
+<p>When using a third-party login, it all involves web page jumping, and web page jumping is also very simple, modify the apiv1.go file</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> handlers
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> ApiV1 <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> (<span style="color:#ff79c6">*</span>ApiV1) <span style="color:#50fa7b">Get</span>(c <span style="color:#ff79c6">*</span>gin.Context) {
+</span></span><span style="display:flex;"><span>	c.<span style="color:#50fa7b">Redirect</span>(<span style="color:#bd93f9">301</span>, <span style="color:#f1fa8c">&#34;https://www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In this way, when the corresponding route of the method is used, it will jump to Baidu.</p>
+<p>It should be noted here that the status code must be processed between 300-308, otherwise an error will be reported</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> (r Redirect) <span style="color:#50fa7b">Render</span>(w http.ResponseWriter) <span style="color:#8be9fd">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> (r.Code &lt; http.StatusMultipleChoices <span style="color:#ff79c6">||</span> r.Code &gt; http.StatusPermanentRedirect) <span style="color:#ff79c6">&amp;&amp;</span> r.Code <span style="color:#ff79c6">!=</span> http.StatusCreated {
+</span></span><span style="display:flex;"><span>		<span style="color:#8be9fd;font-style:italic">panic</span>(fmt.<span style="color:#50fa7b">Sprintf</span>(<span style="color:#f1fa8c">&#34;Cannot redirect with status code %d&#34;</span>, r.Code))
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	http.<span style="color:#50fa7b">Redirect</span>(w, r.Request, r.Location, r.Code)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">return</span> <span style="color:#ff79c6">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The basic construction of the gin framework is first recorded here, and then the acquisition and verification of various request parameters will be introduced.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/go.html">
+    Go
+  </a>
+    <a href="/tags/gin.html">
+    gin
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Use gin to build the framework of the API background system
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/use-go-gin-basic.html" title="Use gin to build the framework of the API background system">https://enblog.yangyanxing.com/article/use-go-gin-basic.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/use-go-gin-params.html" rel="next" title="Use gin to build api background system to get request parameters">
+      <i class="fa fa-chevron-left"></i> Use gin to build api background system to get request parameters
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/query-mysql-in-go-base.html" rel="prev" title="golang query MySQL data">
+      golang query MySQL data
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

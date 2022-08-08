@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Detailed explanation of the use of asyncio in python" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Detailed explanation of the use of asyncio in python" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/asyncio_in_python.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-06-08 23:53:38 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-06-08 23:53:38 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Detailed explanation of the use of asyncio in python - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#some-core-concepts">Some core concepts</a>
+      <ul>
+        <li><a href="#definition-of-async-function">Definition of async function</a></li>
+        <li><a href="#event-loop-eventloop">Event loop Eventloop</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/asyncio_in_python.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Detailed explanation of the use of asyncio in python">
+      <meta itemprop="description" content="In the asynchronous practice of python, every time you look at asynicio, you will have new gains. This article summarizes the use of this library recently.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Detailed explanation of the use of asyncio in python </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-06-08 23:53:38 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-06-08 23:53:38 &#43;0000 UTC">2019-06-08</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1507</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>8min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In the asynchronous practice of python, every time you look at <code>asynicio</code>, you will have new gains. This article summarizes the use of this library recently.</p>
+<h1 id="some-core-concepts">Some core concepts</h1>
+<h2 id="definition-of-async-function">Definition of async function</h2>
+<p>The definition of ordinary functions is to use the <code>def</code> keyword, asynchronous functions, coroutine function (Coroutine) is essentially a function, the characteristic is that the execution right can be handed over to other coroutines in the code block, use <code>async def</code> to definition</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Ordinary function definition</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">add2</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(x<span style="color:#ff79c6">+</span><span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">+</span><span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Definition of async function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">add3</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;in async fun add&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">+</span><span style="color:#bd93f9">3</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>How to call a coroutine and get its result?
+Calling an ordinary function only needs <code>result = add2(2)</code>, then the function can be run, and return the result 4 to result, if you use <code>result = add3(2)</code>, then print <code>result</code> at this time ?
+What I get is a coroutine object, <code>&lt;coroutine object add3 at 0x000002ED564A5048&gt;</code>, which is not the result of 2+3=5. How can I get the result?
+The coroutine function needs to be executed in the event loop to execute.</p>
+<h2 id="event-loop-eventloop">Event loop Eventloop</h2>
+<p>Eventloop is the core of the asyncio application. Register some asynchronous functions to this event loop, and the event loop will execute these functions in a loop. When a function is executed, if it is waiting for I/O to return, such as it is making a network request, Or sleep operation, the event loop will suspend its execution to execute other functions; when a function completes I/O, it will resume and continue to execute the next time it loops. Therefore, these asynchronous functions can run cooperatively: this is the goal of the event loop.</p>
+<p>Return to the above function, to get the function execution result, you need an Eventloop</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">add3</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;in async fun add&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">+</span><span style="color:#bd93f9">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>result <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>run_until_complete(add3(<span style="color:#bd93f9">2</span>))
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(result)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#The result of running is</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#in async fun add</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#5</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Or use the <code>await</code> keyword to modify the function call, such as <code>result = await add3(2)</code>, but await can only be used in coroutine functions, so if you want to use the await keyword, you need to define a coroutine function</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">add3</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;in async fun add&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">+</span><span style="color:#bd93f9">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> add3(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> result
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But the final execution still needs to be put into an event loop.</p>
+<p>A slightly more complicated example</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># coding:utf-8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">testa</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;in test a&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">3</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Resuming a&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">testb</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;in test b&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming b&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    resulta <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> testa(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    resultb <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> testb(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;test a result is </span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>resulta)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;test b result is </span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>resultb)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(time<span style="color:#ff79c6">.</span>time()<span style="color:#ff79c6">-</span>start))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(main())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This code defines two coroutines and puts them in another coroutine main function. To get the result of their running, the event loop is characterized by waiting when it encounters a certain I/O (such as here the asyncio.sleep() function), you can execute other functions, so that the time required for the entire function to execute should be the one with the longest execution time among all the coroutines. For the above code, a sleep 3 seconds, a sleep for 1 second, the total time should be a little more than 3 seconds, but is this the result?</p>
+<p>Its output is like this</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in <span style="color:#8be9fd;font-style:italic">test</span> a
+</span></span><span style="display:flex;"><span>Resuming a
+</span></span><span style="display:flex;"><span>in <span style="color:#8be9fd;font-style:italic">test</span> b
+</span></span><span style="display:flex;"><span>Resuming b
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> a result is <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> b result is <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>use 4.001966714859009 <span style="color:#8be9fd;font-style:italic">time</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It takes a little more than 4 seconds, and the testa function is executed first, and then the testb function is executed. It is executed serially and sequentially, and it is not executed concurrently as we imagined. How should it be executed concurrently?</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    resulta,resultb <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>gather(testa(<span style="color:#bd93f9">1</span>),testb(<span style="color:#bd93f9">2</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;test a result is </span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> resulta)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;test b result is </span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> resultb)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(main())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You need to put the coroutine into <code>asyncio.gather()</code> to run, the output of the above code is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in <span style="color:#8be9fd;font-style:italic">test</span> b
+</span></span><span style="display:flex;"><span>in <span style="color:#8be9fd;font-style:italic">test</span> a
+</span></span><span style="display:flex;"><span>Resuming b
+</span></span><span style="display:flex;"><span>Resuming a
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> a result is <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> b result is <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>use 3.001237392425537 <span style="color:#8be9fd;font-style:italic">time</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen that testa and testb are running synchronously. Since testb only sleeps for 1 second, testb first outputs <code>Resuming b</code>, and finally returns the result of each coroutine function. Note that here is the gather() function After each coroutine function in it is executed, it will result in a list. The order of the values ​​in the list is the same as the order of the coroutines placed in the gather function.</p>
+<p>In addition to using <code>asyncio.gather</code> to execute coroutine functions, you can also use Task task objects</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    taska <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>ensure_future(testa(<span style="color:#bd93f9">1</span>))
+</span></span><span style="display:flex;"><span>    taskb <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>ensure_future(testb(<span style="color:#bd93f9">2</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taskb)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska<span style="color:#ff79c6">.</span>done(), taskb<span style="color:#ff79c6">.</span>done())
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> taskb
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> taska
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska<span style="color:#ff79c6">.</span>done(), taskb<span style="color:#ff79c6">.</span>done())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taskb<span style="color:#ff79c6">.</span>result())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska<span style="color:#ff79c6">.</span>result())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(main())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Use <code>asyncio.ensure_future(testa(1))</code> to return a task object. At this time, the task enters the pending state and is not executed. At this time, <code>print(taska)</code> gets <code>&lt;Task pending coro=&lt;testa() running at F :/python/python3Test/asynctest.py:7&gt;&gt;</code> For some time, taska.done() returns False, indicating that it is not over yet. When <code>await taska</code> is called, it means that the coroutine will be executed. After the execution ends, taska.done() returns True, then you can call taska.result() to get the return value of the function. If the result() method is called before the coroutine ends, an exception will be thrown, <code>raise InvalidStateError('Result is not ready .')</code>.</p>
+<p>In addition to using the <code>asyncio.ensure_future()</code> method to create a task object, you can also use the <code>loop.create_task()</code> method</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    taska <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(testa(<span style="color:#bd93f9">1</span>))
+</span></span><span style="display:flex;"><span>    taskb <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(testb(<span style="color:#bd93f9">2</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taskb)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska<span style="color:#ff79c6">.</span>done(), taskb<span style="color:#ff79c6">.</span>done())
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> taskb
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> taska
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska<span style="color:#ff79c6">.</span>done(), taskb<span style="color:#ff79c6">.</span>done())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taskb<span style="color:#ff79c6">.</span>result())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(taska<span style="color:#ff79c6">.</span>result())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(main())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The <code>asyncio.gather()</code> function has been used above to execute coroutine functions, and there is an <code>asyncio.wait()</code> function whose parameter is a list of coroutines.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    done, pending <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>wait([testa(<span style="color:#bd93f9">1</span>),testb(<span style="color:#bd93f9">2</span>)])
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">list</span>(done))
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">list</span>(pending))
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">list</span>(done)[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>result())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(main())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>asyncio.wait()</code> returns a tuple object, which contains a set of completed tasks and a set of unfinished tasks. The result of the above code is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">in</span> test b
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">in</span> test a
+</span></span><span style="display:flex;"><span>Resuming b
+</span></span><span style="display:flex;"><span>Resuming a
+</span></span><span style="display:flex;"><span>[<span style="color:#ff79c6">&lt;</span>Task finished coro<span style="color:#ff79c6">=&lt;</span>testa() done, defined at F:<span style="color:#ff79c6">/</span>python<span style="color:#ff79c6">/</span>python3Test<span style="color:#ff79c6">/</span>asynctest<span style="color:#ff79c6">.</span>py:<span style="color:#bd93f9">7</span><span style="color:#ff79c6">&gt;</span> result<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span><span style="color:#ff79c6">&gt;</span>, <span style="color:#ff79c6">&lt;</span>Task finished coro<span style="color:#ff79c6">=&lt;</span>testb() done, defined at F:<span style="color:#ff79c6">/</span>python<span style="color:#ff79c6">/</span> python3Test<span style="color:#ff79c6">/</span>asynctest<span style="color:#ff79c6">.</span>py:<span style="color:#bd93f9">14</span><span style="color:#ff79c6">&gt;</span> result<span style="color:#ff79c6">=</span><span style="color:#bd93f9">2</span><span style="color:#ff79c6">&gt;</span>]
+</span></span><span style="display:flex;"><span>[]
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>use <span style="color:#bd93f9">3.0003058910369873</span> time
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>What is the difference between using wait and gather?
+First of all, gather requires all tasks to be executed. If a coroutine function crashes, an exception will be thrown and there will be no result.
+wait can define the timing of the function&rsquo;s return, which can be FIRST_COMPLETED (the first to end), FIRST_EXCEPTION (the first to be abnormal), ALL_COMPLETED (all executed, the default)</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># coding:utf-8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">testa</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;in test a&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">3</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#bd93f9">1</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Resuming a&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">testb</span>(x):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;in test b&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#bd93f9">1</span><span style="color:#ff79c6">/</span><span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming b&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    done, pending <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>wait([testa(<span style="color:#bd93f9">1</span>),testb(<span style="color:#bd93f9">2</span>)],return_when<span style="color:#ff79c6">=</span>asyncio<span style="color:#ff79c6">.</span>tasks<span style="color:#ff79c6">.</span>FIRST_EXCEPTION)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">list</span>(done))
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">list</span>(pending))
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(main())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This code requires the result when the first exception occurs, the function as a whole will not crash, but it is an exception object if you want to get the result here.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in <span style="color:#8be9fd;font-style:italic">test</span> b
+</span></span><span style="display:flex;"><span>in <span style="color:#8be9fd;font-style:italic">test</span> a
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[</span>&lt;Task finished <span style="color:#8be9fd;font-style:italic">coro</span><span style="color:#ff79c6">=</span>&lt;testb<span style="color:#ff79c6">()</span> <span style="color:#ff79c6">done</span>, defined at F:/python/python3Test/asynctest.py:16&gt; <span style="color:#8be9fd;font-style:italic">exception</span><span style="color:#ff79c6">=</span>ZeroDivisionError<span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#39;division by zero&#39;</span>,<span style="color:#ff79c6">)</span>&gt;<span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[</span>&lt;Task pending <span style="color:#8be9fd;font-style:italic">coro</span><span style="color:#ff79c6">=</span>&lt;testa<span style="color:#ff79c6">()</span> running at F:/python/python3Test/asynctest.py:10&gt; <span style="color:#8be9fd;font-style:italic">wait_for</span><span style="color:#ff79c6">=</span>&lt;Future pending <span style="color:#8be9fd;font-style:italic">cb</span><span style="color:#ff79c6">=[</span>Task._wakeup<span style="color:#ff79c6">()]</span>&gt;&gt;<span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span>use 1.0000195503234863 <span style="color:#8be9fd;font-style:italic">time</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This article introduces some basic uses of asyncio, and then will do a more in-depth study of the Future and Task classes.</p>
+<p>Reference article
+[In-depth understanding of asyncio (1)] (
+<a href="https://mp.weixin.qq.com/s/kxWmO6Q_VYt749OhAoTEUA" title="https://mp.weixin.qq.com/s/kxWmO6Q_VYt749OhAoTEUA" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://mp.weixin.qq.com/s/kxWmO6Q_VYt749OhAoTEUA
+    <i class="fa fa-external-link-alt"></i>
+</a>)</p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Detailed explanation of the use of asyncio in python
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/asyncio_in_python.html" title="Detailed explanation of the use of asyncio in python">https://enblog.yangyanxing.com/article/asyncio_in_python.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/sync_in_asyncio.html" rel="next" title="Processing flow analysis in python asynchronous coroutine (1)">
+      <i class="fa fa-chevron-left"></i> Processing flow analysis in python asynchronous coroutine (1)
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/oop_in_python.html" rel="prev" title="The easy-to-ignore problem in object orientation in python">
+      The easy-to-ignore problem in object orientation in python
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

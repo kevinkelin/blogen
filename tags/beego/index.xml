@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>beego on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/beego.html</link>
+    <description>Recent content in beego on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 29 May 2021 15:29:57 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/beego/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Use beego to build the project homepage</title>
+      <link>https://enblog.yangyanxing.com/article/hello-page-with-beego.html</link>
+      <pubDate>Sat, 29 May 2021 15:29:57 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/hello-page-with-beego.html</guid>
+      <description>&lt;p&gt;I recently tried to use beego to initialize a project, and follow the documentation step by step.
+Since the first attempt to use golang to build
+Here I also record the problems and solutions I encountered during initialization.
+Since I am also a novice, the problems encountered may be relatively low-level, but this is also used as some basis for the future use of the framework.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

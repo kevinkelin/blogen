@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Using priority queues in python" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Using priority queues in python" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/priorityqueue_in_python.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-03-04 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-03-04 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Using priority queues in python - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#via-heapq-module">via heapq module</a></li>
+    <li><a href="#implemented-by-queue-priorityqueue-type">Implemented by Queue, PriorityQueue type</a></li>
+    <li><a href="#next-use-an-example-of-production-and-consumption-to-illustrate-the-use-of-priority-queues">Next, use an example of production and consumption to illustrate the use of priority queues</a></li>
+    <li><a href="#how-to-use-in-python3">How to use in python3</a></li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/priorityqueue_in_python.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Using priority queues in python">
+      <meta itemprop="description" content="I believe that everyone is familiar with the concept of queues. This first-in-first-out data structure is widely used, and queues are used in general production and consumption. For the introduction of queue usage, please refer to my previous article [Queue and Queue in Python] Multiprocessing (multiprocessing)](
+
+    https://www.yangyanxing.com/article/1103.html
+    
+) There is also a stack, which is a first-in, last-out data structure. The surface priority queue is different from ordinary queues and stacks. In terms of implementation, it generally passes the data structure of the heap, and the heap is actually a complete binary tree. It sorts the elements entering the container (according to the rules specified in advance), and the order of dequeuing will be the root of the binary tree. The element represented by the dot. Next, we introduce the implementation of several priority queues.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Using priority queues in python </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-03-04 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-03-04 00:00:00 &#43;0000 UTC">2019-03-04</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1548</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>8min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>I believe that everyone is familiar with the concept of queues. This first-in-first-out data structure is widely used, and queues are used in general production and consumption. For the introduction of queue usage, please refer to my previous article [Queue and Queue in Python] Multiprocessing (multiprocessing)](
+<a href="https://www.yangyanxing.com/article/1103.html" title="https://www.yangyanxing.com/article/1103.html" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://www.yangyanxing.com/article/1103.html
+    <i class="fa fa-external-link-alt"></i>
+</a>) There is also a stack, which is a first-in, last-out data structure. The surface priority queue is different from ordinary queues and stacks. In terms of implementation, it generally passes the data structure of the heap, and the heap is actually a complete binary tree. It sorts the elements entering the container (according to the rules specified in advance), and the order of dequeuing will be the root of the binary tree. The element represented by the dot. Next, we introduce the implementation of several priority queues.</p>
+<h1 id="via-heapq-module">via heapq module</h1>
+<p>heapq is an implementation of a binary heap, which uses the built-in list object internally, and its complexity is O(log n) whether inserting or obtaining the minimum element. Its <code>heappush</code> and <code>heappop</code> methods are mainly used here. The heappush method needs to pass in two parameters, one is a list, and the other is an object. The object here must be a comparable object, that is, it can pass cmp method to compare the size, the following is the code implementation in python2</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> heapq
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tasks <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(tasks,(<span style="color:#bd93f9">10</span>,<span style="color:#f1fa8c">&#39;aaa&#39;</span>))
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(tasks,(<span style="color:#bd93f9">40</span>,<span style="color:#f1fa8c">&#39;bbb&#39;</span>))
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(tasks,(<span style="color:#bd93f9">30</span>,<span style="color:#f1fa8c">&#39;ccc&#39;</span>))
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(tasks,(<span style="color:#bd93f9">20</span>,<span style="color:#f1fa8c">&#39;ddd&#39;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">while</span> tasks:
+</span></span><span style="display:flex;"><span>    task <span style="color:#ff79c6">=</span> heapq<span style="color:#ff79c6">.</span>heappop(tasks)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(task)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The running result is as follows</p>
+<pre tabindex="0"><code>(10, &#39;aaa&#39;)
+(20, &#39;ddd&#39;)
+(30, &#39;ccc&#39;)
+(40, &#39;bbb&#39;)
+</code></pre><p>As you can see, the element I put in the tasks list is a set object, and the first element of the object is a number of type int, if you use the cmp method to compare</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> cmp(<span style="color:#bd93f9">10</span>,<span style="color:#bd93f9">20</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> cmp(<span style="color:#bd93f9">10</span>,<span style="color:#bd93f9">10</span>)
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> cmp(<span style="color:#bd93f9">10</span>,<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>For less than, equal to, and greater than return -1, 0, 1, in fact, this is also the implementation method of defining <code>sorted</code>,</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#8be9fd;font-style:italic">sorted</span>([(<span style="color:#bd93f9">10</span>,<span style="color:#f1fa8c">&#39;aaaa&#39;</span>),(<span style="color:#bd93f9">30</span>,<span style="color:#f1fa8c">&#39;bbbb&#39;</span>)])
+</span></span><span style="display:flex;"><span>[(<span style="color:#bd93f9">10</span>, <span style="color:#f1fa8c">&#39;aaaa&#39;</span>), (<span style="color:#bd93f9">30</span>, <span style="color:#f1fa8c">&#39;bbbb&#39;</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#8be9fd;font-style:italic">sorted</span>([(<span style="color:#bd93f9">40</span>,<span style="color:#f1fa8c">&#39;aaaa&#39;</span>),(<span style="color:#bd93f9">30</span>,<span style="color:#f1fa8c">&#39;bbbb&#39;</span>)])
+</span></span><span style="display:flex;"><span>[(<span style="color:#bd93f9">30</span>, <span style="color:#f1fa8c">&#39;bbbb&#39;</span>), (<span style="color:#bd93f9">40</span>, <span style="color:#f1fa8c">&#39;aaaa&#39;</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#8be9fd;font-style:italic">sorted</span>([(<span style="color:#bd93f9">30</span>,<span style="color:#f1fa8c">&#39;aaaa&#39;</span>),(<span style="color:#bd93f9">30</span>,<span style="color:#f1fa8c">&#39;bbbb&#39;</span>)])
+</span></span><span style="display:flex;"><span>[(<span style="color:#bd93f9">30</span>, <span style="color:#f1fa8c">&#39;aaaa&#39;</span>), (<span style="color:#bd93f9">30</span>, <span style="color:#f1fa8c">&#39;bbbb&#39;</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#8be9fd;font-style:italic">sorted</span>([(<span style="color:#bd93f9">30</span>,<span style="color:#f1fa8c">&#39;bbbb&#39;</span>),(<span style="color:#bd93f9">30</span>,<span style="color:#f1fa8c">&#39;abbb&#39;</span>)])
+</span></span><span style="display:flex;"><span>[(<span style="color:#bd93f9">30</span>, <span style="color:#f1fa8c">&#39;abbb&#39;</span>), (<span style="color:#bd93f9">30</span>, <span style="color:#f1fa8c">&#39;bbbb&#39;</span>)]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen that in the <code>sorted</code> method, its sorting algorithm is to compare the size of the first element, the smaller one is first, the first element is the same and then the second element is compared, see the code before returning, heapq. After heappush adds the set elements to the list elements, it will reorder them, putting the smallest first, so the above print result is obtained.</p>
+<p>The above is the use of the set data structure that comes with python. Can you customize a type? In the implementation life, the first thing at work is to write for yourself what to do today, and what priorities are compared Gao is what to do first. In fact, the sorted method is also mentioned above. This method is actually calling the <code>__cmp__</code> method of the object. Well, I can define an object with the <code>__cmp__</code> method separately, which can be implemented in the priority queue. object sorting.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> heapq
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Implement priority queue using heapq</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#define a comparable object</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CompareAble</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, priority, jobname):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">=</span> priority
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>jobname <span style="color:#ff79c6">=</span> jobname
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__cmp__</span>(self, other):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">&lt;</span> other<span style="color:#ff79c6">.</span>priority:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">elif</span> self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">==</span> other<span style="color:#ff79c6">.</span>priority:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>joblist <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(joblist,CompareAble(<span style="color:#bd93f9">80</span>,<span style="color:#f1fa8c">&#39;eat&#39;</span>))
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(joblist,CompareAble(<span style="color:#bd93f9">70</span>,<span style="color:#f1fa8c">&#39;a write plan2&#39;</span>))
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(joblist,CompareAble(<span style="color:#bd93f9">70</span>,<span style="color:#f1fa8c">&#39;write plan&#39;</span>))
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(joblist,CompareAble(<span style="color:#bd93f9">90</span>,<span style="color:#f1fa8c">&#39;sleep&#39;</span>))
+</span></span><span style="display:flex;"><span>heapq<span style="color:#ff79c6">.</span>heappush(joblist,CompareAble(<span style="color:#bd93f9">100</span>,<span style="color:#f1fa8c">&#39;write code&#39;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">while</span> joblist:
+</span></span><span style="display:flex;"><span>    task <span style="color:#ff79c6">=</span> heapq<span style="color:#ff79c6">.</span>heappop(joblist)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(task<span style="color:#ff79c6">.</span>priority, task<span style="color:#ff79c6">.</span>jobname)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>operation result:</p>
+<pre tabindex="0"><code>(70, &#39;write plan&#39;)
+(70, &#39;a write plan2&#39;)
+(80, &#39;eat&#39;)
+(90, &#39;sleep&#39;)
+(100, &#39;write code&#39;)
+</code></pre><p>The above <code>compareAble</code> class initialization has two parameters, one is the priority, and the other is the name of the thing. What I define here is that the smaller the priority value, the higher the sorting, or the higher the value, the higher the priority. If the priorities are the same, they are sorted in insertion order.</p>
+<h1 id="implemented-by-queue-priorityqueue-type">Implemented by Queue, PriorityQueue type</h1>
+<p>This priority queue uses heapq internally. The difference is that the operation of PriorityQueue is synchronous, provides lock operations, supports concurrent producers and consumers, and its interface is more friendly. It inherits from Queue, so many Queue methods can be Use directly</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> heapq
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> queue <span style="color:#ff79c6">import</span> Queue,PriorityQueue
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Implement priority queue using heapq</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#define a comparable object</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CompareAble</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, priority, jobname):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">=</span> priority
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>jobname <span style="color:#ff79c6">=</span> jobname
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__cmp__</span>(self, other):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">&lt;</span> other<span style="color:#ff79c6">.</span>priority:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">elif</span> self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">==</span> other<span style="color:#ff79c6">.</span>priority:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pq <span style="color:#ff79c6">=</span> PriorityQueue()
+</span></span><span style="display:flex;"><span>pq<span style="color:#ff79c6">.</span>put(CompareAble(<span style="color:#bd93f9">80</span>,<span style="color:#f1fa8c">&#39;eat&#39;</span>))
+</span></span><span style="display:flex;"><span>pq<span style="color:#ff79c6">.</span>put(CompareAble(<span style="color:#bd93f9">70</span>,<span style="color:#f1fa8c">&#39;a write plan2&#39;</span>))
+</span></span><span style="display:flex;"><span>pq<span style="color:#ff79c6">.</span>put(CompareAble(<span style="color:#bd93f9">70</span>,<span style="color:#f1fa8c">&#39;write plan&#39;</span>))
+</span></span><span style="display:flex;"><span>pq<span style="color:#ff79c6">.</span>put(CompareAble(<span style="color:#bd93f9">90</span>,<span style="color:#f1fa8c">&#39;sleep&#39;</span>))
+</span></span><span style="display:flex;"><span>pq<span style="color:#ff79c6">.</span>put(CompareAble(<span style="color:#bd93f9">100</span>,<span style="color:#f1fa8c">&#39;write code&#39;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">while</span> pq<span style="color:#ff79c6">.</span>qsize()<span style="color:#ff79c6">!=</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>    task <span style="color:#ff79c6">=</span> pq<span style="color:#ff79c6">.</span>get_nowait()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(task<span style="color:#ff79c6">.</span>jobname, task<span style="color:#ff79c6">.</span>priority)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="next-use-an-example-of-production-and-consumption-to-illustrate-the-use-of-priority-queues">Next, use an example of production and consumption to illustrate the use of priority queues</h1>
+<p>There are three producers and two consumers. The producers produce tasks with priority in the queue, and the consumers also preferentially consume high-level tasks.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> queue <span style="color:#ff79c6">import</span> PriorityQueue
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> random
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Implement priority queue using heapq</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#define a comparable object</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CompareAble</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, priority, jobname):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">=</span> priority
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>jobname <span style="color:#ff79c6">=</span> jobname
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__cmp__</span>(self, other):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">&lt;</span> other<span style="color:#ff79c6">.</span>priority:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">elif</span> self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">==</span> other<span style="color:#ff79c6">.</span>priority:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tasks <span style="color:#ff79c6">=</span> [(i, <span style="color:#f1fa8c">&#34;do task </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>i) <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">10</span>,<span style="color:#bd93f9">100</span>,<span style="color:#bd93f9">5</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">produce</span>(pq,lock):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff79c6">.</span>acquire()
+</span></span><span style="display:flex;"><span>        task <span style="color:#ff79c6">=</span> tasks[random<span style="color:#ff79c6">.</span>randint(<span style="color:#bd93f9">0</span>,<span style="color:#8be9fd;font-style:italic">len</span>(tasks)<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>)]
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;put </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> in pq&#39;</span><span style="color:#ff79c6">%</span>(task[<span style="color:#bd93f9">0</span>],task[<span style="color:#bd93f9">1</span>]))
+</span></span><span style="display:flex;"><span>        pq<span style="color:#ff79c6">.</span>put(CompareAble(task[<span style="color:#bd93f9">0</span>],task[<span style="color:#bd93f9">1</span>]))
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff79c6">.</span>release()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">consumer</span>(pq,lock):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff79c6">.</span>acquire()
+</span></span><span style="display:flex;"><span>        task <span style="color:#ff79c6">=</span> pq<span style="color:#ff79c6">.</span>get_nowait()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> task:
+</span></span><span style="display:flex;"><span>            <span style="color:#8be9fd;font-style:italic">print</span>(task<span style="color:#ff79c6">.</span>priority, task<span style="color:#ff79c6">.</span>jobname)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff79c6">.</span>release()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    task_queue <span style="color:#ff79c6">=</span> PriorityQueue()
+</span></span><span style="display:flex;"><span>    task_lock <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Lock()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">3</span>):
+</span></span><span style="display:flex;"><span>        t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>produce,args<span style="color:#ff79c6">=</span>(task_queue,task_lock))
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>setDaemon(<span style="color:#ff79c6">False</span>)
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">2</span>):
+</span></span><span style="display:flex;"><span>        t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>consumer,args<span style="color:#ff79c6">=</span>(task_queue,task_lock))
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>setDaemon(<span style="color:#ff79c6">False</span>)
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>operation result:</p>
+<pre tabindex="0"><code>put 30 dotask 30 in pq
+put 20 do task 20 in pq
+put 75 do task 75 in pq
+(20, &#39;do task 20&#39;)
+(30, &#39;do task 30&#39;)
+put 20 do task 20 in pq
+put 15 do task 15 in pq
+put 70 do task 70 in pq
+(15, &#39;do task 15&#39;)
+(20, &#39;do task 20&#39;)
+put 85 do task 85 in pq
+put 10 do task 10 in pq
+put 30 do task 30 in pq
+(10, &#39;do task 10&#39;)
+(30, &#39;do task 30&#39;)
+put 70 do task 70 in pq
+put 10 do task 10 in pq
+put 55 do task 55 in pq
+(10, &#39;do task 10&#39;)
+(55, &#39;do task 55&#39;)
+put 20 do task 20 in pq
+put 45 do task 45 in pq
+put 75 do task 75 in pq
+(20, &#39;do task 20&#39;)
+(45, &#39;do task 45&#39;)
+put 40 do task 40 in pq
+put 40 do task 40 in pq
+...
+</code></pre><p>It can be seen that each time it is taken out is the smallest number of <code>priority</code> in the current queue</p>
+<h1 id="how-to-use-in-python3">How to use in python3</h1>
+<p>The above code cannot be run in python3, mainly because python3 does not have a <code>cmp</code> method, and the exception information obtained by running is</p>
+<pre tabindex="0"><code>TypeError: unorderable types: CompareAble() &lt; CompareAble()
+</code></pre><p>There is no <code>&lt;</code> operation</p>
+<p>Need to define a <code>__lt__</code> method above</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> queue <span style="color:#ff79c6">import</span> PriorityQueue
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> random
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Implement priority queue using heapq</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#define a comparable object</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CompareAble</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, priority, jobname):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">=</span> priority
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>jobname <span style="color:#ff79c6">=</span> jobname
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># def __cmp__(self, other):</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># if self.priority &lt; other.priority:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># return -1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># elif self.priority == other.priority:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># return 0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># else:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># return 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __lt__(self, other):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>priority <span style="color:#ff79c6">&lt;=</span> other<span style="color:#ff79c6">.</span>priority:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tasks <span style="color:#ff79c6">=</span> [(i, <span style="color:#f1fa8c">&#34;do task </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>i) <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">10</span>,<span style="color:#bd93f9">100</span>,<span style="color:#bd93f9">5</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">produce</span>(pq,lock):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff79c6">.</span>acquire()
+</span></span><span style="display:flex;"><span>        task <span style="color:#ff79c6">=</span> tasks[random<span style="color:#ff79c6">.</span>randint(<span style="color:#bd93f9">0</span>,<span style="color:#8be9fd;font-style:italic">len</span>(tasks)<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>)]
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;put </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> in pq&#39;</span><span style="color:#ff79c6">%</span>(task[<span style="color:#bd93f9">0</span>],task[<span style="color:#bd93f9">1</span>]))
+</span></span><span style="display:flex;"><span>        pq<span style="color:#ff79c6">.</span>put(CompareAble(task[<span style="color:#bd93f9">0</span>],task[<span style="color:#bd93f9">1</span>]))
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff79c6">.</span>release()
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">consumer</span>(pq,lock):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        lock<span style="color:#ff79c6">.</span>acquire()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> pq<span style="color:#ff79c6">.</span>empty():
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">continue</span>
+</span></span><span style="display:flex;"><span>            task <span style="color:#ff79c6">=</span> pq<span style="color:#ff79c6">.</span>get_nowait()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> task:
+</span></span><span style="display:flex;"><span>                <span style="color:#8be9fd;font-style:italic">print</span>(task<span style="color:#ff79c6">.</span>priority, task<span style="color:#ff79c6">.</span>jobname)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">finally</span>:
+</span></span><span style="display:flex;"><span>            lock<span style="color:#ff79c6">.</span>release()
+</span></span><span style="display:flex;"><span>            time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    task_queue <span style="color:#ff79c6">=</span> PriorityQueue()
+</span></span><span style="display:flex;"><span>    task_lock <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Lock()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">3</span>):
+</span></span><span style="display:flex;"><span>        t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>produce,args<span style="color:#ff79c6">=</span>(task_queue,task_lock))
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>setDaemon(<span style="color:#ff79c6">False</span>)
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">2</span>):
+</span></span><span style="display:flex;"><span>        t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>consumer,args<span style="color:#ff79c6">=</span>(task_queue,task_lock))
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>setDaemon(<span style="color:#ff79c6">False</span>)
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above code I modified a little bit about the size judgment, which is the opposite of the previous one. Here, the larger the priority, the earlier the return. The above code can also be run in python2, so if you can choose to define and use <code>__lt__</code> for compatibility method.</p>
+<p>Reference article
+
+<a href="https://python.freelycode.com/contribution/detail/806" title="3 Ways to Implement Priority Queues in Python" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    3 Ways to Implement Priority Queues in Python
+    <i class="fa fa-external-link-alt"></i>
+</a>
+
+<a href="https://blog.csdn.net/xiecj_2006/article/details/42464681" title="python&amp;rsquo;s priority queue example" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    python&rsquo;s priority queue example
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Using priority queues in python
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/priorityqueue_in_python.html" title="Using priority queues in python">https://enblog.yangyanxing.com/article/priorityqueue_in_python.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/charset_in_python3.html" rel="next" title="Character encoding problem in python3">
+      <i class="fa fa-chevron-left"></i> Character encoding problem in python3
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/python_generate_password_hash.html" rel="prev" title="Encrypt password with salted hash function in python">
+      Encrypt password with salted hash function in python
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

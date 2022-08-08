@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="The easy-to-ignore problem in object orientation in python" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="The easy-to-ignore problem in object orientation in python" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/oop_in_python.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-03-30 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-03-30 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>The easy-to-ignore problem in object orientation in python - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#classes-and-instances">classes and instances</a>
+      <ul>
+        <li><a href="#first-class-access-restrictions">First, class access restrictions</a></li>
+        <li><a href="#2-inheritance">2. Inheritance</a>
+          <ul>
+            <li><a href="#21-displayed-calling-the-constructor-of-the-parent-class">2.1 Displayed calling the constructor of the parent class</a></li>
+            <li><a href="#22-inheritance-of-private-variables-and-methods">2.2 Inheritance of private variables and methods</a></li>
+            <li><a href="#23-multiple-inheritance">2.3 Multiple inheritance</a></li>
+            <li><a href="#24-method-duplication-in-multiple-inheritance">2.4 Method duplication in multiple inheritance</a></li>
+          </ul>
+        </li>
+        <li><a href="#three-polymorphism">Three, polymorphism</a>
+          <ul>
+            <li><a href="#31-types-of-instances">3.1 Types of instances</a></li>
+            <li><a href="#32-method-overloading">3.2 Method overloading</a></li>
+            <li><a href="#33-implementing-polymorphism">3.3 Implementing polymorphism</a></li>
+          </ul>
+        </li>
+        <li><a href="#four-classic-class-and-new-class">Four, classic class and new class</a></li>
+        <li><a href="#five-super-class">Five, super class</a></li>
+        <li><a href="#six-what-is-self">Six. What is self?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/oop_in_python.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="The easy-to-ignore problem in object orientation in python">
+      <meta itemprop="description" content="As an object-oriented language, if you cannot use its object-oriented features well in actual work, you will never be able to comprehend the essence of the language. In the following article, I will try my best to introduce it from the basics to the in-depth introduction. Object-oriented content, the content is long, and some basic ones can be selectively watched.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">The easy-to-ignore problem in object orientation in python </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-03-30 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-03-30 00:00:00 &#43;0000 UTC">2019-03-30</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>2770</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>14min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>As an object-oriented language, if you cannot use its object-oriented features well in actual work, you will never be able to comprehend the essence of the language. In the following article, I will try my best to introduce it from the basics to the in-depth introduction. Object-oriented content, the content is long, and some basic ones can be selectively watched.</p>
+<h1 id="classes-and-instances">classes and instances</h1>
+<p>Class (Class) and instance (Instance), a class is an abstract template, such as humans, birds, and an instance is a real object.
+Simply write a class, the class is defined using the <code>class</code> keyword</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Person</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#f1fa8c">&#34;Person can run&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> Person()
+</span></span><span style="display:flex;"><span>p<span style="color:#ff79c6">.</span>run()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># output: Person can run</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Very simple class definition, defines a human and defines a <code>run</code> method, then initializes an object p, and calls the run method of this class. When the object of the instance class, add () after the class name. If the <code>__ini__</code> method of the class has no parameters, there is no need to pass parameters when the instance object is used. If the <code>__init__</code> method has parameters, then in the instance There are also parameters.</p>
+<p>Note that there are two underscores before and after the <code>__init__</code> method init.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Person</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>age <span style="color:#ff79c6">=</span> age
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>sex <span style="color:#ff79c6">=</span> sex
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#f1fa8c">&#34;Person can run&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> Persion(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>,<span style="color:#bd93f9">31</span>)
+</span></span><span style="display:flex;"><span>p<span style="color:#ff79c6">.</span>run()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="first-class-access-restrictions">First, class access restrictions</h2>
+<p>The methods and properties in the class, but some methods and properties do not want to be accessed directly from the outside, then you need to add two underscores in front of the properties</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Person</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__age <span style="color:#ff79c6">=</span> age
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__sex <span style="color:#ff79c6">=</span> sex
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#f1fa8c">&#34;Person can run&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;name:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,age:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,sex:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>(self<span style="color:#ff79c6">.</span>__name,self<span style="color:#ff79c6">.</span>__age,self<span style="color:#ff79c6">.</span>__sex))
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> Persion(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>,<span style="color:#bd93f9">31</span>)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> p<span style="color:#ff79c6">.</span>__name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#output AttributeError: Persion instance has no attribute &#39;__name&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The result is that Persion instances do not have a __name attribute.
+How to get it? You can write a method to access it in the class, just like the <code>showInfo()</code> above can be accessed in this class method.</p>
+<p>Note: Private properties start with two underscores but <strong>not</strong> end with two underscores, that is to say <code>__name</code> is a private property, but <code>__name__</code> is a public property, usually starts with a double underscore and ends with a double underscore The properties of are special variables.</p>
+<p>The rules and properties of class methods are the same. Those starting with a double underscore and not ending with a double underscore are private methods and cannot be called directly through an instance.</p>
+<h2 id="2-inheritance">2. Inheritance</h2>
+<p>In OOP programming, when we define a class, we can inherit from an existing class, the new class is called a subclass, and the inherited class is called a base class, parent class or superclass (Base class, Super class). The subclass inherits the method from the parent class. Note that it does not necessarily inherit the properties of the parent class. The inheritance statement here is not accurate. First, dig a hole here, and then fill it in when we talk about self. A Person class is defined above, and a Student class is defined below, which inherits from Persion</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Person</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__age <span style="color:#ff79c6">=</span> age
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__sex <span style="color:#ff79c6">=</span> sex
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#f1fa8c">&#34;Person can run&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Person class name:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,age:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,sex:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>(self<span style="color:#ff79c6">.</span>__name,self<span style="color:#ff79c6">.</span>__age,self<span style="color:#ff79c6">.</span>__sex))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Student</span>(Persion):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,grade,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        Persion<span style="color:#ff79c6">.</span>__init__(self,name,age,sex)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>grade<span style="color:#ff79c6">=</span>grade
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo2</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Student class:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>self<span style="color:#ff79c6">.</span>name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>s <span style="color:#ff79c6">=</span> Student(<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#bd93f9">32</span>,<span style="color:#f1fa8c">&#39;Junior&#39;</span>)
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">.</span>showInfo()
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">.</span>showInfo2()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#output</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Person class name:yang,age:32,sex:M</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Student class: yang</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, the subclass inherits the <code>showInfo()</code> method of the parent class and has its own <code>showInfo2()</code> method.</p>
+<h3 id="21-displayed-calling-the-constructor-of-the-parent-class">2.1 Displayed calling the constructor of the parent class</h3>
+<p>The <code>__ini__</code> method of the subclass needs to explicitly call the <code>__init__</code> method of the parent class, of course, it can not be called, but the attributes defined in the parent class are not available in the subclass</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Person</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>age <span style="color:#ff79c6">=</span> age
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>sex <span style="color:#ff79c6">=</span> sex
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> self<span style="color:#ff79c6">.</span>name
+</span></span><span style="display:flex;"><span>       
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo2</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#f1fa8c">&#39;xxxxx&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Student</span>(Persion):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,grade,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># Persion.__init__(self,name,age,sex)</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>grade<span style="color:#ff79c6">=</span>grade
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>s <span style="color:#ff79c6">=</span> Student(<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#bd93f9">32</span>,<span style="color:#f1fa8c">&#39;Junior&#39;</span>)
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">.</span>showInfo2()
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">.</span>showInfo()
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> s<span style="color:#ff79c6">.</span>name
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>operation result</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>xxxxx
+</span></span><span style="display:flex;"><span>Traceback (most recent call last):
+</span></span><span style="display:flex;"><span>  File <span style="color:#f1fa8c">&#34;ooptest.py&#34;</span>, line <span style="color:#bd93f9">23</span>, <span style="color:#ff79c6">in</span> <span style="color:#ff79c6">&lt;</span>module<span style="color:#ff79c6">&gt;</span>
+</span></span><span style="display:flex;"><span>    s<span style="color:#ff79c6">.</span>showInfo()
+</span></span><span style="display:flex;"><span>  File <span style="color:#f1fa8c">&#34;ooptest.py&#34;</span>, line <span style="color:#bd93f9">9</span>, <span style="color:#ff79c6">in</span> showInfo
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span> self<span style="color:#ff79c6">.</span>name
+</span></span><span style="display:flex;"><span>AttributeError: Student instance has no attribute <span style="color:#f1fa8c">&#39;name&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After commenting out the initialization method of the parent class in the subclass, when the showInfo2() method is called, because it inherits the showInfo2 in the parent class, it just prints &lsquo;xxxxx&rsquo;, no error will be reported here, but when the showInfo() method is called , self.name needs to be printed in the parent class. At this time, since the parent class is not initialized, there is no assignment to self.name at all, so an error will be reported here.</p>
+<h3 id="22-inheritance-of-private-variables-and-methods">2.2 Inheritance of private variables and methods</h3>
+<p>Private methods and attributes cannot be inherited, such as the __name attribute in the Persion class above, if you want to use it in a subclass, an error will be reported.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo2</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Student class:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>self<span style="color:#ff79c6">.</span>__name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#output AttributeError: Student instance has no attribute &#39;_Student__name&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="23-multiple-inheritance">2.3 Multiple inheritance</h3>
+<p>Python supports multiple inheritance, that is, a class can inherit from multiple classes, but this will cause a problem. For example, there is a class A, which has a test method, and B inherits from A but overrides the test() method. , C also inherits from A, and also rewrites the test method, D inherits from B and C, but it does not have its own test method, and now calls the test method of the D object, then whose test method should it call? This is to distinguish between python2 and python3, their running results are different</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">A</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;A test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">B</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">C</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;C test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">D</span>(B,C):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>d <span style="color:#ff79c6">=</span> D()
+</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>test()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The result of running the above code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>python2 A <span style="color:#8be9fd;font-style:italic">test</span>
+</span></span><span style="display:flex;"><span>python3 C <span style="color:#8be9fd;font-style:italic">test</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But if class A is inherited from the <code>object</code> class, the results of python2 and python3 are the same</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">A</span>(<span style="color:#8be9fd;font-style:italic">object</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;A test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">B</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">C</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;C test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">D</span>(B,C):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>d <span style="color:#ff79c6">=</span> D()
+</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>test()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#output</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#python2 C test</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#python3 C test</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It&rsquo;s a bit messy, don&rsquo;t worry, this is related to the new class and the classic class, which will be explained in detail later. However, multiple inheritance is rarely used, so everyone can understand it.</p>
+<h3 id="24-method-duplication-in-multiple-inheritance">2.4 Method duplication in multiple inheritance</h3>
+<p>If a class (such as class C) inherits from multiple classes (such as A, B), and there are test methods in both classes A and B, how should class C inherit the test method? Don&rsquo;t worry, just like the above problem, everyone will understand after talking about classic classes and new-style classes.</p>
+<h2 id="three-polymorphism">Three, polymorphism</h2>
+<p>Since python is a weakly typed language, it can&rsquo;t implement the parent class reference in java to point to the subclass object very well, but python can also simulate and implement polymorphism similar to java.</p>
+<h3 id="31-types-of-instances">3.1 Types of instances</h3>
+<p>The <code>isinstance()</code> function can be used to determine whether an object is an instance of a class</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#ff79c6">=</span> Student(<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#bd93f9">32</span>,<span style="color:#f1fa8c">&#39;Junior&#39;</span>)
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> Persion(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>,<span style="color:#bd93f9">32</span>)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(s,Student)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(s,Persion)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(p,Persion)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(p,Student)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>result</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>false
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen that s is both a Student instance and a Persion instance, but p is just a Persion instance, not a Student instance. This is also easy to understand. If someone is a student, he must be an individual, but if someone is a student man, then he is not necessarily a student.</p>
+<h3 id="32-method-overloading">3.2 Method overloading</h3>
+<p>Subclasses can override methods of superclasses, which can make some adjustments based on the behavior of subclasses</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Person</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__age <span style="color:#ff79c6">=</span> age
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>__sex <span style="color:#ff79c6">=</span> sex
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#f1fa8c">&#34;Person can run&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Person class name:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,age:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,sex:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>(self<span style="color:#ff79c6">.</span>__name,self<span style="color:#ff79c6">.</span>__age,self<span style="color:#ff79c6">.</span>__sex))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__showInfo</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Person class Private name:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,age:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">,sex:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>(self<span style="color:#ff79c6">.</span>__name,self<span style="color:#ff79c6">.</span>__age,self<span style="color:#ff79c6">.</span>__sex))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Student</span>(Persion):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,grade,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        Persion<span style="color:#ff79c6">.</span>__init__(self,name,age,sex)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>grade<span style="color:#ff79c6">=</span>grade
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Student class:</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>self<span style="color:#ff79c6">.</span>name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>s <span style="color:#ff79c6">=</span> Student(<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#bd93f9">32</span>,<span style="color:#f1fa8c">&#39;Junior&#39;</span>)
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> Persion(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>,<span style="color:#bd93f9">32</span>)
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">.</span>showInfo()
+</span></span><span style="display:flex;"><span>p<span style="color:#ff79c6">.</span>showInfo()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>operation result</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Student class: yang
+</span></span><span style="display:flex;"><span>Person <span style="color:#ff79c6">class</span> <span style="color:#50fa7b">name</span>:yangyanxing,age:<span style="color:#bd93f9">32</span>,sex:M
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="33-implementing-polymorphism">3.3 Implementing polymorphism</h3>
+<p>As mentioned above, if the type of an object is both the class to which it belongs and the parent class of the class, then you can write a function whose parameter is a parent class, then when passing parameters, you can pass this Parent class object, you can also pass subclass object</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>s <span style="color:#ff79c6">=</span> Student(<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#bd93f9">32</span>,<span style="color:#f1fa8c">&#39;Junior&#39;</span>)
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> Persion(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>,<span style="color:#bd93f9">32</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showDetail</span>(Persion):
+</span></span><span style="display:flex;"><span>    Persion<span style="color:#ff79c6">.</span>showInfo()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>showDetail(s)
+</span></span><span style="display:flex;"><span>showDetail(p)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>There is not much advantage to look at it this way. Your s and p objects themselves have the <code>showInfo()</code> method, which can be called, but if I write another Teacher class now, but I don&rsquo;t implement his showInfo method, will I get an error if I call the showDetail function again?</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Teacher</span>(Persion):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,name,age,tech,sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;F&#39;</span>):
+</span></span><span style="display:flex;"><span>        Persion<span style="color:#ff79c6">.</span>__init__(self,name,age,sex)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>tech <span style="color:#ff79c6">=</span> tech
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>s <span style="color:#ff79c6">=</span> Student(<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#bd93f9">32</span>,<span style="color:#f1fa8c">&#39;Junior&#39;</span>)
+</span></span><span style="display:flex;"><span>p <span style="color:#ff79c6">=</span> Persion(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>,<span style="color:#bd93f9">32</span>)
+</span></span><span style="display:flex;"><span>t <span style="color:#ff79c6">=</span> Teacher(<span style="color:#f1fa8c">&#34;fan&#34;</span>,<span style="color:#bd93f9">24</span>,<span style="color:#f1fa8c">&#39;PE&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showDetail</span>(Persion):
+</span></span><span style="display:flex;"><span>    Persion<span style="color:#ff79c6">.</span>showInfo()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>showDetail(s)
+</span></span><span style="display:flex;"><span>showDetail(p)
+</span></span><span style="display:flex;"><span>showDetail(t)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>operation result:</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Student class: yang
+</span></span><span style="display:flex;"><span>Person <span style="color:#ff79c6">class</span> <span style="color:#50fa7b">name</span>:yangyanxing,age:<span style="color:#bd93f9">32</span>,sex:M
+</span></span><span style="display:flex;"><span>Person <span style="color:#ff79c6">class</span> <span style="color:#50fa7b">name</span>:fan,age:<span style="color:#bd93f9">24</span>,sex:F
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The result will not report an error. When the <code>showDetail()</code> function is called and a Teacher object is passed in, since this object does not have its own showInfo method, but it inherits the showInfo method from the parent class, it will also be called here. The showInfo function of the parent class.</p>
+<h2 id="four-classic-class-and-new-class">Four, classic class and new class</h2>
+<p>When talking about multiple inheritance above, I mentioned that there are two problems that will be understood after reading the classic classes and new-style classes. I will explain in detail here. Don&rsquo;t be fooled by the name. There is nothing special, that is, in python2, When a class does not inherit the task class, the above Person class is used. It is a classic class. If a class inherits from &ldquo;object&rdquo;, it is a new-style class. In python3, it is a new-style class by default, that is, both It is inherited from object. In general, the difference is not big, but in the case of multiple inheritance, there are some differences when searching for class attributes and methods. Please see the following code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>classA():
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">save</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;This is from A&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">B</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">C</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">save</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;This is from C&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">D</span>(B,C):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>fun <span style="color:#ff79c6">=</span> D()
+</span></span><span style="display:flex;"><span>fun<span style="color:#ff79c6">.</span>save()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The result of the above code running on python2 and python3 is
+<img src="/image/p2p3.png" alt="The difference between python2 and python3"></p>
+<p>That is to say, on the classic class (old-fashioned class or called the old class), the properties or methods of the search class are depth-first, that is, search from the bottom to the top. In the classic class, when calling fun.save() , first search from the class D, and find that it does not have a save method, then search from the B class it inherits, and neither does it in B, then search from B&rsquo;s parent class A, which has a save method, Then stop the search and call the save method of class A.
+The search order for new-style classes, new-style classes have an <code>mro()</code> method that displays the search order
+Calling <code>D.mro()</code> shows</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[<span style="color:#ff79c6">&lt;</span><span style="color:#ff79c6">class</span> &#39;<span style="color:#50fa7b">__main__</span><span style="color:#ff79c6">.</span>D<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span><span style="color:#f1fa8c">B</span><span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span>C<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span>A<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span><span style="color:#8be9fd;font-style:italic">object</span><span style="color:#f1fa8c">&#39;&gt;]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Its search order is D, B, C, A. Since class C has a save method, the save method of class C is called directly to stop the search.</p>
+<h2 id="five-super-class">Five, super class</h2>
+<p>super is a class that needs to be used when a subclass wants to call a method of the superclass.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Person</span>(<span style="color:#8be9fd;font-style:italic">object</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, name, age, sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>age <span style="color:#ff79c6">=</span> age
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>sex <span style="color:#ff79c6">=</span> sex
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>name <span style="color:#ff79c6">=</span> name
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(self<span style="color:#ff79c6">.</span>name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo2</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;parent fun&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Student</span>(Persion):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, name, age, grade, sex<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;M&#39;</span>):
+</span></span><span style="display:flex;"><span>        Persion<span style="color:#ff79c6">.</span>__init__(self,name,age,sex)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>grade <span style="color:#ff79c6">=</span> grade
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">showInfo2</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">super</span>(Student, self)<span style="color:#ff79c6">.</span>showInfo2()
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">super</span>(Student, self)<span style="color:#ff79c6">.</span>showInfo()
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;child fun&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>s <span style="color:#ff79c6">=</span> Student(<span style="color:#f1fa8c">&#34;yang&#34;</span>,<span style="color:#bd93f9">32</span>,<span style="color:#f1fa8c">&#39;Junior&#39;</span>)
+</span></span><span style="display:flex;"><span>s<span style="color:#ff79c6">.</span>showInfo2()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#output</span>
+</span></span><span style="display:flex;"><span>parent fun
+</span></span><span style="display:flex;"><span>yang
+</span></span><span style="display:flex;"><span>child fun
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that if you want to use the super class, it generally has two parameters, the first parameter is a class name, the second parameter is an instance (or a class), if the second parameter is an instance (such as self here) , you can understand that sefl is an instance) needs to satisfy <code>isinstance(obj, type) == True</code>, if the second parameter is also a class name, then it needs to satisfy <code>issubclass(type2, type) == True</code>, That is, if the second class is a subclass of the first class, what does super do later? super contains two very important pieces of information: an MRO (Method Resolution Order) list and a class in the MRO. It was introduced above that the new-style class has a <code>mro()</code> method. Calling the mro method of a class will display the search order of methods and properties, such as
+Calling <code>D.mro()</code> shows</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[<span style="color:#ff79c6">&lt;</span><span style="color:#ff79c6">class</span> &#39;<span style="color:#50fa7b">__main__</span><span style="color:#ff79c6">.</span>D<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span><span style="color:#f1fa8c">B</span><span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span>C<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span>A<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span><span style="color:#8be9fd;font-style:italic">object</span><span style="color:#f1fa8c">&#39;&gt;]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When a class is initialized with super, the corresponding method will be searched in the following classes. For example, the mro list of a certain class is
+[A, B, C, D, E, object], when the super class is initialized with super(C,self), this mro will only be searched from the classes after C, such as calling <code>super(C,self) .test()</code> method, it will only find out whether there is a test() method from the D, E, object classes, which also implements the method of calling the parent class. see the code below</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">A</span>(<span style="color:#8be9fd;font-style:italic">object</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>n <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;A test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">B</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;B test&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">C</span>(B):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;C test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">D</span>(C):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">super</span>(D,self)<span style="color:#ff79c6">.</span>test()
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">super</span>(C, self)<span style="color:#ff79c6">.</span>test()
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">super</span>(B, self)<span style="color:#ff79c6">.</span>test()
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;D test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(D<span style="color:#ff79c6">.</span>mro())
+</span></span><span style="display:flex;"><span>d <span style="color:#ff79c6">=</span> D()
+</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>test()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#output</span>
+</span></span><span style="display:flex;"><span>[<span style="color:#ff79c6">&lt;</span><span style="color:#ff79c6">class</span> &#39;<span style="color:#50fa7b">__main__</span><span style="color:#ff79c6">.</span>D<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span>C<span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span><span style="color:#f1fa8c">B</span><span style="color:#f1fa8c">&#39;&gt;, &lt;class &#39;</span>__main__<span style="color:#ff79c6">.</span>A<span style="color:#f1fa8c">&#39;&gt;, &lt;type &#39;</span><span style="color:#8be9fd;font-style:italic">object</span><span style="color:#f1fa8c">&#39;&gt;]</span>
+</span></span><span style="display:flex;"><span>C test
+</span></span><span style="display:flex;"><span>B test
+</span></span><span style="display:flex;"><span>A test
+</span></span><span style="display:flex;"><span>D test
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The D.mro() method displays the list as [D,C,B,A,object] (abbreviated), and when <code>super(D,self).test()</code> is used, it is the first one after querying the D class The class with the test() method has the test method in the C class, so the test method of the C class is called here, and the following is similar.
+Note that <strong>the top class here should display the inherited object class, that is, the new-style class</strong>.</p>
+<h2 id="six-what-is-self">Six. What is self?</h2>
+<p>It was mentioned above that a hole was dug. Fill it here. What exactly is <code>self</code>? see the following code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">A</span>(<span style="color:#8be9fd;font-style:italic">object</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>n <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;A test&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">B</span>(A):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,n):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>n <span style="color:#ff79c6">=</span> n
+</span></span><span style="display:flex;"><span>        A<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#ff79c6">=</span> B(<span style="color:#bd93f9">10</span>)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> b<span style="color:#ff79c6">.</span>n
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The result is that <code>2</code> is not 10. Here self is actually an object instance. Although it is in the parent class, self here is actually an object of the subclass.</p>
+<p>I have talked a lot about object-oriented here. Some things are not necessarily used when coding, but there will be some inexplicable bugs. When you understand object-oriented better, you may find the reason better.</p>
+<p>Reference article
+
+<a href="https://www.zhihu.com/question/22475395" title="The difference between python new-style classes and classic classes? " rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    The difference between python new-style classes and classic classes? 
+    <i class="fa fa-external-link-alt"></i>
+</a>
+
+<a href="https://www.cnblogs.com/blackmatrix/p/5630515.html" title="The difference between Python new-style classes and classic classes" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    The difference between Python new-style classes and classic classes
+    <i class="fa fa-external-link-alt"></i>
+</a>
+
+<a href="https://mozillazg.com/2016/12/python-super-is-not-as-simple-as-you-thought.html" title="Python: super is not so simple" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Python: super is not so simple
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      The easy-to-ignore problem in object orientation in python
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/oop_in_python.html" title="The easy-to-ignore problem in object orientation in python">https://enblog.yangyanxing.com/article/oop_in_python.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/asyncio_in_python.html" rel="next" title="Detailed explanation of the use of asyncio in python">
+      <i class="fa fa-chevron-left"></i> Detailed explanation of the use of asyncio in python
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/fractional_in_python.html" rel="prev" title="Using step-by-step process computing in python">
+      Using step-by-step process computing in python
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

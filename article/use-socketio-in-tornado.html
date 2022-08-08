@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Tornado integrates socketio (1)" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Tornado integrates socketio (1)" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/use-socketio-in-tornado.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2021-05-18 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2021-05-18 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Tornado integrates socketio (1) - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-introduction-to-socketio">1. Introduction to socketio</a></li>
+        <li><a href="#2-introduction-to-python-socketio">2. Introduction to python-socketio</a></li>
+        <li><a href="#third-the-construction-of-tornado">Third, the construction of Tornado</a></li>
+        <li><a href="#fourth-add-python-socketio">Fourth, add python-socketio</a></li>
+        <li><a href="#five-define-the-event-handler-function">Five, define the event handler function</a></li>
+        <li><a href="#six-use-the-client-to-connect">Six, use the client to connect</a></li>
+        <li><a href="#seven-define-client-events">Seven, define client events</a></li>
+        <li><a href="#eight-the-client-sends-custom-events">Eight, the client sends custom events</a></li>
+        <li><a href="#nine-the-server-sends-events-to-the-client">Nine, the server sends events to the client</a></li>
+        <li><a href="#ten-automatic-reconnection">Ten, automatic reconnection</a></li>
+        <li><a href="#refer-to">refer to</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/use-socketio-in-tornado.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Tornado integrates socketio (1)">
+      <meta itemprop="description" content="In the project I am working on recently, I need to send the video stream or audio stream from the mobile phone to the server, and then the server will forward it to the browser. At first, I used redis as a relay to send the data to redis, and then the redis server Publish and subscribe function, the overall structure is as follows
+
+It mainly uses the pub/sub function of redis. There is no problem with this solution, but the overall performance bottleneck is affected by redis.
+I recently came into contact with socketio and found that this requirement can be achieved by using it, but I found some information on the Internet. In the use of python, it is mainly flask-socketio and native applications. Since the current project uses Tornado to build, I use it. Fusion of socketio and Tornado for a few days.
+This tutorial will be introduced in several parts, mainly the following chapters
+
+Introduction to socketio and the construction of scaffolding
+Define message processing events
+Use of namespaces
+Message release and response
+Use of room
+Use socketio in front-end vue to communicate with back-end
+">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Tornado integrates socketio (1) </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-05-18 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2021-05-18 00:00:00 &#43;0000 UTC">2021-05-18</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1878</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>9min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In the project I am working on recently, I need to send the video stream or audio stream from the mobile phone to the server, and then the server will forward it to the browser. At first, I used redis as a relay to send the data to redis, and then the redis server Publish and subscribe function, the overall structure is as follows</p>
+<p><img src="https://yyxbloguse.oss-cn-beijing.aliyuncs.com/img/image-20210519225715299.png" alt="image-20210519225715299"></p>
+<p>It mainly uses the pub/sub function of redis. There is no problem with this solution, but the overall performance bottleneck is affected by redis.</p>
+<p>I recently came into contact with socketio and found that this requirement can be achieved by using it, but I found some information on the Internet. In the use of python, it is mainly flask-socketio and native applications. Since the current project uses Tornado to build, I use it. Fusion of socketio and Tornado for a few days.</p>
+<p>This tutorial will be introduced in several parts, mainly the following chapters</p>
+<ol>
+<li>Introduction to socketio and the construction of scaffolding</li>
+<li>Define message processing events</li>
+<li>Use of namespaces</li>
+<li>Message release and response</li>
+<li>Use of room</li>
+<li>Use socketio in front-end vue to communicate with back-end</li>
+</ol>
+<h2 id="1-introduction-to-socketio">1. Introduction to socketio</h2>
+<p>Socket.IO supports real-time, bidirectional, and event-based communication. It runs on any platform, browser or device with the same reliability and speed. It is compatible with websocket, and on devices that do not support websocket, a lower-level long-link protocol will be used</p>
+<p>Socket.io is a WebSocket library, including client-side js and server-side nodejs, its goal is to build real-time applications that can be used on different browsers and mobile devices. It will automatically select the best method from WebSocket, AJAX long polling, Iframe streaming, etc. according to the browser to realize network real-time application, which is very convenient and user-friendly, and supports browsers up to IE5.5 at least</p>
+<p>socket.io features</p>
+<ul>
+<li>Real-time analytics: push data to clients, which are represented as real-time counters, graphs or log clients.</li>
+<li>Real-time communication and chat: A Socket.IO &ldquo;Hello, World&rdquo; chat application can be written in just a few lines of code.</li>
+<li>Binary streaming: Since version 1.0, Socket.IO supports any form of binary file transfer, such as: pictures, videos, audios, etc.</li>
+<li>Document Merge: Allows multiple users to edit a document at the same time, and be able to see the changes made by each user.</li>
+</ul>
+<p>My project mainly uses its binary stream transmission.</p>
+<h2 id="2-introduction-to-python-socketio">2. Introduction to python-socketio</h2>
+<p>Initially, the background of socketio used nodejs, and later there were back-end applications such as java, c++, and python.</p>
+<p>Python&rsquo;s back-end library address 
+<a href="https://github.com/miguelgrinberg/python-socketio" title="https://github.com/miguelgrinberg/python-socketio" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://github.com/miguelgrinberg/python-socketio
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>But note that different versions are not compatible, refer to the table below</p>
+<p>| JavaScript Socket.IO version | Socket.IO protocol revision | Engine.IO protocol revision | python-socketio version |
+| &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash; &mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash; | &mdash;&mdash;&mdash;&mdash;&ndash; &mdash;&mdash;&mdash; |
+| 0.9.x | 1, 2 | 1, 2 | Not supported |
+| 1.x and 2.x | 3, 4 | 3 | 4.x |
+| 3.x and 4.x | 5 | 4 | 5.x |</p>
+<p>For example, if python-socketio uses 5.x, the front end should use 3.x or 4.x socket.io library, and different versions are not compatible.</p>
+<p>In addition, the python version I use is 3.7.8 when I demonstrate. When I try to install python-socketio in python on 3.5, the installation will fail, and it will fail when installing a dependent library didict.</p>
+<p>My environment is as follows</p>
+<p>python:3.7.8</p>
+<p>python-socketio: 5.3.0</p>
+<p>tornado: 6.0.4</p>
+<p>windows x64</p>
+<h2 id="third-the-construction-of-tornado">Third, the construction of Tornado</h2>
+<p>First build a simple basic web application using Tornado</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#-*- coding:utf-8 -*-</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#author:Yang</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># datetime:2021/5/19 23:26</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># software: PyCharm</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpserver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.web
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.gen
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.concurrent
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.autoreload
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.platform.asyncio <span style="color:#ff79c6">import</span> AsyncIOMainLoop
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> traceback
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Index</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(<span style="color:#f1fa8c">&#34;hello world&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">NotFount</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(<span style="color:#f1fa8c">&#34;404 not found&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">make_app</span>(<span style="color:#ff79c6">**</span>kwargs):
+</span></span><span style="display:flex;"><span>    settings <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">dict</span>(
+</span></span><span style="display:flex;"><span>        template_path<span style="color:#ff79c6">=</span>os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>dirname(__file__), <span style="color:#f1fa8c">&#34;templates&#34;</span>),
+</span></span><span style="display:flex;"><span>        static_path<span style="color:#ff79c6">=</span>os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>dirname(__file__), <span style="color:#f1fa8c">&#34;static&#34;</span>),
+</span></span><span style="display:flex;"><span>        debug<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>Application([
+</span></span><span style="display:flex;"><span>        (<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;/&#39;</span>, Index),
+</span></span><span style="display:flex;"><span>        (<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;.*&#39;</span>, NotFount),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ], <span style="color:#ff79c6">**</span>settings, <span style="color:#ff79c6">**</span>kwargs)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        AsyncIOMainLoop()<span style="color:#ff79c6">.</span>install()
+</span></span><span style="display:flex;"><span>        app <span style="color:#ff79c6">=</span> make_app()
+</span></span><span style="display:flex;"><span>        app<span style="color:#ff79c6">.</span>listen(<span style="color:#bd93f9">8080</span>)
+</span></span><span style="display:flex;"><span>        loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>        processPoolNum <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span> KeyboardInterrupt:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">for</span> task <span style="color:#ff79c6">in</span> asyncio<span style="color:#ff79c6">.</span>Task<span style="color:#ff79c6">.</span>all_tasks():
+</span></span><span style="display:flex;"><span>                task<span style="color:#ff79c6">.</span>cancel()
+</span></span><span style="display:flex;"><span>            loop<span style="color:#ff79c6">.</span>stop()
+</span></span><span style="display:flex;"><span>            loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">finally</span>:
+</span></span><span style="display:flex;"><span>            loop<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(traceback<span style="color:#ff79c6">.</span>print_exc())
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">finally</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above code can build a basic Tornado web service, and the following code is added on this basis.</p>
+<h2 id="fourth-add-python-socketio">Fourth, add python-socketio</h2>
+<p>python-socketio is divided into server side and client side. The installation command on the server side is:</p>
+<p><code>pip install python-socketio</code></p>
+<p>First initialize an instance of the <code>socketio.AsyncServer</code> class</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> socketio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sio <span style="color:#ff79c6">=</span> socketio<span style="color:#ff79c6">.</span>AsyncServer(async_mode<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;tornado&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Hereinafter, <code>python-socketio</code> will be referred to as <code>socketio</code> for short</p>
+<p>There are two versions of socketio server, a synchronous <code>Server()</code> and an asynchronous <code>AsyncServer()</code>. The functions are the same, but the asynchronous server can be built in the asyncio environment. Since my Tornado application also uses asyncio, So here I use an asynchronous server.</p>
+<p>Then create a route and modify the make_app function</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">make_app</span>(<span style="color:#ff79c6">**</span>kwargs):
+</span></span><span style="display:flex;"><span>    settings <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">dict</span>(
+</span></span><span style="display:flex;"><span>        template_path<span style="color:#ff79c6">=</span>os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>dirname(__file__), <span style="color:#f1fa8c">&#34;templates&#34;</span>),
+</span></span><span style="display:flex;"><span>        static_path<span style="color:#ff79c6">=</span>os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>dirname(__file__), <span style="color:#f1fa8c">&#34;static&#34;</span>),
+</span></span><span style="display:flex;"><span>        debug<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>Application([
+</span></span><span style="display:flex;"><span>        (<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;/&#39;</span>, Index),
+</span></span><span style="display:flex;"><span>        (<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/socket.io/&#34;</span>, socketio<span style="color:#ff79c6">.</span>get_tornado_handler(sio)),
+</span></span><span style="display:flex;"><span>        (<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;.*&#39;</span>, NotFount),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ], <span style="color:#ff79c6">**</span>settings, <span style="color:#ff79c6">**</span>kwargs)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that only the route of <code>/socket.io/</code> can be added here. Write it here first, and then explain why when introducing the client side.</p>
+<p>Another point to note is that this <code>/socket.io/</code> must be defined before the <code>.*</code> route, otherwise it will hit NotFount.</p>
+<h2 id="five-define-the-event-handler-function">Five, define the event handler function</h2>
+<p>When we use websocket, we will define several common methods, such as <code>connect</code> to be called after a successful connection, and <code>disconnect</code> to be the operation when the connection is disconnected.</p>
+<p>For the server, we can also define these functions, which we call events. There are two ways to define events.</p>
+<ol>
+<li>
+<p>Use the sio.event decorator</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>event
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">my_event</span>(sid, data):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;my_event get an message </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> from </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">.</span>format(data, sid))
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>Use the sio.on method</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>on(<span style="color:#f1fa8c">&#34;my event&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">event_special</span>(sid, data):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;special event get an message </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> from </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#39;</span><span style="color:#ff79c6">.</span>format(data, sid))
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<p>The events defined by the two methods are the same. Using the first method, the function name is the event name, here is <code>my_event</code>, because the function name cannot have special characters and spaces, but the second method, the event name can be Defined in the decorator parameters, such as the <code>my event</code> event here, there is a space in it, so depending on the requirements, you need to define the event name with special characters, you need to use the on method.</p>
+<p>The <code>connect</code> and <code>disconnect</code> events are special events that are called automatically when the client connects and disconnects</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>event
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">connect</span>(sid, environ, auth):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;connect &#39;</span>, sid)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>event
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">disconnect</span>(sid):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;disconnect &#39;</span>, sid)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Note that when customizing an event, two parameters are required, one is sid, which is the client ID, and the other is data, which is the data sent by the client.</p>
+<h2 id="six-use-the-client-to-connect">Six, use the client to connect</h2>
+<p>The installation of the client is different from that of the server. Use <code>pip install &quot;python-socketio[client]&quot;</code> to install the synchronous version</p>
+<p>Use <code>pip install &quot;python-socketio[asyncio_client]&quot;</code> to install the asynchronous version, I use the synchronous version of the client here, if you need to use it in asyncio, you need to install the asynchronous version</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> socketio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sio <span style="color:#ff79c6">=</span> socketio<span style="color:#ff79c6">.</span>Client()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sio<span style="color:#ff79c6">.</span>connect(<span style="color:#f1fa8c">&#39;http://localhost:8080&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Three lines of code can connect to the web service and establish a long connection with it. One thing to note here is that we have created a route on the server side.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/socket.io/&#34;</span>, socketio<span style="color:#ff79c6">.</span>get_tornado_handler(sio))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But when connecting here, <code>/socket.io/</code> cannot be added to the connect url, only the root url can be written</p>
+<p>View connect function definition</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">connect</span>(self, url, headers<span style="color:#ff79c6">=</span>{}, auth<span style="color:#ff79c6">=</span><span style="color:#ff79c6">None</span>, transports<span style="color:#ff79c6">=</span><span style="color:#ff79c6">None</span>,
+</span></span><span style="display:flex;"><span>                namespaces<span style="color:#ff79c6">=</span><span style="color:#ff79c6">None</span>, socketio_path<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;socket.io&#39;</span>, wait<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>,
+</span></span><span style="display:flex;"><span>                wait_timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>):
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>There is a <code>socketio_path</code> parameter, which is also this parameter, so when you define the server side, you need to add a route. Of course, this parameter can also be defined by yourself. It is not customized here for simplicity, as long as you know it is OK self-defined.</p>
+<p>Call the client and observe the output of the server. When a client connects to the server, the server will automatically trigger the <code>connect</code> event, and the custom function is executed here.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>event
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">connect</span>(sid, environ, auth):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;connect &#39;</span>, sid)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>printout</p>
+<p><code>connect VUke1-fDf8dYFAyEAAAB</code>, the latter is the sid of the client. When the client is closed, the disconnect event will be triggered again, and <code>disconnect VUke1-fDf8dYFAyEAAAB</code> will be output.</p>
+<h2 id="seven-define-client-events">Seven, define client events</h2>
+<p>In fact, for this long connection method, the boundary between the client and the server has been somewhat blurred. The server can also send data requests to the client, and the client here is also related to the server.</p>
+<p>We define a connect event on the client side, which is used to execute the function after connecting to the server side</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>event
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">connect</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;I&#39;m connected!&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Here, connect the server again. When the connection is successful, it will print out <code>I'm connected!</code></p>
+<h2 id="eight-the-client-sends-custom-events">Eight, the client sends custom events</h2>
+<p>We have defined two events <code>my_event</code> and <code>my event</code> on the server side, so how does the client send these two events?</p>
+<p>Clients can use the <code>emit</code> function</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>sio<span style="color:#ff79c6">.</span>connect(<span style="color:#f1fa8c">&#39;http://localhost:8080&#39;</span>)
+</span></span><span style="display:flex;"><span>sio<span style="color:#ff79c6">.</span>emit(<span style="color:#f1fa8c">&#34;my event&#34;</span>, {<span style="color:#f1fa8c">&#34;data&#34;</span>: <span style="color:#f1fa8c">&#34;hello server&#34;</span>})
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This line of code can send the <code>my event</code> event to the server, and then observe the output of the server,</p>
+<p>The <code>my event</code> function is triggered</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>on(<span style="color:#f1fa8c">&#34;my event&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">event_special</span>(sid, data):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;special event get an message </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> from </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#39;</span><span style="color:#ff79c6">.</span>format(data, sid))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>to get the output:</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>special event get an message <span style="color:#ff79c6">{</span><span style="color:#f1fa8c">&#39;data&#39;</span>: <span style="color:#f1fa8c">&#39;hello server&#39;</span><span style="color:#ff79c6">}</span> from kh-Ui9gCLG9b5jD4AAAF
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="nine-the-server-sends-events-to-the-client">Nine, the server sends events to the client</h2>
+<p>The client can send events to the server, and the server can also send events to the client. We first define an event on the client</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>on(<span style="color:#f1fa8c">&#34;client event&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">client_event</span>(data):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;get server message:</span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">.</span>format(data))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Modify the server-side <code>my event</code> event code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>@sio<span style="color:#ff79c6">.</span>on(<span style="color:#f1fa8c">&#34;my event&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">event_special</span>(sid, data):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;special event get an message </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> from </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#39;</span><span style="color:#ff79c6">.</span>format(data, sid))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> sio<span style="color:#ff79c6">.</span>emit(<span style="color:#f1fa8c">&#34;client event&#34;</span>, <span style="color:#f1fa8c">&#34;hello </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">.</span>format(sid))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When the server receives the <code>my event</code> event, it sends a <code>client event</code> event to the client. Note that since the server uses asynchronous, the function should be changed to <code>async def</code>, and the emit function is also Requires the use of <code>await</code>.</p>
+<p>Then connect the calling client, then the client will get the following output</p>
+<pre tabindex="0"><code>I&#39;m connected!
+get server message: hello tNp1Yb7OONZn2FwxAAAB
+</code></pre><p><code>I'm connected!</code> triggers the connect event, and <code>get server message:hello tNp1Yb7OONZn2FwxAAAB</code> triggers the <code>client event</code> event.</p>
+<h2 id="ten-automatic-reconnection">Ten, automatic reconnection</h2>
+<p>When we turn off the server, the client&rsquo;s script does not exit at this time. When the server is started again, the client can automatically connect. This is also the convenience of the library. If you want to write a long connection yourself, Also consider reconnection issues.</p>
+<p>At this point, I have mastered the most basic use of socketio and Tornado, and can send messages to each other. Later articles will introduce more detailed namespaces and interaction with the web front end.</p>
+<h2 id="refer-to">refer to</h2>
+<p>
+<a href="https://python-socketio.readthedocs.io/en/latest/index.html" title="python-socketio official documentation" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    python-socketio official documentation
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+    <a href="/tags/socket.io.html">
+    socket.io
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Tornado integrates socketio (1)
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/use-socketio-in-tornado.html" title="Tornado integrates socketio (1)">https://enblog.yangyanxing.com/article/use-socketio-in-tornado.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/hello-page-with-beego.html" rel="next" title="Use beego to build the project homepage">
+      <i class="fa fa-chevron-left"></i> Use beego to build the project homepage
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/python-aiomysql.html" rel="prev" title="The use of aiomysql and sqlalchemy">
+      The use of aiomysql and sqlalchemy
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

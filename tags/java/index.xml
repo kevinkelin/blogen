@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>java on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/java.html</link>
+    <description>Recent content in java on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 12 May 2016 01:04:03 +0000</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Use Uiautomator for UI-based testing</title>
+      <link>https://enblog.yangyanxing.com/article/use-uiautomator-for-uitest.html</link>
+      <pubDate>Thu, 12 May 2016 01:04:03 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-uiautomator-for-uitest.html</guid>
+      <description>&lt;p&gt;I have been watching the test of the native &lt;code&gt;uiautomator&lt;/code&gt; in the past two days, and I have used it before, but I just implemented the official Android example simply, and there is no actual test meaning. [Implementation of the official Android example of uiautomator](http:/ /www.yangyanxing.com/article/1264.html), today combined with the automation project I am doing recently, I simply used uiautomator to implement it, just made a small example, but basically how to compile the jar and run it Well, here is also a simple record.
+I have also used the python packaged by others to do it before, and that one is relatively simple to write. [Using uiautomator&amp;rsquo;s python package for android UI testing](
+&lt;a href=&#34;http://www.yangyanxing.com/article/how-to-use-uiautomator&#34; title=&#34;http://www.yangyanxing.com/article/how-to-use-uiautomator&#34; rel=&#34;noopener external nofollow noreferrer&#34; target=&#34;_blank&#34; class=&#34; exturl&#34;&gt;
+    http://www.yangyanxing.com/article/how-to-use-uiautomator
+    &lt;i class=&#34;fa fa-external-link-alt&#34;&gt;&lt;/i&gt;
+&lt;/a&gt; -with-python.html)&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

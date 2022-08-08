@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Custom loggingHandler in python" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Custom loggingHandler in python" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/logging-handler-python.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-12-12 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-12-12 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Custom loggingHandler in python - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents"></nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/logging-handler-python.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Custom loggingHandler in python">
+      <meta itemprop="description" content="Recently, when using log processing in python, there is a new requirement to write the log into the database. It is lazy at first, write a loop, read the local log file regularly, and write the content directly to the database. Obviously, this kind of processing is very low. Later, I wrote a service outside, but in essence, the read content is sent to a post request in a circular reading method and then stored in the database. These two methods are essentially the same, and The second one also encountered the problem of too much content causing service parsing failure when sending post requests.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Custom loggingHandler in python </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-12-12 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-12-12 00:00:00 &#43;0000 UTC">2019-12-12</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>905</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>5min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>Recently, when using log processing in python, there is a new requirement to write the log into the database. It is lazy at first, write a loop, read the local log file regularly, and write the content directly to the database. Obviously, this kind of processing is very low. Later, I wrote a service outside, but in essence, the read content is sent to a post request in a circular reading method and then stored in the database. These two methods are essentially the same, and The second one also encountered the problem of too much content causing service parsing failure when sending post requests.</p>
+<p>In fact, this problem is essentially the processing of logs. There are two main types of conventional processing. One is to output on the console, and the other is to write to a file. In fact, this problem is just one more step, and then the log is written to the database. That&rsquo;s enough, but writing directly to the database loses some flexibility. I just want to send an http request for the log information every time I log, and write the log to the database on the server side.</p>
+<p>In fact, there is an HTTPHandler under the logging module of python, which can send a request to the specified url when writing the log. Let&rsquo;s take a brief look at its implementation.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">HTTPHandler</span>(logging<span style="color:#ff79c6">.</span>Handler):
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    A class which sends records to a Web server, using either GET or
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    POST semantics.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, host, url, method<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;GET&#34;</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Initialize the instance with the host, the request URL, and the method
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        (&#34;GET&#34; or &#34;POST&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        logging<span style="color:#ff79c6">.</span>Handler<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        method <span style="color:#ff79c6">=</span> string<span style="color:#ff79c6">.</span>upper(method)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> method <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> [<span style="color:#f1fa8c">&#34;GET&#34;</span>, <span style="color:#f1fa8c">&#34;POST&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span> ValueError, <span style="color:#f1fa8c">&#34;method must be GET or POST&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>host <span style="color:#ff79c6">=</span> host
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">=</span> url
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">=</span> method
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mapLogRecord</span>(self, record):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Default implementation of mapping the log record into a dict
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        that is sent as the CGI data. Overwrite in your class.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Contributed by Franz Glasner.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> record<span style="color:#ff79c6">.</span>__dict__
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">emit</span>(self, record):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Emit a record.
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Send the record to the Web server as an URL-encoded dictionary
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">import</span> httplib<span style="color:#ff79c6">,</span> urllib
+</span></span><span style="display:flex;"><span>            host <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>host
+</span></span><span style="display:flex;"><span>            h <span style="color:#ff79c6">=</span> httplib<span style="color:#ff79c6">.</span>HTTP(host)
+</span></span><span style="display:flex;"><span>            url <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>url
+</span></span><span style="display:flex;"><span>            data <span style="color:#ff79c6">=</span> urllib<span style="color:#ff79c6">.</span>urlencode(self<span style="color:#ff79c6">.</span>mapLogRecord(record))
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;GET&#34;</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">if</span> (string<span style="color:#ff79c6">.</span>find(url, <span style="color:#f1fa8c">&#39;?&#39;</span>) <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>):
+</span></span><span style="display:flex;"><span>                    sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;&amp;&#39;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                    sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>                url <span style="color:#ff79c6">=</span> url <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%c%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (sep, data)
+</span></span><span style="display:flex;"><span>            h<span style="color:#ff79c6">.</span>putrequest(self<span style="color:#ff79c6">.</span>method, url)
+</span></span><span style="display:flex;"><span>            <span style="color:#6272a4"># support multiple hosts on one IP address...</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#6272a4"># need to strip optional :port from host, if present</span>
+</span></span><span style="display:flex;"><span>            i <span style="color:#ff79c6">=</span> string<span style="color:#ff79c6">.</span>find(host, <span style="color:#f1fa8c">&#34;:&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> i <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>                host <span style="color:#ff79c6">=</span> host[:i]
+</span></span><span style="display:flex;"><span>            h<span style="color:#ff79c6">.</span>putheader(<span style="color:#f1fa8c">&#34;Host&#34;</span>, host)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;POST&#34;</span>:
+</span></span><span style="display:flex;"><span>                h<span style="color:#ff79c6">.</span>putheader(<span style="color:#f1fa8c">&#34;Content-type&#34;</span>,
+</span></span><span style="display:flex;"><span>                            <span style="color:#f1fa8c">&#34;application/x-www-form-urlencoded&#34;</span>)
+</span></span><span style="display:flex;"><span>                h<span style="color:#ff79c6">.</span>putheader(<span style="color:#f1fa8c">&#34;Content-length&#34;</span>, <span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(data)))
+</span></span><span style="display:flex;"><span>            h<span style="color:#ff79c6">.</span>endheaders()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;POST&#34;</span>:
+</span></span><span style="display:flex;"><span>                h<span style="color:#ff79c6">.</span>send(data)
+</span></span><span style="display:flex;"><span>            h<span style="color:#ff79c6">.</span>getreply() <span style="color:#6272a4">#can&#39;t do anything with the result</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span> (KeyboardInterrupt, SystemExit):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>handleError(record)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It inherits the <code>logging.Handler</code> class and rewrites the <code>emit</code> method. Note that the <code>emit</code> method must be rewritten, otherwise an exception will be thrown. The <code>emit</code> method is the method that is actually executed when executing log methods such as debug info error. It will send the specified method (GET or POST) request to the specified host, url when recording the log, and the data sent is the original record object, but this object does not meet my needs, I just want to follow my The information printed in the format is enough, so here we rewrite a handler to process the request.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> requests
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CustomHandler</span>(logging<span style="color:#ff79c6">.</span>Handler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self,host,uri,baseParam,method<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;POST&#34;</span>):
+</span></span><span style="display:flex;"><span>        logging<span style="color:#ff79c6">.</span>Handler<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">/</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>(host,uri)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>baseParam <span style="color:#ff79c6">=</span> baseParam
+</span></span><span style="display:flex;"><span>        method <span style="color:#ff79c6">=</span> string<span style="color:#ff79c6">.</span>upper(method)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> method <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> [<span style="color:#f1fa8c">&#34;GET&#34;</span>, <span style="color:#f1fa8c">&#34;POST&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span> ValueError, <span style="color:#f1fa8c">&#34;method must be GET or POST&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">=</span> method
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">emit</span>(self, record):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        Rewrite the emit method, mainly to add the baseParam during initialization
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        :param record:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        :return:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>baseParam[<span style="color:#f1fa8c">&#34;logdata&#34;</span>] <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>format(record)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;GET&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> (string<span style="color:#ff79c6">.</span>find(self<span style="color:#ff79c6">.</span>url, <span style="color:#f1fa8c">&#39;?&#39;</span>) <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>):
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;&amp;&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>            url <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%c%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (sep, data)
+</span></span><span style="display:flex;"><span>            requests<span style="color:#ff79c6">.</span>get(url,timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            headers <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#f1fa8c">&#34;Content-type&#34;</span>:<span style="color:#f1fa8c">&#34;application/x-www-form-urlencoded&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f1fa8c">&#34;Content-length&#34;</span>: <span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(data))
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            requests<span style="color:#ff79c6">.</span>post(self<span style="color:#ff79c6">.</span>url,data<span style="color:#ff79c6">=</span>self<span style="color:#ff79c6">.</span>baseParam,headers<span style="color:#ff79c6">=</span>headers,timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I redefine a CustomHandler class, inherit from logging.Handler, and rewrite the emit method. Note that there is a key line of code here
+<code>self.baseParam[&quot;logdata&quot;] = self.format(record)</code> This line is to format the record according to the custom Formatter and construct it as I want.</p>
+<p>Here&rsquo;s how it&rsquo;s used</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> logging
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>getLogger(<span style="color:#f1fa8c">&#34;yyx&#34;</span>)
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>setLevel(logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span>fmt <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>Formatter(<span style="color:#f1fa8c">&#39;[</span><span style="color:#f1fa8c">%(asctime)s</span><span style="color:#f1fa8c">] [</span><span style="color:#f1fa8c">%(levelname)s</span><span style="color:#f1fa8c">] </span><span style="color:#f1fa8c">%(message)s</span><span style="color:#f1fa8c">&#39;</span>, <span style="color:#f1fa8c">&#39;%Y-%m-</span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c"> %H:%M:%S&#39;</span>)
+</span></span><span style="display:flex;"><span>httphandler <span style="color:#ff79c6">=</span> CustomHandler(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1&#34;</span>,<span style="color:#f1fa8c">&#34;collog&#34;</span>,{<span style="color:#f1fa8c">&#34;taskid&#34;</span>:<span style="color:#f1fa8c">&#34;aaaa&#34;</span>,<span style="color:#f1fa8c">&#34;casenum&#34;</span>:<span style="color:#bd93f9">123</span>})
+</span></span><span style="display:flex;"><span>httphandler<span style="color:#ff79c6">.</span>setFormatter(fmt) <span style="color:#6272a4">#This line of code is to format the log as we want</span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>addHandler(httphandler)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;aaa Yang Yanxing bbb&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this time, when the log is printed again, a post request will be sent to the 127.0.0.1/colllog interface. The parameters of the request are</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;taskid&#34;</span>:<span style="color:#f1fa8c">&#34;aaa&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;casenum&#34;</span>:<span style="color:#bd93f9">123</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;logdata&#34;</span>:<span style="color:#f1fa8c">&#34;[2019-12-12 19:06:40] [INFO] file:test.py line:12 aaa Yang Yanxing bbb&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then my outside service can receive and write this record to the database.</p>
+<p>Custom handlers give a lot of freedom to log processing, and we can easily place logs in various places and process them freely.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Custom loggingHandler in python
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/logging-handler-python.html" title="Custom loggingHandler in python">https://enblog.yangyanxing.com/article/logging-handler-python.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/pymongo-threadsafe.html" rel="next" title="Concurrency issues in pymongo">
+      <i class="fa fa-chevron-left"></i> Concurrency issues in pymongo
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/use_venv_in_python.html" rel="prev" title="Using virtual environment in python">
+      Using virtual environment in python
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

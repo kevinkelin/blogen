@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/go.html</link>
+    <description>Recent content in Go on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 07 Aug 2022 00:35:53 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>An example to explain the application of go build tag tags in cross-compilation</title>
+      <link>https://enblog.yangyanxing.com/article/cros-build-in-go.html</link>
+      <pubDate>Sun, 07 Aug 2022 00:35:53 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/cros-build-in-go.html</guid>
+      <description>&lt;p&gt;The thing is this, in a project, I need to read the creation time of a file in the system, and do different processing according to the time, such as deleting it after a certain time.
+After querying, getting the file creation time can be done by using os and syscall in the standard library, but the interface of the syscall library in different systems is different, for example, it is used in this way under Mac&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>How does go mod import local packages?</title>
+      <link>https://enblog.yangyanxing.com/article/go-mod-import-localpkg.html</link>
+      <pubDate>Wed, 03 Aug 2022 23:15:51 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/go-mod-import-localpkg.html</guid>
+      <description>&lt;p&gt;When we use go development, we often use a lot of third-party packages, most of which are available for download in the form of open source, such as hosting on github, we only need to use &lt;code&gt;go get github.com/xxx/xxxx&lt;/code&gt; Download to, it&amp;rsquo;s very convenient.
+But we often encounter packages that are not open source. For example, packages developed by other departments in the company are not open source, but are only used internally. If we want to use the package, we can no longer use go get. Explain in detail how to import local packages and the pits that may be encountered in the process.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>The pit that Socket.io stepped on in gin</title>
+      <link>https://enblog.yangyanxing.com/article/socketio-gin-experience.html</link>
+      <pubDate>Sun, 24 Jul 2022 20:57:24 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/socketio-gin-experience.html</guid>
+      <description>&lt;p&gt;Recently, golang is used to build the background system. The framework uses the very famous gin framework. Since socket.io needs to be used for long connection management in the project, the official recommended golang server is [go-socket.io](https:// github.com/googollee/go-socket.io), so according to the official document example, the background service is very simple.
+However, there are various problems when using the client to connect. This article records the solutions.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Cross-domain problem of using gin to build api backend system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-cors.html</link>
+      <pubDate>Fri, 14 Jan 2022 23:41:15 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-cors.html</guid>
+      <description>&lt;p&gt;In the development mode of front-end and back-end separation, the cross-domain problem has always been a common problem. The general solution is divided into front-end and back-end. The front-end is mainly solved by jsonp, but the back-end solution will be more convenient. This article records the use of gin The framework solves cross-domain problems in the backend.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build redis of api background system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-redis.html</link>
+      <pubDate>Sun, 09 Jan 2022 00:12:51 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-redis.html</guid>
+      <description>&lt;p&gt;Redis has a very important position in the web system and can act as a cache, message queue, step-by-step lock, etc. This article introduces the use of the go-redis library to simply operate redis.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Middleware development using gin to build api backend system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-midware.html</link>
+      <pubDate>Sat, 08 Jan 2022 00:11:03 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-midware.html</guid>
+      <description>&lt;p&gt;In the previous articles, the default &lt;code&gt;gin.Default()&lt;/code&gt; was basically used to initialize an engine, and then the Run method of the engine was called to run a web service. Now if there is a demand, some APIs only manage Only administrators can access, and non-administrators are very 401. We can write a method and call this method on the interface that requires authorization to verify the authority, but in gin, we can also use a more elegant method, middleware.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL preliminary CURD for building api backend system using gin</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-mysql-base.html</link>
+      <pubDate>Fri, 07 Jan 2022 00:10:37 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-mysql-base.html</guid>
+      <description>&lt;p&gt;The previous articles introduced the basic use of the gin framework. Modern web systems rarely deal with databases. The next few articles will briefly introduce how to use MySQL, Mongodb, and redis, which are commonly used in daily life. Use, this first introduces the use of MySQL.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build cookie and session of api background system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-cookie-session.html</link>
+      <pubDate>Tue, 04 Jan 2022 00:07:49 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-cookie-session.html</guid>
+      <description>&lt;p&gt;The previous articles are all stateless requests. When dealing with stateful requests, such as user login scenarios, the web system usually uses cookies or sessions to record user status. This article records cookies and sessions under the gin framework. usage of.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build api background system to get request parameters</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-params.html</link>
+      <pubDate>Thu, 16 Dec 2021 00:06:45 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-params.html</guid>
+      <description>&lt;p&gt;The previous article recorded the construction of the gin framework and the basic use of routing. This article mainly records the problem of parameter transmission in the routing process, including GET and POST parameters, and the use of path parameters.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build the framework of the API background system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-basic.html</link>
+      <pubDate>Wed, 15 Dec 2021 00:06:04 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-basic.html</guid>
+      <description>&lt;p&gt;Gin is a popular framework in golang. Many systems are developed under this framework. This framework feels to me like Tornado&amp;rsquo;s position in python. It has basic functions, but if you want to use it well, I still need to develop a lot of my own functions and middleware. After reading a lot of tutorials, I want to record the learning process.&lt;/p&gt;
+&lt;p&gt;This series simply implements some usable methods for background services, such as obtaining parameters, database query, etc. The overall project is not about the structure, at most it is a quick start, and the directory structure is not so particular, because beginners, So there will definitely be a lot of questions. Later, I will practice a little bit of repair.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>golang query MySQL data</title>
+      <link>https://enblog.yangyanxing.com/article/query-mysql-in-go-base.html</link>
+      <pubDate>Wed, 03 Nov 2021 22:23:38 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/query-mysql-in-go-base.html</guid>
+      <description>&lt;p&gt;Recently, I have been looking at the use of the gin framework. Many documents and tutorials recommend using gorm to operate the database, but I have no idea about orm, so let’s learn how to use native sql to operate MySQL.&lt;/p&gt;
+&lt;p&gt;On github, &lt;code&gt;https://github.com/go-sql-driver/mysql&lt;/code&gt; has the largest number of starts and is well maintained. I decided to use it to practice basic curd first.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>The choice of lock Mutex and channel channel in golang</title>
+      <link>https://enblog.yangyanxing.com/article/choice-between-mutex-and-channel.html</link>
+      <pubDate>Sat, 23 Oct 2021 21:47:12 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/choice-between-mutex-and-channel.html</guid>
+      <description>&lt;p&gt;Both Mutex and channel can protect resources in a concurrent environment and avoid race conditions. Channel has always been sought after in golang, but since both can solve the problem, why do you need two things?&lt;/p&gt;
+&lt;p&gt;Looking at some articles, I found that sometimes channels are too sought after. Sometimes you should use Mutex or Mutex, don&amp;rsquo;t use channel just to use channel, you need to distinguish between different scenarios&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Interface usage in golang</title>
+      <link>https://enblog.yangyanxing.com/article/interface-in-golang.html</link>
+      <pubDate>Sat, 23 Oct 2021 15:19:33 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/interface-in-golang.html</guid>
+      <description>&lt;p&gt;The interface in golang is very different from the interface in other object-oriented.&lt;/p&gt;
+&lt;p&gt;Definition of an interface&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;
+&lt;table style=&#34;border-spacing:0;padding:0;margin:0;border:0;&#34;&gt;&lt;tr&gt;&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;1
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;2
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;3
+&lt;/span&gt;&lt;span style=&#34;white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td style=&#34;vertical-align:top;padding:0;margin:0;border:0;;width:100%&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;//Define an interface, it has a run method
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#6272a4&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;type&lt;/span&gt; Runable &lt;span style=&#34;color:#8be9fd;font-style:italic&#34;&gt;interface&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;	&lt;span style=&#34;color:#50fa7b&#34;&gt;run&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Define a &lt;code&gt;Runable&lt;/code&gt; interface, which has a method, run() , which has no parameters and no return value&lt;/p&gt;
+&lt;p&gt;A structure can define a method. If a structure defines the &lt;code&gt;run()&lt;/code&gt; method, it means that the structure implements the &lt;code&gt;Runable&lt;/code&gt; interface, which is not like a class in java or python, which is displayed when it is defined. Indicates which interface is inherited from.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Receiver type problem of structure method in golang</title>
+      <link>https://enblog.yangyanxing.com/article/golang-struct-methond-receiver.html</link>
+      <pubDate>Sun, 17 Oct 2021 00:41:21 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/golang-struct-methond-receiver.html</guid>
+      <description>&lt;p&gt;The structure in golang can be regarded as a class in object-oriented programming. You can define methods for the structure. Note the difference between methods and functions here. The definition of a function has no receiver, and the method has a receiver. Here The receiver can be in instance pointer form or instance form, for performance reasons &lt;code&gt;recv&lt;/code&gt; is most commonly a pointer to receiver_type, (because we don&amp;rsquo;t want a copy of the instance, as it would be if call-by-value) , especially when the receiver type is a struct.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>slice as function parameter in golang</title>
+      <link>https://enblog.yangyanxing.com/article/slice-in-go.html</link>
+      <pubDate>Fri, 15 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/slice-in-go.html</guid>
+      <description>&lt;p&gt;The slice in golang is very similar to the list in python, but there are many differences. This article summarizes some features when the parameter of a function is a slice type.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use beego to build the project homepage</title>
+      <link>https://enblog.yangyanxing.com/article/hello-page-with-beego.html</link>
+      <pubDate>Sat, 29 May 2021 15:29:57 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/hello-page-with-beego.html</guid>
+      <description>&lt;p&gt;I recently tried to use beego to initialize a project, and follow the documentation step by step.
+Since the first attempt to use golang to build
+Here I also record the problems and solutions I encountered during initialization.
+Since I am also a novice, the problems encountered may be relatively low-level, but this is also used as some basis for the future use of the framework.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>A summary of the use of strings in the go language</title>
+      <link>https://enblog.yangyanxing.com/article/string_use_in_go.html</link>
+      <pubDate>Tue, 27 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/string_use_in_go.html</guid>
+      <description>&lt;h1 id=&#34;string&#34;&gt;string&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Strings can only be defined with double quotes,&lt;/li&gt;
+&lt;li&gt;If the single and double quotes in go are not passed, you can use the &lt;code&gt; &lt;/code&gt; ` sign to define the original output without escaping, which is equivalent to the triple quotes in python&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Summary of the use of file paths in the go language</title>
+      <link>https://enblog.yangyanxing.com/article/file_path_in_go.html</link>
+      <pubDate>Sun, 25 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/file_path_in_go.html</guid>
+      <description>&lt;p&gt;It is very common to manipulate files in programming, such as reading or writing files, but before that, the file path will be constructed. There is a corresponding os.path library in python, and the operation of file paths is very simple, such as&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;os.path.basename to get the filename&lt;/li&gt;
+&lt;li&gt;os.path.dirname to get the file directory name&lt;/li&gt;
+&lt;li&gt;os.path.join concatenate file path&lt;/li&gt;
+&lt;li&gt;os.path.splitext split file, get filename and extension&lt;/li&gt;
+&lt;li&gt;os.path.adspath Get the absolute path of the file&lt;/li&gt;
+&lt;li&gt;os.path.exists to determine whether a file or folder exists&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following attempts to implement the above methods in the go language&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>The problem of using indefinite parameters in functions in go language</title>
+      <link>https://enblog.yangyanxing.com/article/func_viriadic_in_go.html</link>
+      <pubDate>Sat, 24 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/func_viriadic_in_go.html</guid>
+      <description>&lt;p&gt;In the go language, functions can also use indefinite parameters, variadic functions, that is, the number of parameters is variable - 0 or more. A variadic function is declared by prefixing its parameter type with an ellipsis (three dots).&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Several ways to execute commands in the go language</title>
+      <link>https://enblog.yangyanxing.com/article/exec_command_in_go.html</link>
+      <pubDate>Fri, 23 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/exec_command_in_go.html</guid>
+      <description>&lt;p&gt;The commands used by the go language to execute all systems are still a bit complicated compared to python. Executing commands is a very common requirement, such as calling a system command, starting an exe, etc. There are several situations here, which will be summarized later.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;only execute the command, do not output the result&lt;/li&gt;
+&lt;li&gt;Execute the command and get the output&lt;/li&gt;
+&lt;li&gt;Blocking and asynchronous execution&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>new and make in go language</title>
+      <link>https://enblog.yangyanxing.com/article/new_make_in_go.html</link>
+      <pubDate>Tue, 13 Aug 2019 23:53:38 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/new_make_in_go.html</guid>
+      <description>&lt;p&gt;Beginning to learn go language, I am a little confused about whether to use new or make when initializing variables, here is a brief summary&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Application of for range in go language</title>
+      <link>https://enblog.yangyanxing.com/article/forrange_in_go.html</link>
+      <pubDate>Sun, 11 Aug 2019 23:53:38 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/forrange_in_go.html</guid>
+      <description>&lt;p&gt;for range is used in go language to traverse an iterable object, it can be applied to arrays, slices, dictionaries, etc.
+It has the following usages&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

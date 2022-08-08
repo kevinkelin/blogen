@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sql on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/sql.html</link>
+    <description>Recent content in sql on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 11 Apr 2022 16:28:11 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/sql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Performance comparison between ORM and raw SQL</title>
+      <link>https://enblog.yangyanxing.com/article/orm-sql-performance.html</link>
+      <pubDate>Mon, 11 Apr 2022 16:28:11 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/orm-sql-performance.html</guid>
+      <description>&lt;p&gt;Recently, I used the framework &lt;strong&gt;sanic&lt;/strong&gt;, which is known as the most powerful performance among python web frameworks, to build the basic environment and project framework of the project, but I have made a choice syndrome when using ORM. For a framework that pursues performance, After using ORM, it will definitely have some impact on performance, but how big is the impact? The existence of ORM also has its reasons, so can its advantages eliminate its performance loss?&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Send logs asynchronously to a remote server in python" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Send logs asynchronously to a remote server in python" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/python-aiolog.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2020-09-23 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2020-09-23 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Send logs asynchronously to a remote server in python - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#one-streamhandler-and-filehandler">One, StreamHandler and FileHandler</a></li>
+        <li><a href="#second-add-httphandler">Second, add HTTPHandler</a></li>
+        <li><a href="#3-send-remote-logs-asynchronously">3. Send remote logs asynchronously</a>
+          <ul>
+            <li><a href="#31-using-multithreading">3.1 Using multithreading</a></li>
+            <li><a href="#32-use-thread-pool-processing">3.2 Use thread pool processing</a></li>
+            <li><a href="#33-use-the-asynchronous-aiohttp-library-to-send-requests">3.3 Use the asynchronous aiohttp library to send requests</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/python-aiolog.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Send logs asynchronously to a remote server in python">
+      <meta itemprop="description" content="The most common way to use logs in python is to output logs in the console and files. The logging module also provides the corresponding classes very well, which is very convenient to use, but sometimes we may have some requirements, such as Send the log to the remote, or write directly to the database, how to achieve this requirement?">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Send logs asynchronously to a remote server in python </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2020-09-23 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2020-09-23 00:00:00 &#43;0000 UTC">2020-09-23</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>2344</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>12min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>The most common way to use logs in python is to output logs in the console and files. The logging module also provides the corresponding classes very well, which is very convenient to use, but sometimes we may have some requirements, such as Send the log to the remote, or write directly to the database, how to achieve this requirement?</p>
+<h2 id="one-streamhandler-and-filehandler">One, StreamHandler and FileHandler</h2>
+<p>First, let&rsquo;s write a set of code that simply outputs to cmd and files</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># -*- coding: utf-8 -*-</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">-------------------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   File Name: loger
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   Description :
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   Author : yangyanxing
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   date: 2020/9/23
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">-------------------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> logging
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Initialize logger</span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>getLogger(<span style="color:#f1fa8c">&#34;yyx&#34;</span>)
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>setLevel(logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Set the log format</span>
+</span></span><span style="display:flex;"><span>fmt <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>Formatter(<span style="color:#f1fa8c">&#39;[</span><span style="color:#f1fa8c">%(asctime)s</span><span style="color:#f1fa8c">] [</span><span style="color:#f1fa8c">%(levelname)s</span><span style="color:#f1fa8c">] </span><span style="color:#f1fa8c">%(message)s</span><span style="color:#f1fa8c">&#39;</span>, <span style="color:#f1fa8c">&#39;%Y-%m-</span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c"> %H:%M:%S&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Add cmd handler</span>
+</span></span><span style="display:flex;"><span>cmd_handler <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>StreamHandler(sys<span style="color:#ff79c6">.</span>stdout)
+</span></span><span style="display:flex;"><span>cmd_handler<span style="color:#ff79c6">.</span>setLevel(logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span>cmd_handler<span style="color:#ff79c6">.</span>setFormatter(fmt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Add file handler</span>
+</span></span><span style="display:flex;"><span>logpath <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>getcwd(), <span style="color:#f1fa8c">&#39;debug.log&#39;</span>)
+</span></span><span style="display:flex;"><span>file_handler <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>FileHandler(logpath)
+</span></span><span style="display:flex;"><span>file_handler<span style="color:#ff79c6">.</span>setLevel(logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span>file_handler<span style="color:#ff79c6">.</span>setFormatter(fmt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Add cmd and file handler to logger</span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>addHandler(cmd_handler)
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>addHandler(file_handler)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;The weather is nice today&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>First initialize a logger, and set its log level to DEBUG, then initialize cmd_handler and file_handler, and finally add them to the logger, run the script, and print <code>[2020-09-23 10:45] in cmd: 56] [DEBUG] The weather is nice today</code> and it will be written to the debug.log file in the current directory.</p>
+<h2 id="second-add-httphandler">Second, add HTTPHandler</h2>
+<p>If you want to send the log to the remote server when recording, you can add a <code>HTTPHandler</code>, in the python standard library logging.handler, many handlers have been defined for us, some of which we can use directly, write one locally using tornado The interface for receiving logs, prints all received parameters</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Add an httphandler</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> logging.handlers
+</span></span><span style="display:flex;"><span>http_handler <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>handlers<span style="color:#ff79c6">.</span>HTTPHandler(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;127.0.0.1:1987&#34;</span>, <span style="color:#f1fa8c">&#39;/api/log/get&#39;</span>)
+</span></span><span style="display:flex;"><span>http_handler<span style="color:#ff79c6">.</span>setLevel(logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span>http_handler<span style="color:#ff79c6">.</span>setFormatter(fmt)
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>addHandler(http_handler)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;The weather is nice today&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As a result, we received a lot of information on the server side</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>&#39;name&#39;: [b &#39;yyx&#39;],
+</span></span><span style="display:flex;"><span>&#39;msg&#39;: [b &#39;\xe4\xbb\x8a\xe5\xa4\xa9\xe5\xa4\xa9\xe6\xb0\x94\xe4\xb8\x8d\xe9\x94\x99&#39;],
+</span></span><span style="display:flex;"><span>&#39;args&#39;: [b &#39;()&#39;],
+</span></span><span style="display:flex;"><span>&#39;levelname&#39;: [b &#39;DEBUG&#39;],
+</span></span><span style="display:flex;"><span>&#39;levelno&#39;: [b &#39;10&#39;],
+</span></span><span style="display:flex;"><span>&#39;pathname&#39;: [b &#39;I:/workplace/yangyanxing/test/loger.py&#39;],
+</span></span><span style="display:flex;"><span>&#39;filename&#39;: [b &#39;loger.py&#39;],
+</span></span><span style="display:flex;"><span>&#39;module&#39;: [b &#39;loger&#39;],
+</span></span><span style="display:flex;"><span>&#39;exc_info&#39;: [b &#39;None&#39;],
+</span></span><span style="display:flex;"><span>&#39;exc_text&#39;: [b &#39;None&#39;],
+</span></span><span style="display:flex;"><span>&#39;stack_info&#39;: [b &#39;None&#39;],
+</span></span><span style="display:flex;"><span>&#39;lineno&#39;: [b &#39;41&#39;],
+</span></span><span style="display:flex;"><span>&#39;funcName&#39;: [b &#39;&lt;module&gt;&#39;],
+</span></span><span style="display:flex;"><span>&#39;created&#39;: [b &#39;1600831054.8881223&#39;],
+</span></span><span style="display:flex;"><span>&#39;msecs&#39;: [b &#39;888.1223201751709&#39;],
+</span></span><span style="display:flex;"><span>&#39;relativeCreated&#39;: [b &#39;22.99976348876953&#39;],
+</span></span><span style="display:flex;"><span>&#39;thread&#39;: [b &#39;14876&#39;],
+</span></span><span style="display:flex;"><span>&#39;threadName&#39;: [b &#39;MainThread&#39;],
+</span></span><span style="display:flex;"><span>&#39;processName&#39;: [b &#39;MainProcess&#39;],
+</span></span><span style="display:flex;"><span>&#39;process&#39;: [b &#39;8648&#39;],
+</span></span><span style="display:flex;"><span>&#39;message&#39;: [b &#39;\xe4\xbb\x8a\xe5\xa4\xa9\xe5\xa4\xa9\xe6\xb0\x94\xe4\xb8\x8d\xe9\x94\x99&#39;],
+</span></span><span style="display:flex;"><span>&#39;asctime&#39;: [b &#39;2020-09-23 11:17:34&#39;]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be said that there is a lot of information, but it is not what we want, we just want a log like <code>[2020-09-23 10:45:56] [DEBUG] The weather is nice today</code>.</p>
+<p><code>logging.handlers.HTTPHandler</code> simply sends all the log information to the server. As for how the server organizes the content, it is done by the server. So we can have two methods, one is to change the server code, according to Reorganize the log content with the passed log information. The second is to rewrite a class to let it send the reformatted log content to the server when it is sent.</p>
+<p>We use the second method, because this method is more flexible, the server is only used for recording, and what content to send should be decided by the client.</p>
+<p>We need to redefine a class, we can refer to the <code>logging.handlers.HTTPHandler</code> class and rewrite a httpHandler class</p>
+<p>Each log class needs to rewrite the emit method, which is the emit method that really needs to be executed when logging.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CustomHandler</span>(logging<span style="color:#ff79c6">.</span>Handler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, host, uri, method<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;POST&#34;</span>):
+</span></span><span style="display:flex;"><span>        logging<span style="color:#ff79c6">.</span>Handler<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">/</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (host, uri)
+</span></span><span style="display:flex;"><span>        method <span style="color:#ff79c6">=</span> method<span style="color:#ff79c6">.</span>upper()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> method <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> [<span style="color:#f1fa8c">&#34;GET&#34;</span>, <span style="color:#f1fa8c">&#34;POST&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span> ValueError(<span style="color:#f1fa8c">&#34;method must be GET or POST&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">=</span> method
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">emit</span>(self, record):
+</span></span><span style="display:flex;"><span>        <span style="color:#f1fa8c">&#39;&#39;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        :param record:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        :return:
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">        &#39;&#39;&#39;</span>
+</span></span><span style="display:flex;"><span>        msg <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>format(record)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;GET&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> (self<span style="color:#ff79c6">.</span>url<span style="color:#ff79c6">.</span>find(<span style="color:#f1fa8c">&#34;?&#34;</span>) <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>):
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;&amp;&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>            url <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%c%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (sep, urllib<span style="color:#ff79c6">.</span>parse<span style="color:#ff79c6">.</span>urlencode({<span style="color:#f1fa8c">&#34;log&#34;</span>: msg}))
+</span></span><span style="display:flex;"><span>            requests<span style="color:#ff79c6">.</span>get(url, timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            headers <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#f1fa8c">&#34;Content-type&#34;</span>: <span style="color:#f1fa8c">&#34;application/x-www-form-urlencoded&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f1fa8c">&#34;Content-length&#34;</span>: <span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(msg))
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            requests<span style="color:#ff79c6">.</span>post(self<span style="color:#ff79c6">.</span>url, data<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#39;log&#39;</span>: msg}, headers<span style="color:#ff79c6">=</span>headers, timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>There is a line in the above code that defines the parameters sent <code>msg = self.format(record)</code></p>
+<p>This line of code means that the corresponding content will be returned according to the format set by the log object.
+After that, the content is sent through the requests library. Regardless of the get or post method, the server can receive the log normally.
+<code>[2020-09-23 11:43:50] [DEBUG] The weather is good today</code></p>
+<h2 id="3-send-remote-logs-asynchronously">3. Send remote logs asynchronously</h2>
+<p>Now we consider a problem, when the log is sent to the remote server, if the remote server is very slow, it will take a certain amount of time, then the log recording will be slow.</p>
+<p>Modify the server log processing class and let it pause for 5 seconds to simulate a long processing flow</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">post</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(self<span style="color:#ff79c6">.</span>getParam(<span style="color:#f1fa8c">&#39;log&#39;</span>))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span>    self<span style="color:#ff79c6">.</span>write({<span style="color:#f1fa8c">&#34;msg&#34;</span>: <span style="color:#f1fa8c">&#39;ok&#39;</span>})
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this point we print the above log again</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;The weather is nice today&#34;</span>)
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;It&#39;s sunny and sunny&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The output obtained is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#ff79c6">[</span>2020-09-23 11:47:33<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">[</span>DEBUG<span style="color:#ff79c6">]</span> The weather is good today
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[</span>2020-09-23 11:47:38<span style="color:#ff79c6">]</span> <span style="color:#ff79c6">[</span>DEBUG<span style="color:#ff79c6">]</span> It is sunny and sunny
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We notice that their time interval is also 5 seconds.</p>
+<p>So now the problem comes, it was originally just a log, but now it has become a drag on the entire script, so we need to handle remote log writing asynchronously.</p>
+<h3 id="31-using-multithreading">3.1 Using multithreading</h3>
+<p>The first thing to think about is to use multiple threads to execute the send log method</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">emit</span>(self, record):
+</span></span><span style="display:flex;"><span>    msg <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>format(record)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;GET&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> (self<span style="color:#ff79c6">.</span>url<span style="color:#ff79c6">.</span>find(<span style="color:#f1fa8c">&#34;?&#34;</span>) <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>):
+</span></span><span style="display:flex;"><span>            sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;&amp;&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>        url <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%c%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (sep, urllib<span style="color:#ff79c6">.</span>parse<span style="color:#ff79c6">.</span>urlencode({<span style="color:#f1fa8c">&#34;log&#34;</span>: msg}))
+</span></span><span style="display:flex;"><span>        t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span> Thread(target<span style="color:#ff79c6">=</span>requests<span style="color:#ff79c6">.</span>get, args<span style="color:#ff79c6">=</span>(url,))
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        headers <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;Content-type&#34;</span>: <span style="color:#f1fa8c">&#34;application/x-www-form-urlencoded&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;Content-length&#34;</span>: <span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(msg))
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>requests<span style="color:#ff79c6">.</span>post, args<span style="color:#ff79c6">=</span>(self<span style="color:#ff79c6">.</span>url,), kwargs<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#34;data&#34;</span>:{<span style="color:#f1fa8c">&#39;log&#39;</span>: msg}, <span style="color:#f1fa8c">&#34;headers&#34;</span>:headers})
+</span></span><span style="display:flex;"><span>        t<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This method can achieve the main purpose of not blocking, but every time a log is printed, a thread needs to be started, which is also a waste of resources. We can also use thread pool to handle</p>
+<h3 id="32-use-thread-pool-processing">3.2 Use thread pool processing</h3>
+<p>There are ThreadPoolExecutor and ProcessPoolExecutor classes in python&rsquo;s concurrent.futures, which are thread pools and process pools. It is to define several threads during initialization, and then let these threads process the corresponding functions, so that you do not need to create new threads every time.</p>
+<p>Basic usage of thread pool</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>exector <span style="color:#ff79c6">=</span> ThreadPoolExecutor(max_workers<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>) <span style="color:#6272a4"># Initialize a thread pool with only one thread</span>
+</span></span><span style="display:flex;"><span>exector<span style="color:#ff79c6">.</span>submit(fn, args, kwargs) <span style="color:#6272a4"># submit the function to the thread pool</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If there are n threads in the thread pool, when the number of submitted tasks is greater than n, the redundant tasks will be put into the queue.</p>
+<p>Modify the emit function above again</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>exector <span style="color:#ff79c6">=</span> ThreadPoolExecutor(max_workers<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">emit</span>(self, record):
+</span></span><span style="display:flex;"><span>    msg <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>format(record)
+</span></span><span style="display:flex;"><span>    timeout <span style="color:#ff79c6">=</span> aiohttp<span style="color:#ff79c6">.</span>ClientTimeout(total<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;GET&#34;</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> (self<span style="color:#ff79c6">.</span>url<span style="color:#ff79c6">.</span>find(<span style="color:#f1fa8c">&#34;?&#34;</span>) <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>):
+</span></span><span style="display:flex;"><span>            sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;&amp;&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>        url <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%c%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (sep, urllib<span style="color:#ff79c6">.</span>parse<span style="color:#ff79c6">.</span>urlencode({<span style="color:#f1fa8c">&#34;log&#34;</span>: msg}))
+</span></span><span style="display:flex;"><span>        exector<span style="color:#ff79c6">.</span>submit(requests<span style="color:#ff79c6">.</span>get, url, timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        headers <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;Content-type&#34;</span>: <span style="color:#f1fa8c">&#34;application/x-www-form-urlencoded&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f1fa8c">&#34;Content-length&#34;</span>: <span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(msg))
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        exector<span style="color:#ff79c6">.</span>submit(requests<span style="color:#ff79c6">.</span>post, self<span style="color:#ff79c6">.</span>url, data<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#39;log&#39;</span>: msg}, headers<span style="color:#ff79c6">=</span>headers, timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Why only initialize a thread pool with only one thread? Because this way, the logs in the advanced queue can be guaranteed to be sent first. If there are multiple threads in the pool, the order is not necessarily guaranteed.</p>
+<h3 id="33-use-the-asynchronous-aiohttp-library-to-send-requests">3.3 Use the asynchronous aiohttp library to send requests</h3>
+<p>The emit method in the CustomHandler class above uses requests.post to send logs. This requests itself is blocked, and because of its existence, the script is stuck for a long time, so we can block the running The requests library is replaced with asynchronous aiohttp to execute get and post methods, and the emit method in a CustomHandler is rewritten</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CustomHandler</span>(logging<span style="color:#ff79c6">.</span>Handler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, host, uri, method<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;POST&#34;</span>):
+</span></span><span style="display:flex;"><span>        logging<span style="color:#ff79c6">.</span>Handler<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">/</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (host, uri)
+</span></span><span style="display:flex;"><span>        method <span style="color:#ff79c6">=</span> method<span style="color:#ff79c6">.</span>upper()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> method <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> [<span style="color:#f1fa8c">&#34;GET&#34;</span>, <span style="color:#f1fa8c">&#34;POST&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span> ValueError(<span style="color:#f1fa8c">&#34;method must be GET or POST&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">=</span> method
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">emit</span>(self, record):
+</span></span><span style="display:flex;"><span>        msg <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>format(record)
+</span></span><span style="display:flex;"><span>        timeout <span style="color:#ff79c6">=</span> aiohttp<span style="color:#ff79c6">.</span>ClientTimeout(total<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;GET&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> (self<span style="color:#ff79c6">.</span>url<span style="color:#ff79c6">.</span>find(<span style="color:#f1fa8c">&#34;?&#34;</span>) <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>):
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;&amp;&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>            url <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%c%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (sep, urllib<span style="color:#ff79c6">.</span>parse<span style="color:#ff79c6">.</span>urlencode({<span style="color:#f1fa8c">&#34;log&#34;</span>: msg}))
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> aiohttp<span style="color:#ff79c6">.</span>ClientSession(timeout<span style="color:#ff79c6">=</span>timeout) <span style="color:#ff79c6">as</span> session:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> session<span style="color:#ff79c6">.</span>get(self<span style="color:#ff79c6">.</span>url) <span style="color:#ff79c6">as</span> resp:
+</span></span><span style="display:flex;"><span>                    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#ff79c6">await</span> resp<span style="color:#ff79c6">.</span>text())
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            headers <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#f1fa8c">&#34;Content-type&#34;</span>: <span style="color:#f1fa8c">&#34;application/x-www-form-urlencoded&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f1fa8c">&#34;Content-length&#34;</span>: <span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(msg))
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> aiohttp<span style="color:#ff79c6">.</span>ClientSession(timeout<span style="color:#ff79c6">=</span>timeout, headers<span style="color:#ff79c6">=</span>headers) <span style="color:#ff79c6">as</span> session:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> session<span style="color:#ff79c6">.</span>post(self<span style="color:#ff79c6">.</span>url, data<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#39;log&#39;</span>: msg}) <span style="color:#ff79c6">as</span> resp:
+</span></span><span style="display:flex;"><span>                    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#ff79c6">await</span> resp<span style="color:#ff79c6">.</span>text())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this point the code execution crashes</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>C:<span style="color:#f1fa8c">\P</span>ython37<span style="color:#f1fa8c">\l</span>ib<span style="color:#f1fa8c">\l</span>ogging<span style="color:#f1fa8c">\_</span>_init__.py:894: RuntimeWarning: coroutine <span style="color:#f1fa8c">&#39;CustomHandler.emit&#39;</span> was never awaited
+</span></span><span style="display:flex;"><span>  self.emit<span style="color:#ff79c6">(</span>record<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span>RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The server also did not receive the request to send the log.</p>
+<p>The reason is that because the <code>async with session.post</code> function is used in the emit method, it needs to be executed in a function decorated with async, so modify the emit function and use async to decorate, here the emit function becomes an asynchronous function, It returns a <code>coroutine</code> object. To execute the coroutine object, you need to use await, but there is no place to call await emit() in the script, so the crash message shows <code>coroutine 'CustomHandler.emit' was never awaited</code>.</p>
+<p>Since the emit method returns a coroutine object, then we put it in a loop to execute</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;The weather is nice today&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;It&#39;s sunny and sunny&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>loop<span style="color:#ff79c6">.</span>run_until_complete(main())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Execution still reports an error</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">raise</span> TypeError(<span style="color:#f1fa8c">&#39;An asyncio.Future, a coroutine or an awaitable is &#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It means that a coroutine is required, but the object passed in is not.</p>
+<p>There seems to be no way, I want to use the asynchronous library to send, but there is no place to call await.</p>
+<p>There is a solution, we use <code>asyncio.get_event_loop()</code> to get an event loop object, we can register many coroutine objects on this object, so when the event loop is executed, it is to execute the registration on the event loop The coroutine, let&rsquo;s take a look at a small example</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(n):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> n <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;test </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">.</span>format(n))
+</span></span><span style="display:flex;"><span>        n <span style="color:#ff79c6">-=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> n
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test2</span>(n):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> n <span style="color:#ff79c6">&gt;</span><span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;test2</span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">.</span>format(n))
+</span></span><span style="display:flex;"><span>        n <span style="color:#ff79c6">-=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">stoploop</span>(task):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;End of execution, task n is </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">.</span>format(task<span style="color:#ff79c6">.</span>result()))
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>stop()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>task <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(test(<span style="color:#bd93f9">5</span>))
+</span></span><span style="display:flex;"><span>task2 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(test2(<span style="color:#bd93f9">3</span>))
+</span></span><span style="display:flex;"><span>task<span style="color:#ff79c6">.</span>add_done_callback(stoploop)
+</span></span><span style="display:flex;"><span>task2 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(test2(<span style="color:#bd93f9">3</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We use <code>loop = asyncio.get_event_loop()</code> to create an event loop object loop, and create two tasks on the loop, and add a callback function to task1. After task1 finishes its execution, the loop is stopped.</p>
+<p>Note that looking at the code above, we are not using await somewhere to execute the coroutine, but by registering the coroutine with an event loop object, and then calling the <code>run_forever()</code> function of the loop to make the loop The coroutine object on it can be executed normally.</p>
+<p>The output obtained above is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>test2 <span style="color:#bd93f9">3</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> <span style="color:#bd93f9">4</span>
+</span></span><span style="display:flex;"><span>test2 <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> <span style="color:#bd93f9">3</span>
+</span></span><span style="display:flex;"><span>test2 <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">test</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>execution ends, task n is <span style="color:#bd93f9">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, the task created using the event loop object can be executed after the loop executes run_forever().</p>
+<p>If the <code>loop.run_forever()</code> function is not executed, the coroutine registered on it will not be executed either</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>task <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(test(<span style="color:#bd93f9">5</span>))
+</span></span><span style="display:flex;"><span>task<span style="color:#ff79c6">.</span>add_done_callback(stoploop)
+</span></span><span style="display:flex;"><span>task2 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(test2(<span style="color:#bd93f9">3</span>))
+</span></span><span style="display:flex;"><span>time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># loop.run_forever()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The above code commented out loop.run_forever() and replaced it with time.sleep(5) to stop for 5 seconds. At this time, the script will not have any output, and it will stop after 5 seconds of stop.</p>
+<p>Going back to the previous log sending code to the remote server, we can use aiohttp to encapsulate a function that sends data, then register this function in the global event loop object loop in emit, and finally execute loop.run_forever() .</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">CustomHandler</span>(logging<span style="color:#ff79c6">.</span>Handler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, host, uri, method<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;POST&#34;</span>):
+</span></span><span style="display:flex;"><span>        logging<span style="color:#ff79c6">.</span>Handler<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">/</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (host, uri)
+</span></span><span style="display:flex;"><span>        method <span style="color:#ff79c6">=</span> method<span style="color:#ff79c6">.</span>upper()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> method <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> [<span style="color:#f1fa8c">&#34;GET&#34;</span>, <span style="color:#f1fa8c">&#34;POST&#34;</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span> ValueError(<span style="color:#f1fa8c">&#34;method must be GET or POST&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">=</span> method
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Use aiohttp package to send data function</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">submit</span>(self, data):
+</span></span><span style="display:flex;"><span>        timeout <span style="color:#ff79c6">=</span> aiohttp<span style="color:#ff79c6">.</span>ClientTimeout(total<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>method <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;GET&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>url<span style="color:#ff79c6">.</span>find(<span style="color:#f1fa8c">&#34;?&#34;</span>) <span style="color:#ff79c6">&gt;=</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;&amp;&#39;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                sep <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;?&#39;</span>
+</span></span><span style="display:flex;"><span>            url <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>url <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%c%s</span><span style="color:#f1fa8c">&#34;</span> <span style="color:#ff79c6">%</span> (sep, urllib<span style="color:#ff79c6">.</span>parse<span style="color:#ff79c6">.</span>urlencode({<span style="color:#f1fa8c">&#34;log&#34;</span>: data}))
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> aiohttp<span style="color:#ff79c6">.</span>ClientSession(timeout<span style="color:#ff79c6">=</span>timeout) <span style="color:#ff79c6">as</span> session:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> session<span style="color:#ff79c6">.</span>get(url) <span style="color:#ff79c6">as</span> resp:
+</span></span><span style="display:flex;"><span>                    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#ff79c6">await</span> resp<span style="color:#ff79c6">.</span>text())
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            headers <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#f1fa8c">&#34;Content-type&#34;</span>: <span style="color:#f1fa8c">&#34;application/x-www-form-urlencoded&#34;</span>,
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> aiohttp<span style="color:#ff79c6">.</span>ClientSession(timeout<span style="color:#ff79c6">=</span>timeout, headers<span style="color:#ff79c6">=</span>headers) <span style="color:#ff79c6">as</span> session:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">with</span> session<span style="color:#ff79c6">.</span>post(self<span style="color:#ff79c6">.</span>url, data<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#39;log&#39;</span>: data}) <span style="color:#ff79c6">as</span> resp:
+</span></span><span style="display:flex;"><span>                    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#ff79c6">await</span> resp<span style="color:#ff79c6">.</span>text())
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">emit</span>(self, record):
+</span></span><span style="display:flex;"><span>        msg <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>format(record)
+</span></span><span style="display:flex;"><span>        loop<span style="color:#ff79c6">.</span>create_task(self<span style="color:#ff79c6">.</span>submit(msg))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Add an httphandler</span>
+</span></span><span style="display:flex;"><span>http_handler <span style="color:#ff79c6">=</span> CustomHandler(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:1987&#34;</span>, <span style="color:#f1fa8c">&#39;api/log/get&#39;</span>)
+</span></span><span style="display:flex;"><span>http_handler<span style="color:#ff79c6">.</span>setLevel(logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span>http_handler<span style="color:#ff79c6">.</span>setFormatter(fmt)
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>addHandler(http_handler)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;The weather is nice today&#34;</span>)
+</span></span><span style="display:flex;"><span>logger<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#34;It&#39;s sunny and sunny&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The script can then be executed normally asynchronously.</p>
+<p><code>loop.create_task(self.submit(msg))</code> can also be used <code>asyncio.ensure_future(self.submit(msg), loop=loop)</code> instead, the purpose is to register the coroutine object to the event loop.</p>
+<p>But there is one thing to note in this method, loop.run_forever() will always block, so there needs to be a place to call the <code>loop.stop()</code> method. It can be registered in the callback of a task.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Send logs asynchronously to a remote server in python
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/python-aiolog.html" title="Send logs asynchronously to a remote server in python">https://enblog.yangyanxing.com/article/python-aiolog.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/python-aiomysql.html" rel="next" title="The use of aiomysql and sqlalchemy">
+      <i class="fa fa-chevron-left"></i> The use of aiomysql and sqlalchemy
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/useage-partial.html" rel="prev" title="functools.partial usage in python">
+      functools.partial usage in python
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

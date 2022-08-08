@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Several ways to execute commands in the go language" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Several ways to execute commands in the go language" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/exec_command_in_go.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-08-23 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-08-23 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Several ways to execute commands in the go language - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#only-execute-the-command-do-not-output-the-result">Only execute the command, do not output the result</a></li>
+        <li><a href="#execute-the-command-and-get-the-output">Execute the command and get the output</a></li>
+        <li><a href="#command-line-input">command line input</a></li>
+        <li><a href="#execute-commands-not-in-environment-variables">Execute commands not in environment variables</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/exec_command_in_go.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Several ways to execute commands in the go language">
+      <meta itemprop="description" content="The commands used by the go language to execute all systems are still a bit complicated compared to python. Executing commands is a very common requirement, such as calling a system command, starting an exe, etc. There are several situations here, which will be summarized later.
+
+only execute the command, do not output the result
+Execute the command and get the output
+Blocking and asynchronous execution
+">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Several ways to execute commands in the go language </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-08-23 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-08-23 00:00:00 &#43;0000 UTC">2019-08-23</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1155</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>6min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>The commands used by the go language to execute all systems are still a bit complicated compared to python. Executing commands is a very common requirement, such as calling a system command, starting an exe, etc. There are several situations here, which will be summarized later.</p>
+<ul>
+<li>only execute the command, do not output the result</li>
+<li>Execute the command and get the output</li>
+<li>Blocking and asynchronous execution</li>
+</ul>
+<p>The following takes ping 
+<a href="https://www.baidu.com" title="www.baidu.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    www.baidu.com
+    <i class="fa fa-external-link-alt"></i>
+</a> as an example to execute various commands in sequence, mainly using os/exec in the standard library</p>
+<p>When executing commands, we mainly use the Cmd structure method of the os/exec package owner. The Cmd structure is defined as follows
+
+<a href="https://studygolang.com/static/pkgdoc/pkg/os_exec.htm#Cmd" title="Cmd structure definition" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Cmd structure definition
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>The main parameters are</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>Path <span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Args stores the parameters of the command, including the command name as the first parameter; if it is an empty slice or nil, it is equivalent to a command without parameters.
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">//
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// In typical usage, both Path and Args should be set by the Command function.
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>Args[]<span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Env specifies the environment of the process. If it is nil, it is executed in the environment of the current process.
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>Stdinio.Reader
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Stdout and Stderr specify the standard output and standard error output of the process.
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">//
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// If any one is nil, the Run method will associate the corresponding file descriptor to the empty device (os.DevNull)
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">//
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// If two fields are the same, at most one thread can write at the same time.
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>Stdout io.Writer
+</span></span><span style="display:flex;"><span>Stderr io.Writer
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>But we generally do not construct the Cmd structure directly, but return a Cmd structure pointer through the exec.Command() function
+For example, exec.Command(&ldquo;ping&rdquo;,&ldquo;
+<a href="https://www.baidu.com" title="www.baidu.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    www.baidu.com
+    <i class="fa fa-external-link-alt"></i>
+</a>&rdquo;) ping is the command, and &ldquo;
+<a href="https://www.baidu.com" title="www.baidu.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    www.baidu.com
+    <i class="fa fa-external-link-alt"></i>
+</a>&rdquo; is the parameter. After getting *Cmd, the structure method Run, Start and other methods are used to execute the actual execution. Order.</p>
+<h2 id="only-execute-the-command-do-not-output-the-result">Only execute the command, do not output the result</h2>
+<p>The output here just shows that the command is executed, but we don&rsquo;t care about its specific output. In this kind of practical use, we just want to execute the command. In python, we can use the os.system() function to execute, Of course this is blocking execution</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> r <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#34;ping www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Pinging www<span style="color:#ff79c6">.</span>a<span style="color:#ff79c6">.</span>shifen<span style="color:#ff79c6">.</span>com [<span style="color:#bd93f9">39.156.66.18</span>] <span style="color:#ff79c6">with</span> <span style="color:#bd93f9">32</span> <span style="color:#8be9fd;font-style:italic">bytes</span> of data:
+</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
+</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">28</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
+</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
+</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">7</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Ping stats <span style="color:#ff79c6">for</span> <span style="color:#bd93f9">39.156.66.18</span>:
+</span></span><span style="display:flex;"><span>    Packets: Sent <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">4</span>, Received <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">4</span>, Lost <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span> (<span style="color:#bd93f9">0</span><span style="color:#ff79c6">%</span> lost),
+</span></span><span style="display:flex;"><span>Estimated time of <span style="color:#8be9fd;font-style:italic">round</span> trip <span style="color:#ff79c6">in</span> milliseconds:
+</span></span><span style="display:flex;"><span>    Minimum <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">6</span>ms, Maximum <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">28</span>ms, Average <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">11</span>ms
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> r
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The r here just gets the execution result of the command, 0 means there is no error, but the output of the executed command is like Ping 
+<a href="https://www.a.shifen.com" title="www.a.shifen.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    www.a.shifen.com
+    <i class="fa fa-external-link-alt"></i>
+</a>&hellip;.. We don&rsquo;t care</p>
+<p>To execute a command, you can use the Run() or Start() method. Run is a blocking execution, and Start() is a non-blocking execution.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;os/exec&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	command <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;ping&#34;</span>,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>	err <span style="color:#ff79c6">:=</span> command.<span style="color:#50fa7b">Run</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The program outputs nothing, but exits after a pause. If you replace it with <code>command.Start()</code>, the program will stop immediately after running.</p>
+<p>If you want to get the execution result of os.system like python, in fact, the result here should be ExitError, the exit code of the program, what should you do? There is a special structure <code>ExitError</code> in the exec package. You can use some of its methods to get the ExitCode, but if you want to get the ExitCode, you can get the end of the command, that is, the operation to be blocked. Use the Run() method above to block Wait for the execution result. After using the Start() method, you can also use the Wait() method to wait for the execution to end.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;os/exec&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;syscall&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	command <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;ping&#34;</span>,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>	err <span style="color:#ff79c6">:=</span> command.<span style="color:#50fa7b">Start</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err = command.<span style="color:#50fa7b">Wait</span>();err<span style="color:#ff79c6">!=</span><span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Pid</span>())
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Sys</span>().(syscall.WaitStatus).ExitCode)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>pass</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>command.ProcessState.<span style="color:#50fa7b">Sys</span>().(syscall.WaitStatus).ExitCode
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>to get the exit code of the command execution</p>
+<h2 id="execute-the-command-and-get-the-output">Execute the command and get the output</h2>
+<p>The output here is the standard output or error output of the command line, that is, stdout or stderr, which is stored by bytes.Buffer</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;bytes&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;os/exec&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;syscall&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	command <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;ping&#34;</span>,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>	outinfo <span style="color:#ff79c6">:=</span> bytes.Buffer{}
+</span></span><span style="display:flex;"><span>	command.Stdout = <span style="color:#ff79c6">&amp;</span>outinfo
+</span></span><span style="display:flex;"><span>	err <span style="color:#ff79c6">:=</span> command.<span style="color:#50fa7b">Start</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err = command.<span style="color:#50fa7b">Wait</span>();err<span style="color:#ff79c6">!=</span><span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Pid</span>())
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Sys</span>().(syscall.WaitStatus).ExitCode)
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(outinfo.<span style="color:#50fa7b">String</span>())
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The Chinese output obtained here is garbled
+<img src="/image/2019/go2.png" alt=""></p>
+<p>I checked this, it is generally said to set the console output chcp or use</p>
+<pre tabindex="0"><code>golang.org/x/text/encoding/simplifiedchinese
+</code></pre><p>I don&rsquo;t want to use this package for conversion. I&rsquo;ll talk about it later when I find a way.</p>
+<h2 id="command-line-input">command line input</h2>
+<p>Sometimes entering the command line will wait for user interaction, such as entering nslookup</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;bytes&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;os/exec&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;strings&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> outInfo bytes.Buffer
+</span></span><span style="display:flex;"><span>	cmd <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;nslookup&#34;</span>)
+</span></span><span style="display:flex;"><span>	cmd.Stdin = strings.<span style="color:#50fa7b">NewReader</span>(<span style="color:#f1fa8c">&#34;set q=mx\npython.org\nexit\n&#34;</span>)
+</span></span><span style="display:flex;"><span>	cmd.Stdout = <span style="color:#ff79c6">&amp;</span>outInfo
+</span></span><span style="display:flex;"><span>	cmd.<span style="color:#50fa7b">Run</span>()
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(outInfo.<span style="color:#50fa7b">String</span>())
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="execute-commands-not-in-environment-variables">Execute commands not in environment variables</h2>
+<p>Like the ping command above, because in windows or linux, this command is in the environment variable, but like the copy command in windows, it is not in the environment variable. Under normal circumstances, you can use the copy command in cmd, but if In the go language, it is not possible to use it directly as above.
+For example using the above code, replace the copy command</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;bytes&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;os/exec&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	cmd <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;copy&#34;</span>,<span style="color:#f1fa8c">&#34;1.txt&#34;</span>,<span style="color:#f1fa8c">&#34;2.txt&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> output bytes.Buffer
+</span></span><span style="display:flex;"><span>	cmd.Stdout = <span style="color:#ff79c6">&amp;</span>output
+</span></span><span style="display:flex;"><span>	e <span style="color:#ff79c6">:=</span>cmd.<span style="color:#50fa7b">Run</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> e <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;run error :&#34;</span> <span style="color:#ff79c6">+</span> e.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(output.<span style="color:#50fa7b">String</span>())
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The resulting output is</p>
+<pre tabindex="0"><code>run error :exec: &#34;copy&#34;: executable file not found in %PATH%
+</code></pre><p><code>cmd&quot;, &quot;/C&quot; copy </code> command should be used</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	cmd <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;cmd&#34;</span>,<span style="color:#f1fa8c">&#34;/C&#34;</span>,<span style="color:#f1fa8c">&#34;copy&#34;</span>,<span style="color:#f1fa8c">&#34;1.txt&#34;</span>,<span style="color:#f1fa8c">&#34;2.txt&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> output bytes.Buffer
+</span></span><span style="display:flex;"><span>	cmd.Stdout = <span style="color:#ff79c6">&amp;</span>output
+</span></span><span style="display:flex;"><span>	e <span style="color:#ff79c6">:=</span>cmd.<span style="color:#50fa7b">Run</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> e <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;run error :&#34;</span> <span style="color:#ff79c6">+</span> e.<span style="color:#50fa7b">Error</span>())
+</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(output.<span style="color:#50fa7b">String</span>())
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Reference article</p>
+<p>
+<a href="https://www.jianshu.com/p/9787e30552ce" title="golang exec command execution" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    golang exec command execution
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>
+<a href="https://blog.csdn.net/rznice/article/details/88122923" title="Under Windows, the solution to Chinese garbled characters when executing Go under CMD" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Under Windows, the solution to Chinese garbled characters when executing Go under CMD
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/go.html">
+    Go
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Several ways to execute commands in the go language
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/exec_command_in_go.html" title="Several ways to execute commands in the go language">https://enblog.yangyanxing.com/article/exec_command_in_go.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/func_viriadic_in_go.html" rel="next" title="The problem of using indefinite parameters in functions in go language">
+      <i class="fa fa-chevron-left"></i> The problem of using indefinite parameters in functions in go language
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/new_make_in_go.html" rel="prev" title="new and make in go language">
+      new and make in go language
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

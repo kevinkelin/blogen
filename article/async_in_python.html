@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Asynchronous practice and tornado application in python" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Asynchronous practice and tornado application in python" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/async_in_python.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-01-11 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-01-11 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Asynchronous practice and tornado application in python - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#async-basics">Async Basics</a>
+      <ul>
+        <li><a href="#blocking">blocking</a></li>
+        <li><a href="#non-blocking">non-blocking</a></li>
+        <li><a href="#synchronize">Synchronize</a></li>
+        <li><a href="#async">async</a></li>
+        <li><a href="#yield-syntax"><code>yield</code> syntax</a></li>
+      </ul>
+    </li>
+    <li><a href="#use-asynchronously">use asynchronously</a>
+      <ul>
+        <li><a href="#synchronization-troubles">Synchronization troubles</a></li>
+        <li><a href="#asynchronous-use">Asynchronous use</a></li>
+        <li><a href="#server-implementation">Server implementation</a></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/async_in_python.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Asynchronous practice and tornado application in python">
+      <meta itemprop="description" content="In recent projects, tornado is used in python3, and it has been used before. It is in python2. Since the understanding of coroutines is not very thorough, I just apply the writing in the official documents. Recently, I have looked at the usage of coroutines in detail, and also Practice tornado asynchronously in python3.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Asynchronous practice and tornado application in python </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-01-11 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-01-11 00:00:00 &#43;0000 UTC">2019-01-11</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>4376</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>21min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In recent projects, tornado is used in python3, and it has been used before. It is in python2. Since the understanding of coroutines is not very thorough, I just apply the writing in the official documents. Recently, I have looked at the usage of coroutines in detail, and also Practice tornado asynchronously in python3.</p>
+<h1 id="async-basics">Async Basics</h1>
+<p>To understand coroutines, you must first understand asynchrony. To understand asynchrony, you must first understand synchronization. The concepts related to synchronization include blocking and non-blocking. The following is a brief introduction.</p>
+<h2 id="blocking">blocking</h2>
+<blockquote>
+<p>The blocking state refers to the state in which the program is suspended when the required computing resources are not obtained. A program is said to be blocked on an operation when it cannot continue to do other things while waiting for an operation to complete.
+Common blocking forms are: network I/O blocking, disk I/O blocking, user input blocking, etc. Blocking is ubiquitous, including when the CPU switches contexts, all processes can&rsquo;t really do anything, and they will also be blocked. In the case of a multi-core CPU, the core that is performing the context switch operation cannot be utilized.</p>
+</blockquote>
+<h2 id="non-blocking">non-blocking</h2>
+<blockquote>
+<p>During the process of waiting for an operation, the program itself is not blocked and can continue to run to do other things, then the program is said to be non-blocking in this operation.
+Non-blocking does not exist at any program level and under any circumstances.
+A program&rsquo;s non-blocking state is only possible if its level of encapsulation can encompass independent subprogram units.
+The existence of non-blocking is because of the existence of blocking. It is precisely because of the time-consuming and inefficiency caused by the blocking of an operation that we make it non-blocking.</p>
+</blockquote>
+<h2 id="synchronize">Synchronize</h2>
+<blockquote>
+<p>In order to complete a certain task, different program units need to rely on a certain communication method to coordinate in the execution process, and these program units are said to be executed synchronously.
+For example, to update commodity inventory in a shopping system, it is necessary to use &ldquo;row lock&rdquo; as a communication signal, so that different update requests are forced to be queued and executed in sequence, and the operation of updating inventory is synchronous.
+In short, synchronization means order.</p>
+</blockquote>
+<h2 id="async">async</h2>
+<blockquote>
+<p>In order to complete a certain task, the way in which the task can be completed without communication and coordination between different program units, and the unrelated program units can be asynchronous.
+For example, a crawler downloads a web page. Once the scheduler calls the downloader, other tasks can be scheduled without the need to maintain communication with the downloader to coordinate behavior. The operations such as downloading and saving of different webpages are unrelated, and there is no need for mutual notification and coordination. The moment of completion of these asynchronous operations is uncertain.
+In short, async means out of order.</p>
+</blockquote>
+<p>This concept reminds me of an article I learned when I was in school. It talks about overall arrangements. For example, if you need to boil water, cook, and wash clothes, if you want to do it simultaneously, boil the water first, and then boil the water after the water boils. During the process, you do nothing and wait for it to boil. Then after the water boils, you continue to cook. During the process of cooking, you also do nothing, just wait. After the rice is cooked, go to cook it. The laundry is put in the washing machine to wash, then it is dry waiting. If the time to do one thing is to boil water for 10 minutes, cook for 30 minutes, and do laundry for 20 minutes, it will take a total of 60 minutes to complete the three tasks.
+If these three things are done asynchronously, I will boil the water first, then put the clothes in the washing machine, and then cook, these three things will happen at the same time, and give me a signal when the water boils, Here is the kettle ringing. After I hear the noise, I will stop cooking to deal with the boiling water, such as pouring it into a thermos. After the clothes are washed, the washing machine will also give me a signal, then I will Clothes will be taken out to dry. In this way, the total time to process the three things is determined by the longest time of the three things, which is 30 minutes here. In fact, asynchronous processing is to maximize the processing ability of the cup, allowing it to do more at the same time. matter.</p>
+<p>The above process is implemented in code like this</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading<span style="color:#ff79c6">,</span>multiprocessing
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">water</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Starting to boil water&#34;</span>)
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> (<span style="color:#f1fa8c">&#34;Water is boiling&#34;</span>, end <span style="color:#ff79c6">-</span> start)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">wash</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Start doing laundry&#34;</span>)
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> (<span style="color:#f1fa8c">&#34;The laundry is done&#34;</span>, end <span style="color:#ff79c6">-</span> start)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">cook</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Start cooking&#34;</span>)
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">10</span>)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> (<span style="color:#f1fa8c">&#34;Rice is ready&#34;</span>, end <span style="color:#ff79c6">-</span> start)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">alarm</span>(info):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(info[<span style="color:#bd93f9">0</span>],info[<span style="color:#bd93f9">1</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">DoWork</span>(threading<span style="color:#ff79c6">.</span>Thread):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, func, callback, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap):
+</span></span><span style="display:flex;"><span>        threading<span style="color:#ff79c6">.</span>Thread<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>func <span style="color:#ff79c6">=</span> func
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>params <span style="color:#ff79c6">=</span> params
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>paramMap <span style="color:#ff79c6">=</span> paramMap
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>rst <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finished <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>isDaemon <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>isDaemon <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>callback <span style="color:#ff79c6">=</span> callback
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>rst <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>func(<span style="color:#ff79c6">*</span>self<span style="color:#ff79c6">.</span>params, <span style="color:#ff79c6">**</span>self<span style="color:#ff79c6">.</span>paramMap)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>callback(self<span style="color:#ff79c6">.</span>rst)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finished <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    task1 <span style="color:#ff79c6">=</span> DoWork(water, alarm)
+</span></span><span style="display:flex;"><span>    task2 <span style="color:#ff79c6">=</span> DoWork(wash,alarm)
+</span></span><span style="display:flex;"><span>    task3 <span style="color:#ff79c6">=</span> DoWork(cook, alarm)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    task1<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    task2<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    task3<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    task1<span style="color:#ff79c6">.</span>join()
+</span></span><span style="display:flex;"><span>    task2<span style="color:#ff79c6">.</span>join()
+</span></span><span style="display:flex;"><span>    task3<span style="color:#ff79c6">.</span>join()
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(end<span style="color:#ff79c6">-</span>start))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The execution result is as follows</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>It&#39;s starting to boil
+</span></span><span style="display:flex;"><span>start doing laundry
+</span></span><span style="display:flex;"><span>start cooking
+</span></span><span style="display:flex;"><span>The water boiled <span style="color:#ff79c6">for</span> a total of 2.0003998279571533 <span style="color:#8be9fd;font-style:italic">time</span>
+</span></span><span style="display:flex;"><span>The clothes were washed and it took 4.00029993057251 <span style="color:#8be9fd;font-style:italic">time</span>
+</span></span><span style="display:flex;"><span>The rice is cooked, it took 10.000999689102173 <span style="color:#8be9fd;font-style:italic">time</span>
+</span></span><span style="display:flex;"><span>It took 10.001499891281128 <span style="color:#8be9fd;font-style:italic">time</span> in total
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="yield-syntax"><code>yield</code> syntax</h2>
+<p>The above is a multi-threaded method to achieve the asynchronous effect, but the coroutine is not used. The coroutine is available in python2. Now let&rsquo;s take a look at the <code>yield</code> syntax in python2. The following method is executed in python2.6.</p>
+<p>To understand the syntax of <code>yield</code>, you must first understand a concept: <code>Generator</code> &ldquo;Generator&rdquo;, for the concept of generator, you can refer to Liao Xuefeng&rsquo;s tutorial, which is well written, [Generator](
+<a href="https://www.liaoxuefeng.com" title="https://www.liaoxuefeng.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://www.liaoxuefeng.com
+    <i class="fa fa-external-link-alt"></i>
+</a> /wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014317799226173f45ce40636141b6abc8424e12b5fb27000)</p>
+<p>If a function definition contains the <code>yield</code> keyword, the function is no longer a normal function, but a <code>generator</code></p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">h</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;I am yangyanxing&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">yield</span> <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    c <span style="color:#ff79c6">=</span> h()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After running the script, the program does not have any output because it has a yield expression, so we let it execute through the next() statement. The next() statement will resume Generator execution until the next yield expression. for example:</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">h</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;I am yangyanxing&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">yield</span> <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;I am fjy&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    c <span style="color:#ff79c6">=</span> h()
+</span></span><span style="display:flex;"><span>    c<span style="color:#ff79c6">.</span>next()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After calling <code>c.nect()</code>, the function starts to execute. At this time, &ldquo;I am yangyanxing&rdquo; is printed first, and then the <code>yield</code> keyword is encountered. At this time, the function is interrupted again, the script execution ends, and the program only prints one line&quot; I am yangyanxing&quot;, if you want to print out <code>I am fjy</code>, then you need to call <code>c.next()</code> again, when calling <code>c.next()</code> again, the function returns from the previous <code>yield</code> Execution starts at , and since the function has no <code>yield</code> after that, the program throws a <code>StopIteration</code> exception.</p>
+<p>There is also a <code>send()</code> function related to the <code>next()</code> function. The <code>next</code> function passes <code>None</code>, and the <code>send</code> function can pass the corresponding value. In fact, next() and send() are similar in a certain sense. The difference is that send() can pass the value of the yield expression, while next() cannot pass a specific value, only None. Therefore, we can consider
+c.next() and c.send(None) are the same. See the code below.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">h</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;I am yangyanxing&#39;</span>)
+</span></span><span style="display:flex;"><span>    m <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">yield</span> <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(m)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;I am fjy&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">yield</span> <span style="color:#bd93f9">6</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;They love too much&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    c <span style="color:#ff79c6">=</span> h()
+</span></span><span style="display:flex;"><span>    c<span style="color:#ff79c6">.</span>next()
+</span></span><span style="display:flex;"><span>    c<span style="color:#ff79c6">.</span>send(<span style="color:#f1fa8c">&#34;hahaha&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The output of the function is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>I am yangyanxing
+</span></span><span style="display:flex;"><span>hahaha
+</span></span><span style="display:flex;"><span>I am fjy
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This code analysis, first defines a generator through <code>c = h()</code>, then calls <code>c.next()</code> to start the generator, the generator first prints <code>I am yangyanxing</code> and then encounters <code>m = yield 5 </code> This line of code, then stop, and then call <code>c.send(&quot;hahaha&quot;)</code>, this time the value of m is <code>hahaha</code>, then print out m, then print out <code>I am fjy</code>, and then again When the <code>yield</code> keyword is encountered, the program is terminated again, and the execution of the entire script ends. It should be reminded that when calling for the first time, please use the next() statement or send(None), and you cannot use send to send a non-None value, otherwise an error occurs because there is no yield statement to receive this value.
+So what are the return values ​​of the <code>next()</code> and <code>send()</code> functions? Notice the 5 after the <code>yield</code> in the function above? In fact, this is the return value obtained after calling netx or send.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">h</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;I am yangyanxing&#39;</span>)
+</span></span><span style="display:flex;"><span>    m <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">yield</span> <span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(m)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;I am fjy&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">yield</span> <span style="color:#bd93f9">6</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    c <span style="color:#ff79c6">=</span> h()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(c<span style="color:#ff79c6">.</span>next())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(c<span style="color:#ff79c6">.</span>send(<span style="color:#f1fa8c">&#34;hahaha&#34;</span>))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>the output obtainedfor</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>I am yangyanxing
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">5</span>
+</span></span><span style="display:flex;"><span>hahaha
+</span></span><span style="display:flex;"><span>I am fjy
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">6</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="use-asynchronously">use asynchronously</h1>
+<h2 id="synchronization-troubles">Synchronization troubles</h2>
+<p>First look at the following code, the following is written in python2</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpserver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.ioloop
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.options
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.web
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpclient
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.options <span style="color:#ff79c6">import</span> define, options
+</span></span><span style="display:flex;"><span>define(<span style="color:#f1fa8c">&#34;port&#34;</span>, default<span style="color:#ff79c6">=</span><span style="color:#bd93f9">8000</span>, help<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;run on the given port&#34;</span>, <span style="color:#8be9fd;font-style:italic">type</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">IndexHandler</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        query <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>get_argument(<span style="color:#f1fa8c">&#39;q&#39;</span>)
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(<span style="color:#f1fa8c">&#34;hello </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>query)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>options<span style="color:#ff79c6">.</span>parse_command_line()
+</span></span><span style="display:flex;"><span>    app <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>Application(handlers<span style="color:#ff79c6">=</span>[(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/&#34;</span>, IndexHandler)])
+</span></span><span style="display:flex;"><span>    http_server <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>httpserver<span style="color:#ff79c6">.</span>HTTPServer(app)
+</span></span><span style="display:flex;"><span>    http_server<span style="color:#ff79c6">.</span>listen(options<span style="color:#ff79c6">.</span>port)
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>ioloop<span style="color:#ff79c6">.</span>IOLoop<span style="color:#ff79c6">.</span>instance()<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I use the browser and the script to access the url <code>http://127.0.0.1:8000/?q=yangyanxing</code> respectively, the script is as follows</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> requests<span style="color:#ff79c6">,</span>time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">geturl</span>(url):
+</span></span><span style="display:flex;"><span>     s <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>     r <span style="color:#ff79c6">=</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>     e <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>     <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">int</span>(e<span style="color:#ff79c6">-</span>s))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>getrul(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:8000/?q=yangyanxing&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>server display</p>
+<pre tabindex="0"><code>[I 190114 00:03:46 web:2162] 304 GET /?q=yangyanxing (127.0.0.1) 5000.97ms
+[I 190114 00:03:51 web:2162] 200 GET /?q=yangyanxing (127.0.0.1) 5006.78ms
+</code></pre><p>The script prints as 7 or 8</p>
+<p>In a synchronous application, since only one request can be served at a time. So, if there is a time-consuming operation in a route, such as <code>time.sleep(5)</code> in the code, it means that if there are two requests at the same time, the second request can only wait for the server to process the first one The second request can only be processed after the request, that is, two requests are processed. The shortest is 5 seconds and the longest is 10 seconds. This is only 2. If there are 10, it will take 50 seconds to process all the requests. This The efficiency is unacceptable. Can the server process 10 requests at the same time, as mentioned at the beginning of the article to do three things at the same time. When processing a time-consuming operation, it is not just waiting for this thing to be processed, but Do something else, and notify the caller by calling the callback function when that event is over.</p>
+<h2 id="asynchronous-use">Asynchronous use</h2>
+<ul>
+<li>Client implementation
+Asynchronous use can be divided into client-side invocation and server-side processing. From a simple point of view, the client-side invocation, for example, if you want to visit baidu.com 10 times at the same time, what would you do? You can initiate 10 requests to baidu in sequence, and then initiate the next request after each request. If each request is 1 second, then 10 requests will take at least 10 seconds, excluding IO-related time-consuming, the code may be like this</li>
+</ul>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> requests
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">geturl</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(end<span style="color:#ff79c6">-</span>start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r<span style="color:#ff79c6">.</span>status_code
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">10</span>):
+</span></span><span style="display:flex;"><span>        geturl(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;https://www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;all done,use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(end<span style="color:#ff79c6">-</span>start))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The execution result is as follows:</p>
+<pre tabindex="0"><code>It took 0.2974998950958252 time
+It took 0.0494999885559082 time
+It took 0.0410001277923584 time
+It took 0.029999971389770508 time
+It took 0.18199992179870605 time
+It took 0.02700018882751465 time
+It took 0.022499799728393555 time
+It took 0.020000219345092773 time
+It took 0.020999908447265625 time
+It took 0.019999980926513672 time
+all done, use 0.7105000019073486 time
+</code></pre><p>It took a total of 0.7 seconds, Baidu&rsquo;s response may be too fast, we prepare a local environment to simulate slow return. Here I use tornado&rsquo;s asynchronous coroutine processing first, and then I will explain the usage here in detail.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpserver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.ioloop
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.options
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.web
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpclient
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> urllib
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> json
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> datetime
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.options <span style="color:#ff79c6">import</span> define, options
+</span></span><span style="display:flex;"><span>define(<span style="color:#f1fa8c">&#34;port&#34;</span>, default<span style="color:#ff79c6">=</span><span style="color:#bd93f9">8000</span>, help<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;run on the given port&#34;</span>, <span style="color:#8be9fd;font-style:italic">type</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">IndexHandler</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        query <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>get_argument(<span style="color:#f1fa8c">&#39;q&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>writeres(<span style="color:#f1fa8c">&#34;hello </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>query)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finish()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">writeres</span>(self, returnstr):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(returnstr)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>options<span style="color:#ff79c6">.</span>parse_command_line()
+</span></span><span style="display:flex;"><span>    app <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>Application(handlers<span style="color:#ff79c6">=</span>[(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/&#34;</span>, IndexHandler)])
+</span></span><span style="display:flex;"><span>    http_server <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>httpserver<span style="color:#ff79c6">.</span>HTTPServer(app)
+</span></span><span style="display:flex;"><span>    http_server<span style="color:#ff79c6">.</span>listen(options<span style="color:#ff79c6">.</span>port)
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>ioloop<span style="color:#ff79c6">.</span>IOLoop<span style="color:#ff79c6">.</span>instance()<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The request code was changed to three times, just to illustrate the problem</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">geturl</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(end<span style="color:#ff79c6">-</span>start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r<span style="color:#ff79c6">.</span>status_code
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">3</span>):
+</span></span><span style="display:flex;"><span>        geturl(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:8000/?q=yangyanxing&#34;</span>)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;all done,use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(end<span style="color:#ff79c6">-</span>start))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>result:</p>
+<pre tabindex="0"><code>It took 5.009501695632935 time
+It took 5.012002229690552 time
+It took 5.012502193450928 time
+all done, use 15.035006284713745 time
+</code></pre><p>It can be seen that the time is always 15 seconds, and a url is requested synchronously, and the time is accumulated when no asynchronous processing is performed.</p>
+<p>Next, let&rsquo;s talk about the focus of this article, <code>coroutine</code>.</p>
+<ul>
+<li>define coroutines</li>
+</ul>
+<p>Add the <code>async</code> keyword in front of a normal function, then the function will return a coroutine object, and the function will not be executed immediately.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getUrlByCor</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (end <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r<span style="color:#ff79c6">.</span>status_code
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    s <span style="color:#ff79c6">=</span> getUrlByCor(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;http://127.0.0.1:8000/?q=yangyanxing&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(s)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>operation result:</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span> <span style="color:#ff79c6">&lt;</span>coroutine <span style="color:#8be9fd;font-style:italic">object</span> getUrlByCor at <span style="color:#bd93f9">0x00000000034BBF10</span><span style="color:#ff79c6">&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The s here is a coroutine object, so how can the method in the function be executed? Put this coroutine object into the event loop <code>event_loop</code> to execute</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getUrlByCor</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (end <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r<span style="color:#ff79c6">.</span>status_code
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    s <span style="color:#ff79c6">=</span> getUrlByCor(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:8000/?q=yangyanxing&#34;</span>)
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(s)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Results of the:</p>
+<blockquote>
+<p>took 5.009500026702881 time</p>
+</blockquote>
+<p>What if three requests are sent at the same time?
+Here we need to encapsulate the coroutine and encapsulate it into a task object</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getUrlByCor</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (end <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r<span style="color:#ff79c6">.</span>text
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    s <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    tasks <span style="color:#ff79c6">=</span> [asyncio<span style="color:#ff79c6">.</span>ensure_future(getUrlByCor(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:8000/?q=yangyanxing&#34;</span>)) <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">3</span>)]
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">len</span>(tasks), tasks)
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(asyncio<span style="color:#ff79c6">.</span>wait(tasks))
+</span></span><span style="display:flex;"><span>    e <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(e<span style="color:#ff79c6">-</span>s))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> task <span style="color:#ff79c6">in</span> tasks:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Task Result:&#39;</span>, task<span style="color:#ff79c6">.</span>result())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The result is as follows:</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#bd93f9">3</span> [<span style="color:#ff79c6">&lt;</span>Task pending coro<span style="color:#ff79c6">=&lt;</span>getUrlByCor() running at E:<span style="color:#ff79c6">/</span>Github<span style="color:#ff79c6">/</span>asyncTorMysql<span style="color:#ff79c6">/</span>asynctest<span style="color:#ff79c6">.</span>py:<span style="color:#bd93f9">69</span><span style="color:#ff79c6">&gt;&gt;</span>, <span style="color:#ff79c6">&lt;</span>Task pending coro<span style="color:#ff79c6">=&lt;</span>getUrlByCor() running at E:<span style="color:#ff79c6">/</span>Github<span style="color:#ff79c6">/</span>asyncTorMysql<span style="color:#ff79c6">/</span>asynctest<span style="color:#ff79c6">.</span>py: <span style="color:#bd93f9">69</span><span style="color:#ff79c6">&gt;&gt;</span>, <span style="color:#ff79c6">&lt;</span>Task pending coro<span style="color:#ff79c6">=&lt;</span>getUrlByCor() running at E:<span style="color:#ff79c6">/</span>Github<span style="color:#ff79c6">/</span>asyncTorMysql<span style="color:#ff79c6">/</span>asynctest<span style="color:#ff79c6">.</span>py:<span style="color:#bd93f9">69</span><span style="color:#ff79c6">&gt;&gt;</span>]
+</span></span><span style="display:flex;"><span>It took <span style="color:#bd93f9">5.008501291275024</span> time
+</span></span><span style="display:flex;"><span>It took <span style="color:#bd93f9">5.012002229690552</span> time
+</span></span><span style="display:flex;"><span>It took <span style="color:#bd93f9">5.012002229690552</span> time
+</span></span><span style="display:flex;"><span>use <span style="color:#bd93f9">15.03450632095337</span> time
+</span></span><span style="display:flex;"><span>Task Result: hello yangyanxing
+</span></span><span style="display:flex;"><span>Task Result: hello yangyanxing
+</span></span><span style="display:flex;"><span>Task Result: hello yangyanxing
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The total time is still 15 seconds, and the asynchronous is not implemented, or the requests are executed synchronously in sequence.
+In fact, to achieve asynchronous processing, we must first have a suspend operation. When a task needs to wait for the IO result, we can suspend the current task and perform other tasks instead, so that we can make full use of resources. The above method They are all serious serial walk down, not even a hang, how is it possible to achieve asynchronous?</p>
+<p>The time-consuming operation of the above function is <code>r = requests.get(url)</code> So what about writing it as pending?
+<code>r = await requests.get(url)</code></p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getUrlByCor</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (end <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r<span style="color:#ff79c6">.</span>text
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    s <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    tasks <span style="color:#ff79c6">=</span> [asyncio<span style="color:#ff79c6">.</span>ensure_future(getUrlByCor(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:8000/?q=yangyanxing&#34;</span>)) <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">3</span>)]
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">len</span>(tasks), tasks)
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(asyncio<span style="color:#ff79c6">.</span>wait(tasks))
+</span></span><span style="display:flex;"><span>    e <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(e<span style="color:#ff79c6">-</span>s))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> task <span style="color:#ff79c6">in</span> tasks:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Task Result:&#39;</span>, task<span style="color:#ff79c6">.</span>result())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Unsurprisingly, I got an error</p>
+<blockquote>
+<p>Task exception was never retrieved
+future: &lt;Task finished coro=&lt;getUrlByCor() done, defined at E:/Github/asyncTorMysql/asynctest.py:69&gt; exception=TypeError(&ldquo;object Response can&rsquo;t be used in &lsquo;await&rsquo; expression&rdquo;,)&gt;
+Traceback (most recent call last):
+File &ldquo;C:\Python35\lib\asyncio\tasks.py&rdquo;, line 240, in _step
+result = coro.send(None)
+File &ldquo;E:/Github/asyncTorMysql/asynctest.py&rdquo;, line 71, in getUrlByCor
+r = await requests.get(url)
+TypeError: object Response can&rsquo;t be used in &lsquo;await&rsquo; expression</p>
+</blockquote>
+<p>This error means that the Response object returned by requests cannot be used with await, and the object behind await must be in one of the following formats</p>
+<ol>
+<li>Native coroutine object</li>
+<li>A generator decorated with types.coroutine() that returns a coroutine object.</li>
+<li>An iterator returned by an object containing the __await method.</li>
+</ol>
+<p>The Response returned by reqeusts does not meet any of the above conditions, so the above error will be reported.</p>
+<p>Since the object after <code>await</code> is a <code>coroutine</code> object, isn&rsquo;t it OK to wrap it after <code>async</code>?</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(url):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> requests<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getUrlByCor</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (end <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r<span style="color:#ff79c6">.</span>text
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    s <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    tasks <span style="color:#ff79c6">=</span> [asyncio<span style="color:#ff79c6">.</span>ensure_future(getUrlByCor(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:8000/?q=yangyanxing&#34;</span>)) <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">3</span>)]
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">len</span>(tasks), tasks)
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(asyncio<span style="color:#ff79c6">.</span>wait(tasks))
+</span></span><span style="display:flex;"><span>    e <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(e<span style="color:#ff79c6">-</span>s))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> task <span style="color:#ff79c6">in</span> tasks:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Task Result:&#39;</span>, task<span style="color:#ff79c6">.</span>result())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>No error is reported this time, but there is still no asynchronous execution</p>
+<pre tabindex="0"><code>It took 5.0090014934539795 time
+It took 5.011002063751221 time
+It took 5.011502027511597 time
+use 15.03450632095337 time
+Task Result: hello yangyanxing
+Task Result: hello yangyanxing
+Task Result: hello yangyanxing
+</code></pre><p>That is to say, it is not feasible for us to only encapsulate the code involving IO operations into async decorated methods! We must use a request method that supports asynchronous operations to achieve true asynchrony, so aiohttp comes in handy here.</p>
+<p>aiohttp is a library that supports asynchronous requests. Using it with asyncio, we can easily implement asynchronous request operations.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(url):
+</span></span><span style="display:flex;"><span>    session <span style="color:#ff79c6">=</span> aiohttp<span style="color:#ff79c6">.</span>ClientSession()
+</span></span><span style="display:flex;"><span>    res <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> session<span style="color:#ff79c6">.</span>get(url)
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> res<span style="color:#ff79c6">.</span>text()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> session<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> result
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getUrlByCor</span>(url):
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    r <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> get(url)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span> <span style="color:#ff79c6">%</span> (end <span style="color:#ff79c6">-</span> start))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> r
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    s <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    tasks <span style="color:#ff79c6">=</span> [asyncio<span style="color:#ff79c6">.</span>ensure_future(getUrlByCor(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;http://127.0.0.1:8000/?q=yangyanxing&#34;</span>)) <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">3</span>)]
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">len</span>(tasks), tasks)
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(asyncio<span style="color:#ff79c6">.</span>wait(tasks))
+</span></span><span style="display:flex;"><span>    e <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;use </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(e<span style="color:#ff79c6">-</span>s))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> task <span style="color:#ff79c6">in</span> tasks:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Task Result:&#39;</span>, task<span style="color:#ff79c6">.</span>result())
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Results of the:</p>
+<pre tabindex="0"><code>It took 5.006500005722046 time
+It took 5.006499767303467 time
+It took 5.006500005722046 time
+use 5.008500099182129 time
+Task Result: hello yangyanxing
+Task Result: hello yangyanxing
+Task Result: hello yangyanxing
+</code></pre><p>This time, the asynchronous request is finally realized.</p>
+<p>Remember the original laundry and cooking example? It can be implemented using asynchronous coroutines, the code looks like this</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading<span style="color:#ff79c6">,</span>multiprocessing
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> aiohttp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">water</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Starting to boil water&#34;</span>)
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>) <span style="color:#6272a4"># Asyncio.sleep is used here to sleep asynchronously</span>
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> (<span style="color:#f1fa8c">&#34;Water is boiling&#34;</span>, end <span style="color:#ff79c6">-</span> start)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">wash</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Start doing laundry&#34;</span>)
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> (<span style="color:#f1fa8c">&#34;The laundry is done&#34;</span>, end <span style="color:#ff79c6">-</span> start)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">cook</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Start cooking&#34;</span>)
+</span></span><span style="display:flex;"><span>    start <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">10</span>)
+</span></span><span style="display:flex;"><span>    end <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> (<span style="color:#f1fa8c">&#34;Rice is ready&#34;</span>, end <span style="color:#ff79c6">-</span> start)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">alarm</span>(task):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(task<span style="color:#ff79c6">.</span>result()[<span style="color:#bd93f9">0</span>],task<span style="color:#ff79c6">.</span>result()[<span style="color:#bd93f9">1</span>]))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    tasks <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># initialize task</span>
+</span></span><span style="display:flex;"><span>    task_water <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>ensure_future(water())
+</span></span><span style="display:flex;"><span>    task_wash <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>ensure_future(wash())
+</span></span><span style="display:flex;"><span>    task_cook <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>ensure_future(cook())
+</span></span><span style="display:flex;"><span>    tasks<span style="color:#ff79c6">.</span>extend([task_water,task_wash,task_cook])
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Bind these three tasks to the callback function</span>
+</span></span><span style="display:flex;"><span>    task_water<span style="color:#ff79c6">.</span>add_done_callback(alarm)
+</span></span><span style="display:flex;"><span>    task_wash<span style="color:#ff79c6">.</span>add_done_callback(alarm)
+</span></span><span style="display:flex;"><span>    task_cook<span style="color:#ff79c6">.</span>add_done_callback(alarm)
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Put the task in the event loop</span>
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_until_complete(asyncio<span style="color:#ff79c6">.</span>wait(tasks))
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Results of the:</p>
+<blockquote>
+<p>Start to boil water
+start doing laundry
+start cooking
+It took 2.0 hours for the water to boil
+The clothes were washed and it took 4.003999948501587 time
+The rice is cooked, it took 9.994499921798706 time</p>
+</blockquote>
+<h2 id="server-implementation">Server implementation</h2>
+<ul>
+<li>Let&rsquo;s take a look at tornado&rsquo;s solution in python2.</li>
+</ul>
+<p>Let&rsquo;s turn over and look at the server-side synchronization code written with tornado before.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpserver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.ioloop
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.options
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.web
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpclient
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.options <span style="color:#ff79c6">import</span> define, options
+</span></span><span style="display:flex;"><span>define(<span style="color:#f1fa8c">&#34;port&#34;</span>, default<span style="color:#ff79c6">=</span><span style="color:#bd93f9">8000</span>, help<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;run on the given port&#34;</span>, <span style="color:#8be9fd;font-style:italic">type</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">IndexHandler</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        query <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>get_argument(<span style="color:#f1fa8c">&#39;q&#39;</span>)
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(<span style="color:#f1fa8c">&#34;hello </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>query)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>options<span style="color:#ff79c6">.</span>parse_command_line()
+</span></span><span style="display:flex;"><span>    app <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>Application(handlers<span style="color:#ff79c6">=</span>[(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/&#34;</span>, IndexHandler)])
+</span></span><span style="display:flex;"><span>    http_server <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>httpserver<span style="color:#ff79c6">.</span>HTTPServer(app)
+</span></span><span style="display:flex;"><span>    http_server<span style="color:#ff79c6">.</span>listen(options<span style="color:#ff79c6">.</span>port)
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>ioloop<span style="color:#ff79c6">.</span>IOLoop<span style="color:#ff79c6">.</span>instance()<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In the get method in <code>IndexHandler</code>, due to a time-consuming operation, <code>time.sleep(5)</code> takes 5 seconds to process this request. During the stuck time, tornado can no longer complete other tasks. If you send another <code>/</code> request at this time, you can only wait for the previous request operation to end before processing the new request. If 10,000 requests are sent at the same time, it is conceivable , the last request will not be processed until the year of the monkey and the month of the horse&hellip;</p>
+<p>The solution is to use the <code>@tornado.web.asynchronous</code> and <code>@tornado.gen.coroutine</code> decorators to put time-consuming operations on threads to execute, where the time-consuming operation <code>time.sleep(5) </code> is Blocking, so put the blocking function and add the <code> @run_on_executor</code> decorator</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpserver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.ioloop
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.options
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.web
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpclient
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.autoreload
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.concurrent <span style="color:#ff79c6">import</span> run_on_executor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> concurrent.futures <span style="color:#ff79c6">import</span> ThreadPoolExecutor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.options <span style="color:#ff79c6">import</span> define, options
+</span></span><span style="display:flex;"><span>define(<span style="color:#f1fa8c">&#34;port&#34;</span>, default<span style="color:#ff79c6">=</span><span style="color:#bd93f9">8000</span>, help<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;run on the given port&#34;</span>, <span style="color:#8be9fd;font-style:italic">type</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">IndexHandler</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    executor <span style="color:#ff79c6">=</span> ThreadPoolExecutor(<span style="color:#bd93f9">100</span>)
+</span></span><span style="display:flex;"><span>    @tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>asynchronous
+</span></span><span style="display:flex;"><span>    @tornado<span style="color:#ff79c6">.</span>gen<span style="color:#ff79c6">.</span>coroutine
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        query <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>get_argument(<span style="color:#f1fa8c">&#39;q&#39;</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">yield</span> self<span style="color:#ff79c6">.</span>sleepBlock(<span style="color:#bd93f9">2</span>, query)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(<span style="color:#f1fa8c">&#34;hello </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>res)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finish()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    @run_on_executor
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">sleepBlock</span>(self, sleeptime, query):
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(sleeptime)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> query
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>options<span style="color:#ff79c6">.</span>parse_command_line()
+</span></span><span style="display:flex;"><span>    app <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>Application(handlers<span style="color:#ff79c6">=</span>[(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/&#34;</span>, IndexHandler)],settings<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#34;debug&#34;</span>:<span style="color:#ff79c6">True</span>})
+</span></span><span style="display:flex;"><span>    http_server <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>httpserver<span style="color:#ff79c6">.</span>HTTPServer(app)
+</span></span><span style="display:flex;"><span>    http_server<span style="color:#ff79c6">.</span>listen(options<span style="color:#ff79c6">.</span>port)
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>ioloop<span style="color:#ff79c6">.</span>IOLoop<span style="color:#ff79c6">.</span>instance()<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Notice that there is a line of code to initialize the executor in <code>IndexHandler</code> <code>executor = ThreadPoolExecutor(100)</code> The parameter 100 here is the maximum number of threads, I pass 100 here, which means that 100 requests can be processed at the same time. When there are 101 requests, the first 100 requests can be executed within 2 seconds at the same time, and the last request will be executed after the thread that has ended before.</p>
+<ul>
+<li>Take a look at tornado&rsquo;s solution in python3.5</li>
+</ul>
+<p>Since the standard library <code>asyncio</code> was introduced after python3.5, many asynchronous operations can be operated with this library</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpserver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.ioloop
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.options
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.web
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.httpclient
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> tornado.autoreload
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.concurrent <span style="color:#ff79c6">import</span> run_on_executor
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> concurrent.futures <span style="color:#ff79c6">import</span> ThreadPoolExecutor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> tornado.options <span style="color:#ff79c6">import</span> define, options
+</span></span><span style="display:flex;"><span>define(<span style="color:#f1fa8c">&#34;port&#34;</span>, default<span style="color:#ff79c6">=</span><span style="color:#bd93f9">8000</span>, help<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;run on the given port&#34;</span>, <span style="color:#8be9fd;font-style:italic">type</span><span style="color:#ff79c6">=</span><span style="color:#8be9fd;font-style:italic">int</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">IndexHandler</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    executor <span style="color:#ff79c6">=</span> ThreadPoolExecutor(<span style="color:#bd93f9">100</span>)
+</span></span><span style="display:flex;"><span>    @tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>asynchronous
+</span></span><span style="display:flex;"><span>    @tornado<span style="color:#ff79c6">.</span>gen<span style="color:#ff79c6">.</span>coroutine
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        query <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>get_argument(<span style="color:#f1fa8c">&#39;q&#39;</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">yield</span> self<span style="color:#ff79c6">.</span>sleepBlock(<span style="color:#bd93f9">2</span>, query)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(<span style="color:#f1fa8c">&#34;hello </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>res)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finish()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    @run_on_executor
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">sleepBlock</span>(self, sleeptime, query):
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(sleeptime)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> query
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">asyncIndexHandler</span>(tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>RequestHandler):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">get</span>(self):
+</span></span><span style="display:flex;"><span>        query <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>get_argument(<span style="color:#f1fa8c">&#39;q&#39;</span>)
+</span></span><span style="display:flex;"><span>        res <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> self<span style="color:#ff79c6">.</span>sleepBlock(<span style="color:#bd93f9">2</span>, query)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>write(<span style="color:#f1fa8c">&#34;hello </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>res)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finish()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">sleepBlock</span>(self, sleeptime, query):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(sleeptime) <span style="color:#6272a4"># use asynchronous sleep method</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> query
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>options<span style="color:#ff79c6">.</span>parse_command_line()
+</span></span><span style="display:flex;"><span>    app <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>web<span style="color:#ff79c6">.</span>Application(handlers<span style="color:#ff79c6">=</span>[
+</span></span><span style="display:flex;"><span>        (<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/&#34;</span>, IndexHandler),
+</span></span><span style="display:flex;"><span>        (<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#34;/async&#34;</span>, asyncIndexHandler)
+</span></span><span style="display:flex;"><span>    ],settings<span style="color:#ff79c6">=</span>{<span style="color:#f1fa8c">&#34;debug&#34;</span>:<span style="color:#ff79c6">True</span>})
+</span></span><span style="display:flex;"><span>    http_server <span style="color:#ff79c6">=</span> tornado<span style="color:#ff79c6">.</span>httpserver<span style="color:#ff79c6">.</span>HTTPServer(app)
+</span></span><span style="display:flex;"><span>    http_server<span style="color:#ff79c6">.</span>listen(options<span style="color:#ff79c6">.</span>port)
+</span></span><span style="display:flex;"><span>    tornado<span style="color:#ff79c6">.</span>ioloop<span style="color:#ff79c6">.</span>IOLoop<span style="color:#ff79c6">.</span>instance()<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The get method in <code>IndexHandler</code> uses the <code>async</code> and <code>await</code> keywords to process requests asynchronously. Here <code>asyncio.sleep(5)</code> is an asynchronous pause for 5 seconds. How to deal with the library that uses asynchronous requests, for example, if I want to use <code>time.sleep(5)</code>, it needs to run in the thread pool, just like the <code>@run_on_executor</code> in the above <code>/</code> route.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>There are many knowledge points involved in asynchronous operations, and different versions of python handle asynchronous processing differently. Some things such as <code>yield</code> are difficult to understand and need to be practiced in the project. The original intention of <code>tornado</code> is also an asynchronous network. The library, through the use of non-blocking network I/O, Tornado can support tens of thousands of connections, so more consideration should be given to asynchronous non-blocking coding during use.</p>
+<p>Reference article</p>
+<p>
+<a href="https://cuiqingcai.com/6160.html" title="Crawler is too slow? Let&amp;rsquo;s try speeding up with asynchronous coroutines! " rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Crawler is too slow? Let&rsquo;s try speeding up with asynchronous coroutines! 
+    <i class="fa fa-external-link-alt"></i>
+</a>
+
+<a href="https://www.jianshu.com/p/7690edfe9ba5" title="Python3 asynchronous coroutine function async specific usage" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Python3 asynchronous coroutine function async specific usage
+    <i class="fa fa-external-link-alt"></i>
+</a>
+
+<a href="http://www.cnblogs.com/coderzh/articles/1202040.html" title="Python delicious every day (25) - in-depth understanding of yield" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Python delicious every day (25) - in-depth understanding of yield
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>
+<a href="https://blog.csdn.net/soonfly/article/details/78361819" title="Understanding Python coroutines: from yield/send to yield from to async/await" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Understanding Python coroutines: from yield/send to yield from to async/await
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>
+<a href="http://www.dongwm.com/archives/shi-yong-tornadorang-ni-de-qing-qiu-yi-bu-fei-zu-sai/" title="Use tornado to make your requests asynchronous and non-blocking" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Use tornado to make your requests asynchronous and non-blocking
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Asynchronous practice and tornado application in python
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/async_in_python.html" title="Asynchronous practice and tornado application in python">https://enblog.yangyanxing.com/article/async_in_python.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/python_generate_password_hash.html" rel="next" title="Encrypt password with salted hash function in python">
+      <i class="fa fa-chevron-left"></i> Encrypt password with salted hash function in python
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/specialuse-in-pymongo.html" rel="prev" title="special query in pymongo">
+      special query in pymongo
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

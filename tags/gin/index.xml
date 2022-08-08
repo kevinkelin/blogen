@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gin on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/gin.html</link>
+    <description>Recent content in gin on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 24 Jul 2022 20:57:24 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/gin/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The pit that Socket.io stepped on in gin</title>
+      <link>https://enblog.yangyanxing.com/article/socketio-gin-experience.html</link>
+      <pubDate>Sun, 24 Jul 2022 20:57:24 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/socketio-gin-experience.html</guid>
+      <description>&lt;p&gt;Recently, golang is used to build the background system. The framework uses the very famous gin framework. Since socket.io needs to be used for long connection management in the project, the official recommended golang server is [go-socket.io](https:// github.com/googollee/go-socket.io), so according to the official document example, the background service is very simple.
+However, there are various problems when using the client to connect. This article records the solutions.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Cross-domain problem of using gin to build api backend system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-cors.html</link>
+      <pubDate>Fri, 14 Jan 2022 23:41:15 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-cors.html</guid>
+      <description>&lt;p&gt;In the development mode of front-end and back-end separation, the cross-domain problem has always been a common problem. The general solution is divided into front-end and back-end. The front-end is mainly solved by jsonp, but the back-end solution will be more convenient. This article records the use of gin The framework solves cross-domain problems in the backend.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build redis of api background system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-redis.html</link>
+      <pubDate>Sun, 09 Jan 2022 00:12:51 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-redis.html</guid>
+      <description>&lt;p&gt;Redis has a very important position in the web system and can act as a cache, message queue, step-by-step lock, etc. This article introduces the use of the go-redis library to simply operate redis.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Middleware development using gin to build api backend system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-midware.html</link>
+      <pubDate>Sat, 08 Jan 2022 00:11:03 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-midware.html</guid>
+      <description>&lt;p&gt;In the previous articles, the default &lt;code&gt;gin.Default()&lt;/code&gt; was basically used to initialize an engine, and then the Run method of the engine was called to run a web service. Now if there is a demand, some APIs only manage Only administrators can access, and non-administrators are very 401. We can write a method and call this method on the interface that requires authorization to verify the authority, but in gin, we can also use a more elegant method, middleware.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>MySQL preliminary CURD for building api backend system using gin</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-mysql-base.html</link>
+      <pubDate>Fri, 07 Jan 2022 00:10:37 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-mysql-base.html</guid>
+      <description>&lt;p&gt;The previous articles introduced the basic use of the gin framework. Modern web systems rarely deal with databases. The next few articles will briefly introduce how to use MySQL, Mongodb, and redis, which are commonly used in daily life. Use, this first introduces the use of MySQL.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build cookie and session of api background system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-cookie-session.html</link>
+      <pubDate>Tue, 04 Jan 2022 00:07:49 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-cookie-session.html</guid>
+      <description>&lt;p&gt;The previous articles are all stateless requests. When dealing with stateful requests, such as user login scenarios, the web system usually uses cookies or sessions to record user status. This article records cookies and sessions under the gin framework. usage of.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build api background system to get request parameters</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-params.html</link>
+      <pubDate>Thu, 16 Dec 2021 00:06:45 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-params.html</guid>
+      <description>&lt;p&gt;The previous article recorded the construction of the gin framework and the basic use of routing. This article mainly records the problem of parameter transmission in the routing process, including GET and POST parameters, and the use of path parameters.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build the framework of the API background system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-basic.html</link>
+      <pubDate>Wed, 15 Dec 2021 00:06:04 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-basic.html</guid>
+      <description>&lt;p&gt;Gin is a popular framework in golang. Many systems are developed under this framework. This framework feels to me like Tornado&amp;rsquo;s position in python. It has basic functions, but if you want to use it well, I still need to develop a lot of my own functions and middleware. After reading a lot of tutorials, I want to record the learning process.&lt;/p&gt;
+&lt;p&gt;This series simply implements some usable methods for background services, such as obtaining parameters, database query, etc. The overall project is not about the structure, at most it is a quick start, and the directory structure is not so particular, because beginners, So there will definitely be a lot of questions. Later, I will practice a little bit of repair.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

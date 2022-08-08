@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Use uiautomator&#39;s python package for android UI testing" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Use uiautomator&#39;s python package for android UI testing" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/how-to-use-uiautomator-with-python.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2015-08-28 01:17:30 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2015-08-28 01:17:30 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Use uiautomator&#39;s python package for android UI testing - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-overview-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/how-to-use-uiautomator-with-python.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use uiautomator&#39;s python package for android UI testing">
+      <meta itemprop="description" content="In a recent project, there is a requirement to perform compatibility tests on applications on at least 100 mobile phones. The first thing that comes to mind is to automate the operation.
+The basic requirements are as follows, install the application under test, start and exit, and then install the test sample to detect whether there is a corresponding pop-up window interception
+Considering the various test frameworks on the market and the programming languages ​​that I am familiar with, I finally chose Google&rsquo;s own uiautomator to do it. With the help of predecessors, it was encapsulated in python, so it was very smooth at the beginning, but the whole process was still There&rsquo;s a lot to be aware of">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Use uiautomator&#39;s python package for android UI testing </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2015-08-28 01:17:30 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2015-08-28 01:17:30 &#43;0000 UTC">2015-08-28</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>2723</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>13min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In a recent project, there is a requirement to perform compatibility tests on applications on at least 100 mobile phones. The first thing that comes to mind is to automate the operation.</p>
+<p>The basic requirements are as follows, install the application under test, start and exit, and then install the test sample to detect whether there is a corresponding pop-up window interception</p>
+<p>Considering the various test frameworks on the market and the programming languages ​​that I am familiar with, I finally chose Google&rsquo;s own uiautomator to do it. With the help of predecessors, it was encapsulated in python, so it was very smooth at the beginning, but the whole process was still There&rsquo;s a lot to be aware of</p>
+<p>
+<a href="https://github.com/xiaocong/uiautomator" title="https://github.com/xiaocong/uiautomator" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://github.com/xiaocong/uiautomator
+    <i class="fa fa-external-link-alt"></i>
+</a> This is the python encapsulation of xiaocong, which is also This small test case is used, worship it</p>
+<h1 id="prepare">Prepare:</h1>
+<p>python27, can not use python26, install urllib3 and uiautomator, you can use the easy_install command, install the android SDK, configure the environment variables of adb, these should be the most basic environment configuration for android testers, the application to be tested is the 360 ​​mobile phone first aid kit , can be downloaded from 
+<a href="http://jijiu.360.cn/" title="http://jijiu.360.cn/" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    http://jijiu.360.cn/
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>The following is the basic test flow</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Need to configure adb environment variables</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 1. First determine how many mobile phones you have</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 2. Determine how many applications there are</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 3. Install mkiller first, start mkiller</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 4. Reinstall the test sample</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 5. Check if there is a button to cancel the installation. If it appears, it means that the test has passed. If it does not appear, it means that the test has failed.</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Since we want to use automation, we can&rsquo;t do mobile phone testing. Running one by one should be able to run multiple mobile phones at the same time. My idea is to enable multi-threading to run, and each mobile phone uses one thread to run.</p>
+<h1 id="determine-how-many-phones-there-are">Determine how many phones there are</h1>
+<p>I blocked a method</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">finddevices</span>():
+</span></span><span style="display:flex;"><span>    rst <span style="color:#ff79c6">=</span> util<span style="color:#ff79c6">.</span>exccmd(<span style="color:#f1fa8c">&#39;adb devices&#39;</span>)
+</span></span><span style="display:flex;"><span>    devices <span style="color:#ff79c6">=</span> re<span style="color:#ff79c6">.</span>findall(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;(.*?)\s+device&#39;</span>,rst)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(devices) <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">1</span>:
+</span></span><span style="display:flex;"><span>        deviceIds <span style="color:#ff79c6">=</span> devices[<span style="color:#bd93f9">1</span>:]
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#39;A total of </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> mobile phones were found&#39;</span><span style="color:#ff79c6">%</span><span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(devices)<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> deviceIds:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#39;ID is </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span><span style="color:#ff79c6">%</span>i)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> deviceIds
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>error(<span style="color:#f1fa8c">&#39;No phone found, please check&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="the-use-of-uiautomator-in-python">The use of uiautomator in python</h1>
+<p>Let&rsquo;s talk about the use of uiautomator in python. In fact, the readme.md in github is very clear, but there are still some problems in practice.</p>
+<p>When uiautomator is used, a d object must be initialized, and a single mobile phone can pass the</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> uiautomator <span style="color:#ff79c6">import</span> device <span style="color:#ff79c6">as</span> d
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Multiple phones can</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> uiautomator <span style="color:#ff79c6">import</span> Device
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then initialize the d object by means of d=Device(Serial), and the subsequent operations are basically to operate the d object. It can be imagined that each d corresponds to a mobile phone</p>
+<p>I think this design is a little bit bad, I am still confused about the capitalization of device</p>
+<h1 id="basic-click-action">Basic click action</h1>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># press home key</span>
+</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>press<span style="color:#ff79c6">.</span>home()
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># press back key</span>
+</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>press<span style="color:#ff79c6">.</span>back()
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># the normal way to press back key</span>
+</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>press(<span style="color:#f1fa8c">&#34;back&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># press keycode 0x07(&#39;0&#39;) with META ALT(0x02) on</span>
+</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>press(<span style="color:#bd93f9">0x07</span>, <span style="color:#bd93f9">0x02</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>First install the startup application, install using the adb install command, and start using the adb shell am start command</p>
+<p>The launchable-activity of the mobile phone first aid kit is &lsquo;com.qihoo.mkiller.ui.index.AppEnterActivity&rsquo;, the first launch will pop up the usage agreement asking the user to click &ldquo;Agree and use&rdquo;</p>
+<p>
+<a href="/image/2015/08/dump_3164510212585030182.png" title="&lt;img src=&#34;/image/2015/08/dump_3164510212585030182_thumb.png&#34; alt=&#34;dump_3164510212585030182&#34; title=&#34;dump_3164510212585030182&#34;&gt;" >
+    <img src="/image/2015/08/dump_3164510212585030182_thumb.png" alt="dump_3164510212585030182" title="dump_3164510212585030182">
+</a></p>
+<h1 id="use-of-watcher">use of watcher</h1>
+<p>I use watcher here to monitor and click, the basic watcher method is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;agree&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;agree and use&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;agree and use&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Give the watcher a name first, whatever you want, I call it agree here, write the conditions in when, I here is when the text is &lsquo;agree and use&rsquo;, and then write the operation when these conditions are met, here is click(text =u&rsquo;Agree and use&rsquo;), there is a pit here. When I wrote watcher before, I just wrote click() directly. I thought that if I didn&rsquo;t write the content in it, I would click the element found earlier by default, but later I found out that this is not possible, You must write which object you want to click</p>
+<p>In fact, for this kind of view that only appears once, you don&rsquo;t need to write it in the watcher, you can directly write d(text=u&rsquo;agree and use&rsquo;).click(), but considering that there will be some delay before this interface appears, various mobile phones The performance is different, and it is not easy to add time.sleep() time, so I recommend writing it to the watcher like this, and click when it appears.</p>
+<p>Since this application will request root permissions, sometimes third-party root tools will pop up the corresponding authorization prompt box. I think most root tools should have the &ldquo;Allow&rdquo; button, so I added a watcher</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;allowroot&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;allow&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;allow&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After clicking agree, another pop-up box will pop up to turn on the super mode, here I want to click cancel</p>
+<p>
+<a href="/image/2015/08/dump_3893862848196469772.png" title="&lt;img src=&#34;/image/2015/08/dump_3893862848196469772_thumb.png&#34; alt=&#34;dump_3893862848196469772&#34; title=&#34;dump_3893862848196469772&#34;&gt;" >
+    <img src="/image/2015/08/dump_3893862848196469772_thumb.png" alt="dump_3893862848196469772" title="dump_3893862848196469772">
+</a></p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;cancel&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;cancel&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;cancel&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After that, I have to click the back button, and then a box will pop up whether to exit. This time I want to click &ldquo;Confirm&rdquo;</p>
+<p>
+<a href="/image/2015/08/dump_8250787869838979823.png" title="&lt;img src=&#34;/image/2015/08/dump_8250787869838979823_thumb.png&#34; alt=&#34;dump_8250787869838979823&#34; title=&#34;dump_8250787869838979823&#34;&gt;" >
+    <img src="/image/2015/08/dump_8250787869838979823_thumb.png" alt="dump_8250787869838979823" title="dump_8250787869838979823">
+</a>9823</p>
+<p>This confirmation is handled separately later, but it can also be placed in the watcher, but my consideration is that sometimes when I click the back button, this box may not pop up, so I will try to click a few more times until this box comes out.</p>
+<p>But now there is a problem. I just wrote a d.watcher(&lsquo;cancel&rsquo;).when(text=u&rsquo;cancel&rsquo;).click(text=u&rsquo;cancel&rsquo;), when this box pops up, When the watcher is about to work, it will click to cancel first. This is not what I want, so I added a restriction to the previous click to cancel.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;cancel&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Cancel&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Super protection can greatly improve&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Cancel&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The meaning of textContains is to contain the text inside. The above means that when the text in the interface is &ldquo;Cancel&rdquo;, there must also be a view text that contains u&rsquo;Super protection can be greatly improved&rsquo;, in this case, it is limited Click the &ldquo;Cancel&rdquo; condition, and you will no longer click &ldquo;Cancel&rdquo; when you encounter the prompt box when you exit.</p>
+<p>Try to think of the possible pop-up boxes as much as possible, compare the installation of the application in the Xiaomi mobile phone, and a Xiaomi installation confirmation interface will pop up, and use the following watcher to monitor and click</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;install&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;install&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Do you want to install the application&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;install&#39;</span>,className<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;android.widget. Button&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The overall watcher looks like the following</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;allowroot&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;allow&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;allow&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;install&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;install&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Do you want to install the application&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;install&#39;</span>,className<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;android.widget. Button&#39;</span>) <span style="color:#6272a4">#Specially for Xiaomi pop-up installation interception</span>
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;cancel&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Cancel&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Super protection can greatly improve&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Cancel&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;confirm&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;confirm&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;application permission&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;confirm&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;agree&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;agree and use&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;agree and use&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;weishiuninstall&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;not processed for now&#39;</span>)<span style="color:#ff79c6">.</span>click(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;not processed for now&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Then use d.watchers.run() to start the watcher</p>
+<p>But in the actual watcher, I found that the watcher is not as easy to use as I imagined. Sometimes there is a corresponding view but it is not clickable. After many attempts, I found that when the interface has appeared, then I forcibly use the run() method to start watchers, and then it can click well, so based on this, I wrote a loop to call the run method infinitely, the times limit the number of times, according to the actual project Adjust it, the sleep time can also be adjusted accordingly</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">runwatch</span>(d, data):
+</span></span><span style="display:flex;"><span>    times <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">120</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> data <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">1</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># d.watchers.reset()</span>
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watchers<span style="color:#ff79c6">.</span>run()times <span style="color:#ff79c6">-=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> times <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">break</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">0.5</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When monitoring, you can not only run the monitoring program, but also run the corresponding test steps, so here I put the runwatch method in a thread to run, start a thread for monitoring, and put the test method of the script on another thread run</p>
+<p>thread function</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#thread function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">FuncThread</span>(threading<span style="color:#ff79c6">.</span>Thread):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, func, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap):
+</span></span><span style="display:flex;"><span>        threading<span style="color:#ff79c6">.</span>Thread<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>func <span style="color:#ff79c6">=</span> func
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>params <span style="color:#ff79c6">=</span> params
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>paramMap <span style="color:#ff79c6">=</span> paramMap
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>rst <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finished <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>rst <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>func(<span style="color:#ff79c6">*</span>self<span style="color:#ff79c6">.</span>params, <span style="color:#ff79c6">**</span>self<span style="color:#ff79c6">.</span>paramMap)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finished <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getResult</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> self<span style="color:#ff79c6">.</span>rst
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">isFinished</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> self<span style="color:#ff79c6">.</span>finished
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">doInThread</span>(func, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap):
+</span></span><span style="display:flex;"><span>    t_setDaemon <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#f1fa8c">&#39;t_setDaemon&#39;</span> <span style="color:#ff79c6">in</span> paramMap:
+</span></span><span style="display:flex;"><span>        t_setDaemon <span style="color:#ff79c6">=</span> paramMap[<span style="color:#f1fa8c">&#39;t_setDaemon&#39;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">del</span> paramMap[<span style="color:#f1fa8c">&#39;t_setDaemon&#39;</span>]
+</span></span><span style="display:flex;"><span>    ft <span style="color:#ff79c6">=</span> FuncThread(func, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> t_setDaemon <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        ft<span style="color:#ff79c6">.</span>setDaemon(t_setDaemon)
+</span></span><span style="display:flex;"><span>    ft<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> ft
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>So here the call to start the thread to run the runwatcher is</p>
+<p>data = 0</p>
+<p>doInThread(runwatch,d,data,t_setDaemon=True)</p>
+<h1 id="running-problems-with-multiple-phones">Running problems with multiple phones</h1>
+<p>The basic idea is this, so that when the script is all written, it will run well on a single phone, but once multiple phones are inserted, there will be a problem, all watchers are only valid on one phone, and the other phones can only be stupid I don&rsquo;t know how to click. This problem has been bothering me for a long time. I also sent an issue to the author on github, but then I found a solution myself, which is to add the local_port port number when d=Device(Serial), so that each Each mobile phone uses a different local_port port number, so that each runs its own, all in good condition</p>
+<h1 id="final-code">final code</h1>
+<p>Below is the code of the test script</p>
+<p>mkiller.py, the main test script file</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">148
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">149
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">150
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">151
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">152
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">153
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">154
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">155
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">156
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">157
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os<span style="color:#ff79c6">,</span>sys<span style="color:#ff79c6">,</span>time<span style="color:#ff79c6">,</span>re<span style="color:#ff79c6">,</span>csv
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> log
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> util
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> uiautomator <span style="color:#ff79c6">import</span> Device
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> traceback
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> log<span style="color:#ff79c6">,</span>logging
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> multiprocessing
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>optpath <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>getcwd() <span style="color:#6272a4">#Get the current operating directory</span>
+</span></span><span style="display:flex;"><span>imgpath <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(optpath,<span style="color:#f1fa8c">&#39;img&#39;</span>) <span style="color:#6272a4">#Screenshot directory</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">cleanEnv</span>():
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#39;adb kill-server&#39;</span>)
+</span></span><span style="display:flex;"><span>    needClean <span style="color:#ff79c6">=</span> [<span style="color:#f1fa8c">&#39;log.log&#39;</span>,<span style="color:#f1fa8c">&#39;img&#39;</span>,<span style="color:#f1fa8c">&#39;rst&#39;</span>]
+</span></span><span style="display:flex;"><span>    pwd <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>getcwd()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> needClean:
+</span></span><span style="display:flex;"><span>        delpath <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(pwd,i)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>isfile(delpath):
+</span></span><span style="display:flex;"><span>            cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;del /f/s/q &#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;&#39;</span><span style="color:#ff79c6">%</span> delpath
+</span></span><span style="display:flex;"><span>            os<span style="color:#ff79c6">.</span>system(cmd)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">elif</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>isdir(delpath):
+</span></span><span style="display:flex;"><span>            cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;rd /s/q &#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;&#39;</span> <span style="color:#ff79c6">%</span>delpath
+</span></span><span style="display:flex;"><span>            os<span style="color:#ff79c6">.</span>system(cmd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>isdir(<span style="color:#f1fa8c">&#39;rst&#39;</span>):
+</span></span><span style="display:flex;"><span>        os<span style="color:#ff79c6">.</span>mkdir(<span style="color:#f1fa8c">&#39;rst&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">runwatch</span>(d, data):
+</span></span><span style="display:flex;"><span>    times <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">120</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> data <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">1</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># d.watchers.reset()</span>
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watchers<span style="color:#ff79c6">.</span>run()
+</span></span><span style="display:flex;"><span>        times <span style="color:#ff79c6">-=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> times <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">break</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">0.5</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">installapk</span>(apklist,d,device):
+</span></span><span style="display:flex;"><span>    sucapp <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>    erapp <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># d = Device(device)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">#initialize a result file</span>
+</span></span><span style="display:flex;"><span>    d<span style="color:#ff79c6">.</span>screen<span style="color:#ff79c6">.</span>on()
+</span></span><span style="display:flex;"><span>    rstlogger <span style="color:#ff79c6">=</span> log<span style="color:#ff79c6">.</span>Logger(<span style="color:#f1fa8c">&#39;rst/</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">.log&#39;</span><span style="color:#ff79c6">%</span>device,clevel<span style="color:#ff79c6">=</span>logging<span style="color:#ff79c6">.</span>DEBUG,Flevel<span style="color:#ff79c6">=</span>logging<span style="color:#ff79c6">.</span>INFO)
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">#Install mkiller first</span>
+</span></span><span style="display:flex;"><span>    mkillerpath <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>getcwd(),<span style="color:#f1fa8c">&#39;MKiller_1001.apk&#39;</span>)
+</span></span><span style="display:flex;"><span>    cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;adb -s </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> install -r </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span><span style="color:#ff79c6">%</span> (device,mkillerpath)
+</span></span><span style="display:flex;"><span>    util<span style="color:#ff79c6">.</span>exccmd(cmd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">checkcancel</span>(d,sucapp,erapp):
+</span></span><span style="display:flex;"><span>        times <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">while</span>(times):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> d(textContains <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;uninstall&#39;</span>)<span style="color:#ff79c6">.</span>count:
+</span></span><span style="display:flex;"><span>                <span style="color:#8be9fd;font-style:italic">print</span> d(textContains <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;cancel installation&#39;</span>,className<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;android.widget.Button&#39;</span>)<span style="color:#ff79c6">.</span>info[<span style="color:#f1fa8c">&#39;text&#39;</span>]
+</span></span><span style="display:flex;"><span>                d(textContains <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Uninstall&#39;</span>,className<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;android.widget.Button&#39;</span>)<span style="color:#ff79c6">.</span>click()
+</span></span><span style="display:flex;"><span>                rstlogger<span style="color:#ff79c6">.</span>info(device<span style="color:#ff79c6">+</span><span style="color:#f1fa8c">&#39;The test is successful, a dialog box for canceling the installation will pop up&#39;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>                times <span style="color:#ff79c6">-=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">if</span> times <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>                    rstlogger<span style="color:#ff79c6">.</span>error(device<span style="color:#ff79c6">+</span><span style="color:#f1fa8c">&#39;test failed, no cancel installation dialog box popped up&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;allowroot&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;allow&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;allow&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;install&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;install&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Do you want to install the application&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;install&#39;</span>,className<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;android.widget. Button&#39;</span>) <span style="color:#6272a4">#Specially for Xiaomi pop-up installation interception</span>
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;cancel&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Cancel&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Super protection can greatly improve&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;Cancel&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;confirm&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;confirm&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;application permission&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;confirm&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;agree&#39;</span>)<span style="color:#ff79c6">.</span>when(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;agree and use&#39;</span>)<span style="color:#ff79c6">.</span>click(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;agree and use&#39;</span>)
+</span></span><span style="display:flex;"><span>        d<span style="color:#ff79c6">.</span>watcher(<span style="color:#f1fa8c">&#39;weishiuninstall&#39;</span>)<span style="color:#ff79c6">.</span>when(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;not processed for now&#39;</span>)<span style="color:#ff79c6">.</span>click(textContains<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;not processed for now&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># d.watchers.run()</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>        util<span style="color:#ff79c6">.</span>doInThread(runwatch,d,data,t_setDaemon<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#Start first aid kit and exit first aid kit</span>
+</span></span><span style="display:flex;"><span>        cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;adb -s </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> shell am start com.qihoo.mkiller/com.qihoo.mkiller.ui.index.AppEnterActivity&#39;</span><span style="color:#ff79c6">%</span> device
+</span></span><span style="display:flex;"><span>        util<span style="color:#ff79c6">.</span>exccmd(cmd)
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">5</span>)
+</span></span><span style="display:flex;"><span>        times <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">3</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">while</span>(times):
+</span></span><span style="display:flex;"><span>            d<span style="color:#ff79c6">.</span>press<span style="color:#ff79c6">.</span>back()
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> d(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;confirm&#39;</span>)<span style="color:#ff79c6">.</span>count:
+</span></span><span style="display:flex;"><span>                d(text<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">u</span><span style="color:#f1fa8c">&#39;confirm&#39;</span>)<span style="color:#ff79c6">.</span>click()
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">break</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>                times <span style="color:#ff79c6">-=</span><span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> item <span style="color:#ff79c6">in</span> apklist:
+</span></span><span style="display:flex;"><span>            apkpath<span style="color:#ff79c6">=</span>item
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>exists(apkpath):
+</span></span><span style="display:flex;"><span>                logger<span style="color:#ff79c6">.</span>error(<span style="color:#f1fa8c">&#39;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> application does not exist, please check &#39;</span><span style="color:#ff79c6">%</span>apkpath)
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">continue</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> device:
+</span></span><span style="display:flex;"><span>                cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;adb install -r &#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;&#39;</span> <span style="color:#ff79c6">%</span> apkpath
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>                cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;adb -s </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> install -r &#34;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;&#39;</span><span style="color:#ff79c6">%</span>(device,apkpath)
+</span></span><span style="display:flex;"><span>            util<span style="color:#ff79c6">.</span>doInThread(checkcancel,d,sucapp,erapp)
+</span></span><span style="display:flex;"><span>            rst <span style="color:#ff79c6">=</span> util<span style="color:#ff79c6">.</span>exccmd(cmd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> Exception, e:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>error(traceback<span style="color:#ff79c6">.</span>format_exc())
+</span></span><span style="display:flex;"><span>        data <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> sucapp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">finddevices</span>():
+</span></span><span style="display:flex;"><span>    rst <span style="color:#ff79c6">=</span> util<span style="color:#ff79c6">.</span>exccmd(<span style="color:#f1fa8c">&#39;adb devices&#39;</span>)
+</span></span><span style="display:flex;"><span>    devices <span style="color:#ff79c6">=</span> re<span style="color:#ff79c6">.</span>findall(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;(.*?)\s+device&#39;</span>,rst)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(devices) <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">1</span>:
+</span></span><span style="display:flex;"><span>        deviceIds <span style="color:#ff79c6">=</span> devices[<span style="color:#bd93f9">1</span>:]
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#39;A total of </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> mobile phones were found&#39;</span><span style="color:#ff79c6">%</span><span style="color:#8be9fd;font-style:italic">str</span>(<span style="color:#8be9fd;font-style:italic">len</span>(devices)<span style="color:#ff79c6">-</span><span style="color:#bd93f9">1</span>))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> deviceIds:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#39;ID is </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span><span style="color:#ff79c6">%</span>i)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> deviceIds
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        logger<span style="color:#ff79c6">.</span>error(<span style="color:#f1fa8c">&#39;No phone found, please check&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#needcount: The number of apks to be installed, the default is 0, both safe</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#deviceids: list of phones</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#apklist: List of apk apps</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">doInstall</span>(deviceids,apklist):
+</span></span><span style="display:flex;"><span>    count <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">len</span>(deviceids)
+</span></span><span style="display:flex;"><span>    port_list <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#bd93f9">5555</span>,<span style="color:#bd93f9">5555</span><span style="color:#ff79c6">+</span>count)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">range</span>(<span style="color:#8be9fd;font-style:italic">len</span>(deviceids)):
+</span></span><span style="display:flex;"><span>        d <span style="color:#ff79c6">=</span> Device(deviceids[i],port_list[i])
+</span></span><span style="display:flex;"><span>        util<span style="color:#ff79c6">.</span>doInThread(installapk,apklist,d,deviceids[i])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#end application</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">uninstall</span>(deviceid,packname,timeout<span style="color:#ff79c6">=</span><span style="color:#bd93f9">20</span>):
+</span></span><span style="display:flex;"><span>    cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;adb -s </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> uninstall </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span> <span style="color:#ff79c6">%</span>(deviceid,packname)
+</span></span><span style="display:flex;"><span>    ft <span style="color:#ff79c6">=</span> util<span style="color:#ff79c6">.</span>doInThread(os<span style="color:#ff79c6">.</span>system,cmd,t_setDaemon<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> ft<span style="color:#ff79c6">.</span>isFinished():
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>            timeout <span style="color:#ff79c6">-=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> timeout <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Need to configure adb environment variables</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 1. First determine how many mobile phones you have</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 2. Determine how many applications there are</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 3. Install mkiller first, start mkiller</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 4. Reinstall the test sample</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># 5. Check if there is a button to cancel the installation. If it appears, it means that the test has passed. If it does not appear, it means that the test has failed.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    cleanEnv()
+</span></span><span style="display:flex;"><span>    logger <span style="color:#ff79c6">=</span> util<span style="color:#ff79c6">.</span>logger
+</span></span><span style="display:flex;"><span>    devicelist <span style="color:#ff79c6">=</span> finddevices()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> devicelist:
+</span></span><span style="display:flex;"><span>        apkpath <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>getcwd(),<span style="color:#f1fa8c">&#39;apk&#39;</span>)
+</span></span><span style="display:flex;"><span>        apklist <span style="color:#ff79c6">=</span> util<span style="color:#ff79c6">.</span>listFile(apkpath)
+</span></span><span style="display:flex;"><span>        doInstall(devicelist,apklist) <span style="color:#6272a4">#Every phone must install the apk in the apklist</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>util.py thread and execute cmd script function file</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os<span style="color:#ff79c6">,</span>sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> log
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> logging
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> multiprocessing
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#ff79c6">=</span> log<span style="color:#ff79c6">.</span>Logger(<span style="color:#f1fa8c">&#39;log.log&#39;</span>,clevel<span style="color:#ff79c6">=</span>logging<span style="color:#ff79c6">.</span>DEBUG,Flevel<span style="color:#ff79c6">=</span>logging<span style="color:#ff79c6">.</span>INFO)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">exccmd</span>(cmd):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> os<span style="color:#ff79c6">.</span>popen(cmd)<span style="color:#ff79c6">.</span>read()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> Exception:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Traverse the list of files in the directory</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">listFile</span>(path, isDeep<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>):
+</span></span><span style="display:flex;"><span>    _list <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> isDeep:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">for</span> root, dirs, files <span style="color:#ff79c6">in</span> os<span style="color:#ff79c6">.</span>walk(path):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">for</span> fl <span style="color:#ff79c6">in</span> files:
+</span></span><span style="display:flex;"><span>                    _list<span style="color:#ff79c6">.</span>append(<span style="color:#f1fa8c">&#39;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">\</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span> <span style="color:#ff79c6">%</span> (root, fl))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> fn <span style="color:#ff79c6">in</span> glob<span style="color:#ff79c6">.</span>glob( path <span style="color:#ff79c6">+</span> os<span style="color:#ff79c6">.</span>sep <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#39;*&#39;</span> ):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>isdir(fn):
+</span></span><span style="display:flex;"><span>                _list<span style="color:#ff79c6">.</span>append(<span style="color:#f1fa8c">&#39;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span> <span style="color:#ff79c6">%</span> path <span style="color:#ff79c6">+</span> os<span style="color:#ff79c6">.</span>sep <span style="color:#ff79c6">+</span> fn[fn<span style="color:#ff79c6">.</span>rfind(<span style="color:#f1fa8c">&#39;</span><span style="color:#f1fa8c">\\</span><span style="color:#f1fa8c">&#39;</span>)<span style="color:#ff79c6">+</span><span style="color:#bd93f9">1</span>:])
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> _list
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#thread function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">FuncThread</span>(threading<span style="color:#ff79c6">.</span>Thread):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, func, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap):
+</span></span><span style="display:flex;"><span>        threading<span style="color:#ff79c6">.</span>Thread<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>func <span style="color:#ff79c6">=</span> func
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>params <span style="color:#ff79c6">=</span> params
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>paramMap <span style="color:#ff79c6">=</span> paramMap
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>rst <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finished <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>rst <span style="color:#ff79c6">=</span> self<span style="color:#ff79c6">.</span>func(<span style="color:#ff79c6">*</span>self<span style="color:#ff79c6">.</span>params, <span style="color:#ff79c6">**</span>self<span style="color:#ff79c6">.</span>paramMap)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>finished <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getResult</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> self<span style="color:#ff79c6">.</span>rst
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">isFinished</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> self<span style="color:#ff79c6">.</span>finished
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">doInThread</span>(func, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap):
+</span></span><span style="display:flex;"><span>    t_setDaemon <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#f1fa8c">&#39;t_setDaemon&#39;</span> <span style="color:#ff79c6">in</span> paramMap:
+</span></span><span style="display:flex;"><span>        t_setDaemon <span style="color:#ff79c6">=</span> paramMap[<span style="color:#f1fa8c">&#39;t_setDaemon&#39;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">del</span> paramMap[<span style="color:#f1fa8c">&#39;t_setDaemon&#39;</span>]
+</span></span><span style="display:flex;"><span>    ft <span style="color:#ff79c6">=</span> FuncThread(func, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> t_setDaemon <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        ft<span style="color:#ff79c6">.</span>setDaemon(t_setDaemon)
+</span></span><span style="display:flex;"><span>    ft<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> ft
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>log.py log the corresponding function file</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#coding=gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> logging<span style="color:#ff79c6">,</span>os
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> ctypes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FOREGROUND_WHITE <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0x0007</span>
+</span></span><span style="display:flex;"><span>FOREGROUND_BLUE <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0x01</span> <span style="color:#6272a4"># text color contains blue.</span>
+</span></span><span style="display:flex;"><span>FOREGROUND_GREEN<span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0x02</span> <span style="color:#6272a4"># text color contains green.</span>
+</span></span><span style="display:flex;"><span>FOREGROUND_RED <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0x04</span> <span style="color:#6272a4"># text color contains red.</span>
+</span></span><span style="display:flex;"><span>FOREGROUND_YELLOW <span style="color:#ff79c6">=</span> FOREGROUND_RED <span style="color:#ff79c6">|</span> FOREGROUND_GREEN
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>STD_OUTPUT_HANDLE<span style="color:#ff79c6">=</span> <span style="color:#ff79c6">-</span><span style="color:#bd93f9">11</span>
+</span></span><span style="display:flex;"><span>std_out_handle <span style="color:#ff79c6">=</span> ctypes<span style="color:#ff79c6">.</span>windll<span style="color:#ff79c6">.</span>kernel32<span style="color:#ff79c6">.</span>GetStdHandle(STD_OUTPUT_HANDLE)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">set_color</span>(color, handle<span style="color:#ff79c6">=</span>std_out_handle):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">bool</span> <span style="color:#ff79c6">=</span> ctypes<span style="color:#ff79c6">.</span>windll<span style="color:#ff79c6">.</span>kernel32<span style="color:#ff79c6">.</span>SetConsoleTextAttribute(handle, color)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#8be9fd;font-style:italic">bool</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Logger</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, path, clevel <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>DEBUG, Flevel <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>DEBUG):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>getLogger(path)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>setLevel(logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span>        fmt <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>Formatter(<span style="color:#f1fa8c">&#39;[</span><span style="color:#f1fa8c">%(asctime)s</span><span style="color:#f1fa8c">] [</span><span style="color:#f1fa8c">%(levelname)s</span><span style="color:#f1fa8c">] </span><span style="color:#f1fa8c">%(message)s</span><span style="color:#f1fa8c">&#39;</span>, <span style="color:#f1fa8c">&#39;%Y-%m-</span><span style="color:#f1fa8c">%d</span><span style="color:#f1fa8c"> %H:%M:%S&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#Set CMD log</span>
+</span></span><span style="display:flex;"><span>        sh <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>StreamHandler()
+</span></span><span style="display:flex;"><span>        sh<span style="color:#ff79c6">.</span>setFormatter(fmt)
+</span></span><span style="display:flex;"><span>        sh<span style="color:#ff79c6">.</span>setLevel(clevel)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#Set file log</span>
+</span></span><span style="display:flex;"><span>        fh <span style="color:#ff79c6">=</span> logging<span style="color:#ff79c6">.</span>FileHandler(path)
+</span></span><span style="display:flex;"><span>        fh<span style="color:#ff79c6">.</span>setFormatter(fmt)
+</span></span><span style="display:flex;"><span>        fh<span style="color:#ff79c6">.</span>setLevel(Flevel)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>addHandler(sh)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>addHandler(fh)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">debug</span>(self, message):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>debug(message)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">info</span>(self, message):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>info(message)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">war</span>(self, message, color<span style="color:#ff79c6">=</span>FOREGROUND_YELLOW):
+</span></span><span style="display:flex;"><span>        set_color(color)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>warn(message)
+</span></span><span style="display:flex;"><span>        set_color(FOREGROUND_WHITE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">error</span>(self, message, color<span style="color:#ff79c6">=</span>FOREGROUND_RED):
+</span></span><span style="display:flex;"><span>        set_color(color)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>error(message)
+</span></span><span style="display:flex;"><span>        set_color(FOREGROUND_WHITE)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">cri</span>(self, message):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>logger<span style="color:#ff79c6">.</span>critical(message)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    logyyx <span style="color:#ff79c6">=</span> Logger(<span style="color:#f1fa8c">&#39;yyx.log&#39;</span>,logging<span style="color:#ff79c6">.</span>WARNING,logging<span style="color:#ff79c6">.</span>DEBUG)
+</span></span><span style="display:flex;"><span>    logyyx<span style="color:#ff79c6">.</span>debug(<span style="color:#f1fa8c">&#39;a debug message&#39;</span>)
+</span></span><span style="display:flex;"><span>    logyyx<span style="color:#ff79c6">.</span>info(<span style="color:#f1fa8c">&#39;an info info&#39;</span>)
+</span></span><span style="display:flex;"><span>    logyyx<span style="color:#ff79c6">.</span>war(<span style="color:#f1fa8c">&#39;a warning message&#39;</span>)
+</span></span><span style="display:flex;"><span>    logyyx<span style="color:#ff79c6">.</span>error(<span style="color:#f1fa8c">&#39;an error message&#39;</span>)
+</span></span><span style="display:flex;"><span>    logyyx<span style="color:#ff79c6">.</span>cri(<span style="color:#f1fa8c">&#39;a fatal critical message&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Although this small test application is relatively simple, I still encountered some troubles because I just came into contact with the python package of uiautomator, but fortunately, the final result is a good solution to the corresponding problems. There are many interesting places worth exploring, and you will find them later~</p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+    <a href="/tags/android.html">
+    android
+  </a>
+    <a href="/tags/automated-test.html">
+    automated test
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Use uiautomator&#39;s python package for android UI testing
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/how-to-use-uiautomator-with-python.html" title="Use uiautomator&#39;s python package for android UI testing">https://enblog.yangyanxing.com/article/how-to-use-uiautomator-with-python.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/use-uiautomator-for-uitest.html" rel="next" title="Use Uiautomator for UI-based testing">
+      <i class="fa fa-chevron-left"></i> Use Uiautomator for UI-based testing
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/1103.html" rel="prev" title="Queue and multiprocessing in python">
+      Queue and multiprocessing in python
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

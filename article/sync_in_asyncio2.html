@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Processing flow analysis in python asynchronous coroutine (2)" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Processing flow analysis in python asynchronous coroutine (2)" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/sync_in_asyncio2.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-06-14 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-06-14 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Processing flow analysis in python asynchronous coroutine (2) - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#run-synchronous-code-in-a-traditional-multi-threaded-way">Run synchronous code in a traditional multi-threaded way</a></li>
+        <li><a href="#dynamically-add-synchronization-functions-to-the-event-loop">Dynamically add synchronization functions to the event loop</a></li>
+        <li><a href="#dynamically-add-async-functions-to-the-event-loop">Dynamically add async functions to the event loop</a></li>
+        <li><a href="#get-the-return-result-of-the-coroutine">Get the return result of the coroutine</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/sync_in_asyncio2.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Processing flow analysis in python asynchronous coroutine (2)">
+      <meta itemprop="description" content="The previous article 
+
+    Processing Process Analysis in Python Asynchronous Coroutines (1)
+    
+ introduced the use of asyncio to create a single coroutine and multiple coroutines in python3 A coroutine, this article describes how to call synchronous functions in asynchronous applications.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Processing flow analysis in python asynchronous coroutine (2) </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-06-14 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-06-14 00:00:00 &#43;0000 UTC">2019-06-14</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>2725</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>13min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>The previous article 
+<a href="https://mp.weixin.qq.com/s/iNhWG2VJr-PEANzmU8jqbQ" title="Processing Process Analysis in Python Asynchronous Coroutines (1)" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Processing Process Analysis in Python Asynchronous Coroutines (1)
+    <i class="fa fa-external-link-alt"></i>
+</a> introduced the use of asyncio to create a single coroutine and multiple coroutines in python3 A coroutine, this article describes how to call synchronous functions in asynchronous applications.</p>
+<p>There are still three functions prepared before, one blocking and two asynchronous.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># Define the blocking function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">ping</span>(url):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function starts running&#34;</span>)
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#34;ping </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>url)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;End of blocking function&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># define two async functions</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">asyncfunc1</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Suspending func1&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;func func1 &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming func1&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;func1&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">asyncfunc2</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Suspending func2&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;func func2 &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming func2&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;func2&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="run-synchronous-code-in-a-traditional-multi-threaded-way">Run synchronous code in a traditional multi-threaded way</h2>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time<span style="color:#ff79c6">,</span>sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> concurrent
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> functools
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> subprocess
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Define the blocking function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">ping</span>(url):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function starts to run, the current thread ID is: &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#34;ping </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;</span><span style="color:#ff79c6">%</span>url)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;End of blocking function&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    task1 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(asyncfunc1())
+</span></span><span style="display:flex;"><span>    task1<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task2 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(asyncfunc2())
+</span></span><span style="display:flex;"><span>    task2<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>gather(task1,task2)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(result)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mian2</span>():
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>gather(asyncfunc1(), asyncfunc2())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(result)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__<span style="color:#ff79c6">==</span><span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;In main thread &#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Create three child threads</span>
+</span></span><span style="display:flex;"><span>    t1 <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>ping,args<span style="color:#ff79c6">=</span>(<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>,))
+</span></span><span style="display:flex;"><span>    t2 <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>ping,args<span style="color:#ff79c6">=</span>(<span style="color:#f1fa8c">&#34;www.yangyanxing.com&#34;</span>,))
+</span></span><span style="display:flex;"><span>    t3 <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>ping,args<span style="color:#ff79c6">=</span>(<span style="color:#f1fa8c">&#34;www.qq.com&#34;</span>,))
+</span></span><span style="display:flex;"><span>    t1<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    t2<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    t3<span style="color:#ff79c6">.</span>start()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>output result</p>
+<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 9208)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 8720)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started 9368)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started 8320)&gt;
+
+Pinging https.qq.com [123.151.137.18] with 32 bytes of data:
+Reply from 123.151.137.18: bytes=32 time=4ms TTL=53
+
+Pinging www.a.shifen.com [220.181.38.150] with 32 bytes of data:
+Reply from 220.181.38.150: bytes=32 time=1ms TTL=54
+
+Pinging yangyanxing.coding.me [119.28.76.36] with 32 bytes of data:
+....
+....
+The blocking function finishes running
+</code></pre><p>As you can see, the main thread and the child thread run in different threads.</p>
+<h2 id="dynamically-add-synchronization-functions-to-the-event-loop">Dynamically add synchronization functions to the event loop</h2>
+<p>The solution is to start a child thread first, this thread is used to run the event loop loop, and then dynamically add the synchronization function to the event loop</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time<span style="color:#ff79c6">,</span>sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> concurrent
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> functools
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> subprocess
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Define the blocking function</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function starts to run, the current thread ID is: &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Simulated ping output &#34;</span>,url)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function ends, the current thread ID is: &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Define a thread function that runs the event loop</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_thread_loop</span>(loop):
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>set_event_loop(loop)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__<span style="color:#ff79c6">==</span><span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;In main thread &#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Run the event loop in the child thread, let it run_forever</span>
+</span></span><span style="display:flex;"><span>    t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>start_thread_loop, args<span style="color:#ff79c6">=</span>(loop,))
+</span></span><span style="display:flex;"><span>    t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Dynamically add synchronization functions in the main thread</span>
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>call_soon_threadsafe(ping,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>call_soon_threadsafe(ping,<span style="color:#f1fa8c">&#34;www.qq.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>call_soon_threadsafe(ping,<span style="color:#f1fa8c">&#34;www.yangyanxing.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;The main thread will not block&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Since I get a lot of output from the ping command, I modified the function a little bit, just simulate printing a line of text, but the time.sleep(2) in the function is a blocking function
+The output obtained is</p>
+<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 7924)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
+The main thread does not block
+Simulate ping output www.baidu.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
+Simulate ping output www.qq.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
+Simulate ping output www.yangyanxing.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
+</code></pre><p>It can be seen from the output that <code>loop.call_soon_threadsafe()</code> and the main thread are running in the same thread, although <code>loop.call_soon_threadsafe()</code> does not block the running of the main thread, but because the function ping that needs to run is blocked The function is called three times, and the results of these three times are executed sequentially, and no concurrency is achieved.
+If you want to achieve concurrency, you need to execute the synchronization function in an executor through <code>run_in_executor</code>. This method needs to pass in three parameters, <code>run_in_executor(self, executor, func, *args)</code> The first one is the executor, and None can be passed in by default. If None is passed in, the default executor will be used, generally Executors can use thread or process executors.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time<span style="color:#ff79c6">,</span>sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> concurrent
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> functools
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> subprocess
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Define the blocking function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">ping</span>(url):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function starts to run, the current thread ID is: &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Simulated ping output &#34;</span>,url)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function ends, the current thread ID is: &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Define a thread function that runs the event loop</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_thread_loop</span>(loop):
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>set_event_loop(loop)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__<span style="color:#ff79c6">==</span><span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;In main thread &#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Run the event loop in the child thread, let it run_forever</span>
+</span></span><span style="display:flex;"><span>    t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>start_thread_loop, args<span style="color:#ff79c6">=</span>(loop,))
+</span></span><span style="display:flex;"><span>    t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Dynamically add synchronization functions in the main thread</span>
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_in_executor(<span style="color:#ff79c6">None</span>,ping,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_in_executor(<span style="color:#ff79c6">None</span>,ping,<span style="color:#f1fa8c">&#34;www.qq.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_in_executor(<span style="color:#ff79c6">None</span>,ping,<span style="color:#f1fa8c">&#34;www.yangyanxing.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;The main thread will not block&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>the output obtained</p>
+<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 8588)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 9068)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started daemon 7200)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-4, started daemon 10924)&gt;
+The main thread does not block
+Simulate ping output www.yangyanxing.com
+Simulate ping output www.baidu.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-4, started daemon 10924)&gt;
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 9068)&gt;
+Simulate ping output www.qq.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-3, started daemon 7200)&gt;
+</code></pre><p>It can be seen that the synchronization functions achieve concurrency, but they run in different threads, which is the same as the traditional use of multithreading.</p>
+<p>As mentioned above, the first parameter of run_in_executor is the executor. Here the executor uses two classes under <code>concurrent.futures</code>, one is thread and the other is process, that is, the executor can be divided into thread executor and process Actuator. They all have a <code>max_workers</code> parameter when they are initialized. If they are not passed, it will be determined by the system itself.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time<span style="color:#ff79c6">,</span>sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> concurrent
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> functools
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> subprocess
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Define the blocking function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">ping</span>(url):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function starts to run, the current thread ID is:&#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread(),<span style="color:#f1fa8c">&#34;The process ID is:&#34;</span>,os<span style="color:#ff79c6">.</span>getpid())
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Simulated ping output &#34;</span>,url)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function ends, the current thread ID is: &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Define a thread function that runs the event loop</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_thread_loop</span>(loop):
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>set_event_loop(loop)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__<span style="color:#ff79c6">==</span><span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;In main thread &#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Run the event loop in the child thread, let it run_forever</span>
+</span></span><span style="display:flex;"><span>    t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>start_thread_loop, args<span style="color:#ff79c6">=</span>(loop,))
+</span></span><span style="display:flex;"><span>    t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    threadingexecutor <span style="color:#ff79c6">=</span> concurrent<span style="color:#ff79c6">.</span>futures<span style="color:#ff79c6">.</span>ThreadPoolExecutor(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    processExetutor <span style="color:#ff79c6">=</span> concurrent<span style="color:#ff79c6">.</span>futures<span style="color:#ff79c6">.</span>ProcessPoolExecutor()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Dynamically add synchronization functions in the main thread</span>
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_in_executor(processExetutor,ping,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_in_executor(processExetutor,ping,<span style="color:#f1fa8c">&#34;www.qq.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_in_executor(processExetutor,ping,<span style="color:#f1fa8c">&#34;www.yangyanxing.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;The main thread will not block&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Two executors are initialized here, one is a thread and the other is a process.
+They have the same effect, except that one runs in multiple threads and the other runs in multiple processes.
+The result of using the <code>concurrent.futures.ThreadPoolExecutor()</code> executor is</p>
+<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 7688)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt; The process ID is: 8188
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started daemon 9068)&gt; The process ID is: 8188
+The main thread does not block
+Simulate ping output www.baidu.com
+Simulate ping output www.qq.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt;
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-3, started daemon 9068)&gt;
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt; The process ID is: 8188
+Simulate ping output www.yangyanxing.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt;
+</code></pre><p>The process IDs of these are all 8188, and they are running under the same process. Also note that I passed a max_workers value of 2 during initialization here, pay attention to the output of the result, it executes the first two first, and then starts to execute the third one after one is executed, instead of three running at the same time of.</p>
+<p>Execution result of using <code>concurrent.futures.ProcessPoolExecutor()</code> executor</p>
+<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 10220)&gt;
+The main thread does not block
+The blocking function starts to run, the current thread ID is: &lt;_MainThread(MainThread, started 3928)&gt; The process ID is: 6652
+The blocking function starts to run, the current thread ID is: &lt;_MainThread(MainThread, started 10992)&gt; The process ID is: 9436
+The blocking function starts to run, the current thread ID is: &lt;_MainThread(MainThread, started 9740)&gt; The process ID is: 9000
+Simulate ping output www.qq.com
+The blocking function ends, the current thread ID is: &lt;_MainThread(MainThread, started 3928)&gt;
+Simulate ping output www.baidu.com
+The blocking function ends, the current thread ID is: &lt;_MainThread(MainThread, started 10992)&gt;
+Simulate ping output www.yangyanxing.com
+The blocking function ends, the current thread ID is: &lt;_MainThread(MainThread, started 9740)&gt;
+</code></pre><p>It can be seen that their process IDs are different.</p>
+<p>In this way, using <code>run_in_executor</code> is actually the same as using multiprocessing and multithreading. Don&rsquo;t worry, you&rsquo;ll see the difference after talking about asynchronous functions.</p>
+<h2 id="dynamically-add-async-functions-to-the-event-loop">Dynamically add async functions to the event loop</h2>
+<p>Dynamically bind a coroutine to the event loop via the <code>asyncio.run_coroutine_threadsafe</code> method without blocking the main thread</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time<span style="color:#ff79c6">,</span>sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> concurrent
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> functools
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> subprocess
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># define two async functions</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">asyncfunc1</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Suspending func1&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;func func1 &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming func1&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;func1&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">asyncfunc2</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Suspending func2&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;func func2 &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming func2&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;func2&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Define a thread function that runs the event loop</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_thread_loop</span>(loop):
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>set_event_loop(loop)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__<span style="color:#ff79c6">==</span><span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;In main thread &#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Run the event loop in the child thread, let it run_forever</span>
+</span></span><span style="display:flex;"><span>    t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>start_thread_loop, args<span style="color:#ff79c6">=</span>(loop,))
+</span></span><span style="display:flex;"><span>    t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>run_coroutine_threadsafe(asyncfunc1(),loop)
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>run_coroutine_threadsafe(asyncfunc1(),loop)
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>run_coroutine_threadsafe(asyncfunc2(),loop)
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>run_coroutine_threadsafe(asyncfunc2(),loop)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;The main thread will not block&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Four coroutine functions are bound to the loop through <code>asyncio.run_coroutine_threadsafe</code>, and the output result is</p>
+<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 4772)&gt;
+Suspending func1
+The main thread does not block
+Suspending func1
+Suspending func2
+Suspending func2
+func func1 &lt;Thread(Thread-1, started 3948)&gt;
+Resuming func1
+func func2 &lt;Thread(Thread-1, started 3948)&gt;
+Resuming func2
+func func1 &lt;Thread(Thread-1, started 3948)&gt;
+Resuming func1
+func func2 &lt;Thread(Thread-1, started 3948)&gt;
+Resuming func2
+</code></pre><p>The main thread will not be blocked, and the results of the four coroutine functions that are started almost return at the same time, but note that the thread where the coroutine is located and the main thread are not the same thread, because the event loop loop is placed in another child thread at this time. run, so at this time these four coroutines are put into the thread of the event loop to run.Note that there is only <code>run_coroutine_threadsafe</code> method, no <code>run_coroutine_thread</code> method.</p>
+<h2 id="get-the-return-result-of-the-coroutine">Get the return result of the coroutine</h2>
+<p>To get the result, you can use the <code>asyncio.gather()</code> method, where <code>coros_or_futures</code> is a coroutine or task object, and <code>asyncio.run_coroutine_threadsafe()</code> and <code>run_in_executor()</code> return both Future objects, so you can Put them together in gather and get the return value.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">86
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">87
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">88
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">89
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">90
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">91
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">92
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">93
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">94
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:gbk</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> asyncio
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time<span style="color:#ff79c6">,</span>sys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> concurrent
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> functools
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> subprocess
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Define the blocking function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">ping</span>(url):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function starts to run, the current thread ID is:&#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread(),<span style="color:#f1fa8c">&#34;The process ID is:&#34;</span>,os<span style="color:#ff79c6">.</span>getpid())
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Simulated ping output &#34;</span>,url)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;The blocking function ends, the current thread ID is: &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> url
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># define two async functions</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">asyncfunc1</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Suspending func1&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;func func1 &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming func1&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;func1&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">asyncfunc2</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;Suspending func2&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;func func2 &#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;Resuming func2&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#f1fa8c">&#34;func2&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Define a thread function that runs the event loop</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_thread_loop</span>(loop):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;loop thread id is&#34;</span>, threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>set_event_loop(loop)
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>run_forever()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># define a callback function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">callbackfunc</span>(task):
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;task is finished, its result is: &#34;</span>, task<span style="color:#ff79c6">.</span>result())
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># loop.stop()</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">main</span>():
+</span></span><span style="display:flex;"><span>    t1 <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Use loop.create_task to create a task object and return asyncio.tasks.Task object</span>
+</span></span><span style="display:flex;"><span>    task1 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(asyncfunc1())
+</span></span><span style="display:flex;"><span>    task2 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>create_task(asyncfunc2())
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Using asyncio.run_coroutine_threadsafe returns the concurrent.futures._base.Future object</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Note that this object does not have an __await__ method, so you cannot use await on it but you can add a callback add_done_callback to it</span>
+</span></span><span style="display:flex;"><span>    task3 <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>run_coroutine_threadsafe(asyncfunc1(),loop)
+</span></span><span style="display:flex;"><span>    task4 <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>run_coroutine_threadsafe(asyncfunc2(),loop)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Use loop.run_in_executor to create blocking tasks and return asyncio.futures.Future objects</span>
+</span></span><span style="display:flex;"><span>    task5 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>run_in_executor(<span style="color:#ff79c6">None</span>,ping,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    task6 <span style="color:#ff79c6">=</span> loop<span style="color:#ff79c6">.</span>run_in_executor(<span style="color:#ff79c6">None</span>,ping,<span style="color:#f1fa8c">&#34;www.yangyanxing.com&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Use asyncio.ensure_future() to create a task object</span>
+</span></span><span style="display:flex;"><span>    task7 <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>ensure_future(asyncfunc1())
+</span></span><span style="display:flex;"><span>    task8 <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>ensure_future(asyncfunc2())
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    task1<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task2<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task3<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task4<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task5<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task6<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task7<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>    task8<span style="color:#ff79c6">.</span>add_done_callback(callbackfunc)
+</span></span><span style="display:flex;"><span>   
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>gather(task1,task2,task5,task6,task7,task8)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(result)
+</span></span><span style="display:flex;"><span>    t2 <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;It took </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c"> time&#34;</span><span style="color:#ff79c6">%</span>(t2<span style="color:#ff79c6">-</span>t1))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">async</span> <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mian2</span>():
+</span></span><span style="display:flex;"><span>    result <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">await</span> asyncio<span style="color:#ff79c6">.</span>gather(asyncfunc1(),asyncfunc2(),)
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(result)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">shutdown</span>(loop):
+</span></span><span style="display:flex;"><span>    loop<span style="color:#ff79c6">.</span>stop()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__<span style="color:#ff79c6">==</span><span style="color:#f1fa8c">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;In main thread &#34;</span>,threading<span style="color:#ff79c6">.</span>current_thread())
+</span></span><span style="display:flex;"><span>    loop <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>get_event_loop()
+</span></span><span style="display:flex;"><span>    loop2 <span style="color:#ff79c6">=</span> asyncio<span style="color:#ff79c6">.</span>new_event_loop()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Run the event loop in the child thread, let it run_forever</span>
+</span></span><span style="display:flex;"><span>    t <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>start_thread_loop, args<span style="color:#ff79c6">=</span>(loop,))
+</span></span><span style="display:flex;"><span>    t<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    asyncio<span style="color:#ff79c6">.</span>run_coroutine_threadsafe(main(),loop)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#39;The main thread will not block&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Code execution result:</p>
+<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 6052)&gt;
+The loop thread id is &lt;Thread(Thread-1, started 2388)&gt;
+The main thread does not block
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 11644)&gt; The process ID is: 12280
+The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started daemon 1180)&gt; The process ID is: 12280
+Suspending func1
+Suspending func2
+Suspending func1
+Suspending func2
+Suspending func1
+Suspending func2
+func func1 &lt;Thread(Thread-1, started 2388)&gt;
+Resuming func1
+func func1 &lt;Thread(Thread-1, started 2388)&gt;
+Resuming func1
+func func1 &lt;Thread(Thread-1, started 2388)&gt;
+Resuming func1
+The task finishes running, and its result is: func1
+The task finishes running, and its result is: func1
+The task finishes running, and its result is: func1
+func func2 &lt;Thread(Thread-1, started 2388)&gt;
+Resuming func2
+func func2 &lt;Thread(Thread-1, started 2388)&gt;
+Resuming func2
+func func2 &lt;Thread(Thread-1, started 2388)&gt;
+Resuming func2
+The task finishes running, and its result is: func2
+The task finishes running, and its result is: func2
+The task finishes running, and its result is: func2
+Simulate ping output www.baidu.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 11644)&gt;
+Simulate ping output www.yangyanxing.com
+The blocking function ends, the current thread ID is: &lt;Thread(Thread-3, started daemon 1180)&gt;
+The task finishes running, and its result is: www.baidu.com
+The task finishes running, and its result is: www.yangyanxing.com
+[&#39;func1&#39;, &#39;func2&#39;, &#39;www.baidu.com&#39;, &#39;www.yangyanxing.com&#39;, &#39;func1&#39;, &#39;func2&#39;]
+It took 4.002800464630127 time in total
+</code></pre><p>The total time depends on the longest of all running functions, here the sync function has a blocking sleep(4) , so the total time is a little over 4 seconds.</p>
+<p>So much about the processing flow in asynchronous coroutines, and then learn to summarize a variety of asynchronous-related libraries such as the use of aiohttp and so on.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Processing flow analysis in python asynchronous coroutine (2)
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/sync_in_asyncio2.html" title="Processing flow analysis in python asynchronous coroutine (2)">https://enblog.yangyanxing.com/article/sync_in_asyncio2.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/aggregate-perday-mongodb.html" rel="next" title="Aggregate query by day in mongodb">
+      <i class="fa fa-chevron-left"></i> Aggregate query by day in mongodb
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/sync_in_asyncio.html" rel="prev" title="Processing flow analysis in python asynchronous coroutine (1)">
+      Processing flow analysis in python asynchronous coroutine (1)
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

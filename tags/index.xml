@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags.html</link>
+    <description>Recent content in Tags on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 07 Aug 2022 00:35:53 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go</title>
+      <link>https://enblog.yangyanxing.com/tags/go.html</link>
+      <pubDate>Sun, 07 Aug 2022 00:35:53 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/go.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gin</title>
+      <link>https://enblog.yangyanxing.com/tags/gin.html</link>
+      <pubDate>Sun, 24 Jul 2022 20:57:24 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/gin.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>socket.io</title>
+      <link>https://enblog.yangyanxing.com/tags/socket.io.html</link>
+      <pubDate>Sun, 24 Jul 2022 20:57:24 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/socket.io.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://enblog.yangyanxing.com/tags/python.html</link>
+      <pubDate>Thu, 14 Jul 2022 21:59:53 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/python.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>redis</title>
+      <link>https://enblog.yangyanxing.com/tags/redis.html</link>
+      <pubDate>Tue, 12 Apr 2022 19:32:30 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/redis.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sanic</title>
+      <link>https://enblog.yangyanxing.com/tags/sanic.html</link>
+      <pubDate>Mon, 11 Apr 2022 16:28:11 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/sanic.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sql</title>
+      <link>https://enblog.yangyanxing.com/tags/sql.html</link>
+      <pubDate>Mon, 11 Apr 2022 16:28:11 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/sql.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>javascript</title>
+      <link>https://enblog.yangyanxing.com/tags/javascript.html</link>
+      <pubDate>Thu, 14 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/javascript.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://enblog.yangyanxing.com/tags/web.html</link>
+      <pubDate>Mon, 02 Aug 2021 16:38:51 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/web.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>beego</title>
+      <link>https://enblog.yangyanxing.com/tags/beego.html</link>
+      <pubDate>Sat, 29 May 2021 15:29:57 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/beego.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>k8s</title>
+      <link>https://enblog.yangyanxing.com/tags/k8s.html</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/k8s.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>automated test</title>
+      <link>https://enblog.yangyanxing.com/tags/automated-test.html</link>
+      <pubDate>Thu, 26 Apr 2018 22:41:32 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/automated-test.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>java</title>
+      <link>https://enblog.yangyanxing.com/tags/java.html</link>
+      <pubDate>Thu, 12 May 2016 01:04:03 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/java.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>android</title>
+      <link>https://enblog.yangyanxing.com/tags/android.html</link>
+      <pubDate>Fri, 28 Aug 2015 01:17:30 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/android.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>requests</title>
+      <link>https://enblog.yangyanxing.com/tags/requests.html</link>
+      <pubDate>Sun, 15 Jun 2014 23:20:53 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/tags/requests.html</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

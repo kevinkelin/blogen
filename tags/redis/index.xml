@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redis on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/redis.html</link>
+    <description>Recent content in redis on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 12 Apr 2022 19:32:30 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The solution to the too many connections error reported in redis</title>
+      <link>https://enblog.yangyanxing.com/article/redis-too-many-connections.html</link>
+      <pubDate>Tue, 12 Apr 2022 19:32:30 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/redis-too-many-connections.html</guid>
+      <description>&lt;p&gt;Recently, when I stress tested an interface in the system, I found that there was a large number of errors reported in the redis query interface, so I checked the background log and found that aioredis reported &lt;code&gt;Too many connections&lt;/code&gt;. At first, I thought it was because of the stress test. , because this interface needs to access redis data, and a large number of requests come in at the same time, it will cause a large number of requests to the redis server, and the redis server can&amp;rsquo;t resist returning the &lt;code&gt;Too many connections&lt;/code&gt; error, but this is not the case after investigation.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use gin to build redis of api background system</title>
+      <link>https://enblog.yangyanxing.com/article/use-go-gin-redis.html</link>
+      <pubDate>Sun, 09 Jan 2022 00:12:51 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-go-gin-redis.html</guid>
+      <description>&lt;p&gt;Redis has a very important position in the web system and can act as a cache, message queue, step-by-step lock, etc. This article introduces the use of the go-redis library to simply operate redis.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

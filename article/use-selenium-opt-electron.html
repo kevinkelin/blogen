@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Use selenium to operate electron applications" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Use selenium to operate electron applications" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/use-selenium-opt-electron.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2021-10-14 00:00:00 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2021-10-14 00:00:00 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Use selenium to operate electron applications - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-introduction-to-electron">1. Introduction to electron</a></li>
+        <li><a href="#second-use-selenium-to-operate-the-chrome-browser">Second, use selenium to operate the Chrome browser</a></li>
+        <li><a href="#third-use-selenium-to-operate-electron-applications">Third, use selenium to operate electron applications</a></li>
+        <li><a href="#fourth-use-selenium-to-operate-the-opened-electron-application">Fourth, use selenium to operate the opened electron application</a></li>
+        <li><a href="#5-summary">5. Summary</a></li>
+        <li><a href="#refer-to">refer to</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/use-selenium-opt-electron.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Use selenium to operate electron applications">
+      <meta itemprop="description" content="In a recent automated test project, there is a requirement for testing internal IM communication software. After understanding the implementation of the corresponding technology stack of each client, the application in the mac uses the electron technology. We also conduct research on the corresponding technology. The article records the automated testing of electron applications.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Use selenium to operate electron applications </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-10-14 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2021-10-14 00:00:00 &#43;0000 UTC">2021-10-14</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1432</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>7min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In a recent automated test project, there is a requirement for testing internal IM communication software. After understanding the implementation of the corresponding technology stack of each client, the application in the mac uses the electron technology. We also conduct research on the corresponding technology. The article records the automated testing of electron applications.</p>
+<h2 id="1-introduction-to-electron">1. Introduction to electron</h2>
+<p>Electron uses Chromium and Node.js to build cross-platform desktop applications using JavaScript, HTML and CSS. It can compile the code at one time and run multiple terminals. It can generate mac app, windows exe, etc., but the compiled files are due to Contains Chromium, so the volume is generally larger.</p>
+<h2 id="second-use-selenium-to-operate-the-chrome-browser">Second, use selenium to operate the Chrome browser</h2>
+<p>First determine the version of the chrome browser in the system. Since selenium needs to use the ChromeDriver to operate the Chrome browser, different versions of Chrome correspond to different ChromeDrivers. If they do not correspond, it may fail.</p>
+<p>Then go to 
+<a href="https://chromedriver.chromium.org/downloads" title="https://chromedriver.chromium.org/downloads" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://chromedriver.chromium.org/downloads
+    <i class="fa fa-external-link-alt"></i>
+</a> to download the corresponding ChromeDriver. If domestic users cannot access it, they can use the Taobao mirror source 
+<a href="https://npm.taobao.org/mirrors/chromedriver" title="https://npm.taobao.org/mirrors/chromedriver" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://npm.taobao.org/mirrors/chromedriver
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>You need to put chromedriver in the environment variable. If you don&rsquo;t put it in the environment variable, you can also specify the path of chromedriver in the code.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> selenium <span style="color:#ff79c6">import</span> webdriver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> selenium.webdriver.common.keys <span style="color:#ff79c6">import</span> Keys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>driver <span style="color:#ff79c6">=</span> webdriver<span style="color:#ff79c6">.</span>Chrome()
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># webdriver.Chrome can also specify the chromedriver path during initialization, which is very useful for multiple versions of chromedriver in the system</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># driver = webdriver.Chrome(executable_path=&#34;/Users/qihoo/Desktop/chromedriver94&#34;)</span>
+</span></span><span style="display:flex;"><span>driver<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;https://www.google.com&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">assert</span> <span style="color:#f1fa8c">&#34;Google&#34;</span> <span style="color:#ff79c6">in</span> driver<span style="color:#ff79c6">.</span>title
+</span></span><span style="display:flex;"><span>elem <span style="color:#ff79c6">=</span> driver<span style="color:#ff79c6">.</span>find_element_by_name(<span style="color:#f1fa8c">&#34;q&#34;</span>)
+</span></span><span style="display:flex;"><span>elem<span style="color:#ff79c6">.</span>clear()
+</span></span><span style="display:flex;"><span>elem<span style="color:#ff79c6">.</span>send_keys(<span style="color:#f1fa8c">&#34;360&#34;</span>)
+</span></span><span style="display:flex;"><span>elem<span style="color:#ff79c6">.</span>send_keys(Keys<span style="color:#ff79c6">.</span>RETURN)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">assert</span> <span style="color:#f1fa8c">&#34;No results found.&#34;</span> <span style="color:#ff79c6">not</span> <span style="color:#ff79c6">in</span> driver<span style="color:#ff79c6">.</span>page_source
+</span></span><span style="display:flex;"><span>driver<span style="color:#ff79c6">.</span>close()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://yyxbloguse.oss-cn-beijing.aliyuncs.com//img/20211014195859.png" alt="image-20211014195859378"></p>
+<h2 id="third-use-selenium-to-operate-electron-applications">Third, use selenium to operate electron applications</h2>
+<p>If you want to use selenium to operate an electron app, the first thing to confirm is which version of Chromium the app is using</p>
+<p>So how to confirm the Chromium version number of the electron application?</p>
+<p>In general, the apps we test are all apps packaged by development. For this kind of application, it is difficult for us to do some hooks on the code. If we open the chrome devTools panel, (use option+command+i under mac) , Enter <code>process.versions</code> in the console tab to view the chrome version, then it&rsquo;s better, you can directly download the corresponding chromedriver, but more often the process object is not defined, if you want to use the console Using process, when writing an app, you should add</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">function</span> createWindow () {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">const</span> win <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> BrowserWindow({
+</span></span><span style="display:flex;"><span>    width<span style="color:#ff79c6">:</span> <span style="color:#bd93f9">800</span>,
+</span></span><span style="display:flex;"><span>    height<span style="color:#ff79c6">:</span> <span style="color:#bd93f9">600</span>,
+</span></span><span style="display:flex;"><span>    webPreferences<span style="color:#ff79c6">:</span> {
+</span></span><span style="display:flex;"><span>      preload<span style="color:#ff79c6">:</span> path.join(__dirname, <span style="color:#f1fa8c">&#39;preload.js&#39;</span>),
+</span></span><span style="display:flex;"><span>      nodeIntegration<span style="color:#ff79c6">:</span> <span style="color:#ff79c6">true</span>, contextIsolation<span style="color:#ff79c6">:</span> <span style="color:#ff79c6">false</span> <span style="color:#6272a4">//Add this configuration to use the process object in the console
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    }
+</span></span><span style="display:flex;"><span>  })
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="https://yyxbloguse.oss-cn-beijing.aliyuncs.com//img/20211014172944.png" alt="image-20211014172936368"></p>
+<p>More often, we can find the version of chromedriver casually. During the initialization process, if the program reports an error, it will prompt which version of chrome the app is using.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>selenium.common.exceptions.SessionNotCreatedException: Message: session not created: This version of ChromeDriver only supports Chrome version <span style="color:#bd93f9">94</span>
+</span></span><span style="display:flex;"><span>Current browser version is 80.0.3987.86 with binary path /Applications/360home.app/Contents/MacOS/360home
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It shows that my current chromedriver version number is 94, but the version number of the application to be tested is 80, so I know which version of chromedriver to download.</p>
+<p>We use electron to create a mac application, the code uses the official example, 
+<a href="https://www.electronjs.org/zh/docs/latest/tutorial/quick-start" title="https://www.electronjs.org/zh/docs/latest/tutorial/quick-start" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    https://www.electronjs.org/zh/docs/latest/tutorial/quick-start
+    <i class="fa fa-external-link-alt"></i>
+</a> , but the packaging here is not the same as the official one</p>
+<ol>
+<li>Create a project</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>mkdir electroltest
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">cd</span> electrontest
+</span></span><span style="display:flex;"><span>npm init -y
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>Install electron and the corresponding packaging tools</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>npm install electron electron-packager electron-installer-dmg --save
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>Modify package.json</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;name&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;electroltest&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;version&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;1.0.0&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;description&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;main&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;main.js&#34;</span>, <span style="color:#6272a4">//modify to main.js
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  <span style="color:#f1fa8c">&#34;scripts&#34;</span><span style="color:#ff79c6">:</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;test&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;echo \&#34;Error: no test specified\&#34; &amp;&amp; exit 1&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;start&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;electron .&#34;</span>, <span style="color:#6272a4">// add a start command
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#f1fa8c">&#34;build&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;electron-packager .&#34;</span>, <span style="color:#6272a4">//Add packaging instructions
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>    <span style="color:#f1fa8c">&#34;dmg&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;electron-installer-dmg ./electroltest-darwin-x64/electroltest.app/ electroltest&#34;</span> <span style="color:#6272a4">// Add command to generate dmg
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;author&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;license&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;ISC&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;dependencies&#34;</span><span style="color:#ff79c6">:</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;electron&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;^15.1.2&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;electron-installer-dmg&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;^3.0.0&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;electron-packager&#34;</span><span style="color:#ff79c6">:</span> <span style="color:#f1fa8c">&#34;^15.4.0&#34;</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li>Add main.js</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#ff79c6">const</span> { app, BrowserWindow } <span style="color:#ff79c6">=</span> require(<span style="color:#f1fa8c">&#39;electron&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">const</span> path <span style="color:#ff79c6">=</span> require(<span style="color:#f1fa8c">&#39;path&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">function</span> createWindow () {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">const</span> win <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">new</span> BrowserWindow({
+</span></span><span style="display:flex;"><span>    width<span style="color:#ff79c6">:</span> <span style="color:#bd93f9">800</span>,
+</span></span><span style="display:flex;"><span>    height<span style="color:#ff79c6">:</span> <span style="color:#bd93f9">600</span>,
+</span></span><span style="display:flex;"><span>    webPreferences<span style="color:#ff79c6">:</span> {
+</span></span><span style="display:flex;"><span>      preload<span style="color:#ff79c6">:</span> path.join(__dirname, <span style="color:#f1fa8c">&#39;preload.js&#39;</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  })
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  win.loadFile(<span style="color:#f1fa8c">&#39;index.html&#39;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.whenReady().then(() =&gt; {
+</span></span><span style="display:flex;"><span>  createWindow()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  app.on(<span style="color:#f1fa8c">&#39;activate&#39;</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> (BrowserWindow.getAllWindows().length <span style="color:#ff79c6">===</span> <span style="color:#bd93f9">0</span>) {
+</span></span><span style="display:flex;"><span>      createWindow()
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  })
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>app.on(<span style="color:#f1fa8c">&#39;window-all-closed&#39;</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">if</span> (process.platform <span style="color:#ff79c6">!==</span> <span style="color:#f1fa8c">&#39;darwin&#39;</span>) {
+</span></span><span style="display:flex;"><span>    app.quit()
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>})
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="5">
+<li>Add index.html</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#ff79c6">&lt;!DOCTYPE html&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff79c6">html</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff79c6">head</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff79c6">meta</span> <span style="color:#50fa7b">charset</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;UTF-8&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff79c6">title</span>&gt;Hello YYX!&lt;/<span style="color:#ff79c6">title</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff79c6">meta</span> <span style="color:#50fa7b">http-equiv</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;Content-Security-Policy&#34;</span> <span style="color:#50fa7b">content</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;script-src &#39;self&#39; &#39;unsafe-inline&#39;;&#34;</span> /&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#ff79c6">head</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff79c6">body</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff79c6">h1</span>&gt;Hello Yang Yanxing!&lt;/<span style="color:#ff79c6">h1</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff79c6">p</span>&gt;
+</span></span><span style="display:flex;"><span>        We are using Node.js &lt;<span style="color:#ff79c6">span</span> <span style="color:#50fa7b">id</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;node-version&#34;</span>&gt;&lt;/<span style="color:#ff79c6">span</span>&gt;,
+</span></span><span style="display:flex;"><span>        Chromium &lt;<span style="color:#ff79c6">span</span> <span style="color:#50fa7b">id</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;chrome-version&#34;</span>&gt;&lt;/<span style="color:#ff79c6">span</span>&gt;,
+</span></span><span style="display:flex;"><span>        and Electron &lt;<span style="color:#ff79c6">span</span> <span style="color:#50fa7b">id</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;electron-version&#34;</span>&gt;&lt;/<span style="color:#ff79c6">span</span>&gt;.
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#ff79c6">p</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#ff79c6">body</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#ff79c6">html</span>&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="6">
+<li>Add proload.js</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">window</span>.addEventListener(<span style="color:#f1fa8c">&#39;DOMContentLoaded&#39;</span>, () =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">const</span> replaceText <span style="color:#ff79c6">=</span> (selector, text) =&gt; {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">const</span> element <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">document</span>.getElementById(selector)
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">if</span> (element) element.innerText <span style="color:#ff79c6">=</span> text
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> (<span style="color:#ff79c6">const</span> type <span style="color:#ff79c6">of</span> [<span style="color:#f1fa8c">&#39;chrome&#39;</span>, <span style="color:#f1fa8c">&#39;node&#39;</span>, <span style="color:#f1fa8c">&#39;electron&#39;</span>]) {
+</span></span><span style="display:flex;"><span>      replaceText(<span style="color:#f1fa8c">`</span><span style="color:#f1fa8c">${</span>type<span style="color:#f1fa8c">}</span><span style="color:#f1fa8c">-version`</span>, process.versions[type])
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  })
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After writing the code, you can use <code>npm run start</code> to see the effect, whether the electron application can be displayed normally</p>
+<p><img src="https://yyxbloguse.oss-cn-beijing.aliyuncs.com//img/20211014184536.png" alt="image-20211014184536826"></p>
+<p>If it is displayed normally, the packaging operation can be performed</p>
+<ol start="7">
+<li>Packaging electron applications</li>
+</ol>
+<p>Here is just the electron application as an app, and no dmg installation package is generated</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>npm run build <span style="color:#6272a4">#This is because the build command is defined in package.json, if it is not defined, you can run npx electron-packager .</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="8">
+<li>Generate dmg installation package under mac</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>npm run dmg <span style="color:#6272a4"># Same as build command, you can also use npx electron-installer-dmg ./electroltest-darwin-x64/electroltest.app/ electroltest</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>If all goes well, the electroltest.dmg file will be generated in the current directory, and double-click this file to install it in mac</p>
+<p><img src="https://yyxbloguse.oss-cn-beijing.aliyuncs.com//img/20211014184855.png" alt="image-20211014184855362"></p>
+<p>Next, let&rsquo;s write a simple test, which is to open the app, check the html, then jump to google, enter some text, and then click the search button</p>
+<p>The location where the electron app is installed is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>/Applications/electroltest.app/Contents/MacOS/electroltest
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Modify accordingly according to the installation location</p>
+<ol>
+<li>Install selenium</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>pip install selenium
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>Write test cases</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4"># -*- coding: utf-8 -*-</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">-------------------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   File Name: eletest
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   Description : electrol test automation
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   Author : Yang Yanxing
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">   date: 2021/10/14
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">-------------------------------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> selenium <span style="color:#ff79c6">import</span> webdriver
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> selenium.webdriver.common.keys <span style="color:#ff79c6">import</span> Keys
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>options <span style="color:#ff79c6">=</span> webdriver<span style="color:#ff79c6">.</span>ChromeOptions()
+</span></span><span style="display:flex;"><span>options<span style="color:#ff79c6">.</span>binary_location <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;/Applications/electroltest.app/Contents/MacOS/electroltest&#34;</span>
+</span></span><span style="display:flex;"><span>driver <span style="color:#ff79c6">=</span> webdriver<span style="color:#ff79c6">.</span>Chrome(chrome_options<span style="color:#ff79c6">=</span>options)
+</span></span><span style="display:flex;"><span>time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">3</span>)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(driver<span style="color:#ff79c6">.</span>page_source)
+</span></span><span style="display:flex;"><span>driver<span style="color:#ff79c6">.</span>get(<span style="color:#f1fa8c">&#34;http://www.google.com&#34;</span>)
+</span></span><span style="display:flex;"><span>elem <span style="color:#ff79c6">=</span> driver<span style="color:#ff79c6">.</span>find_element_by_name(<span style="color:#f1fa8c">&#34;q&#34;</span>)
+</span></span><span style="display:flex;"><span>elem<span style="color:#ff79c6">.</span>clear()
+</span></span><span style="display:flex;"><span>elem<span style="color:#ff79c6">.</span>send_keys(<span style="color:#f1fa8c">&#34;360&#34;</span>) <span style="color:#6272a4"># Chinese can also be entered here</span>
+</span></span><span style="display:flex;"><span>elem<span style="color:#ff79c6">.</span>send_keys(Keys<span style="color:#ff79c6">.</span>RETURN)
+</span></span><span style="display:flex;"><span>driver<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>driver<span style="color:#ff79c6">.</span>quit()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The more important thing here is to define <code>options.binary_location</code> which needs to be set as the path of the electron application</p>
+<p><img src="https://yyxbloguse.oss-cn-beijing.aliyuncs.com//img/20211014190302.png" alt="20211014190302"></p>
+<h2 id="fourth-use-selenium-to-operate-the-opened-electron-application">Fourth, use selenium to operate the opened electron application</h2>
+<p>In the previous way, we actually reopened an app, but more often, we expect to test an app that has already been opened. Imagine the following scenario, an app needs to be logged in, and the login method is more complicated. You can log in with code or SMS, or have a verification code, but if you log in successfully, you will not enter the login interface if you open it again after a period of time. At this time, we do not want to log in again every time you run the use case. We need to use selenium to test an open application.</p>
+<p>An app built with electron can add a port for debugging at startup</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>/Applications/electroltest.app/Contents/MacOS/electroltest --remote-debugging-port<span style="color:#ff79c6">=</span><span style="color:#bd93f9">9222</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In this way, while the application can be started normally, the remote debugging function will also be enabled. When we use selenium, we can directly test the app without having to reopen a new app again.</p>
+<p>The port here needs an unoccupied port, which can be used when initializing the driver.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>options <span style="color:#ff79c6">=</span> webdriver<span style="color:#ff79c6">.</span>ChromeOptions()
+</span></span><span style="display:flex;"><span>options<span style="color:#ff79c6">.</span>add_experimental_option(<span style="color:#f1fa8c">&#34;debuggerAddress&#34;</span>, <span style="color:#f1fa8c">&#34;127.0.0.1:9222&#34;</span>) <span style="color:#6272a4"># Set debuggerAddress</span>
+</span></span><span style="display:flex;"><span>driver <span style="color:#ff79c6">=</span> webdriver<span style="color:#ff79c6">.</span>Chrome(chrome_options<span style="color:#ff79c6">=</span>options)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After passing the above settings, we can test directly on the open application, which is very suitable for applications with complicated login.</p>
+<h2 id="5-summary">5. Summary</h2>
+<p>There are a few points to summarize the tests of electron applications using selenium</p>
+<ol>
+<li>Find the corresponding chromedriver</li>
+<li>Set the app path through the binary_location parameter</li>
+<li>For testing an open app, you need to add the remote debugging parameter <code>--remote-debugging-port</code> when the app starts</li>
+</ol>
+<h2 id="refer-to">refer to</h2>
+<p>
+<a href="https://selenium-python-zh.readthedocs.io/en/latest/index.html#" title="Selenium-Python Chinese Documentation" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Selenium-Python Chinese Documentation
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>
+<a href="https://www.sqlpy.com/blogs/894258980" title="Packaging electron application to mac" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Packaging electron application to mac
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+    <a href="/tags/javascript.html">
+    javascript
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Use selenium to operate electron applications
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/use-selenium-opt-electron.html" title="Use selenium to operate electron applications">https://enblog.yangyanxing.com/article/use-selenium-opt-electron.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/slice-in-go.html" rel="next" title="slice as function parameter in golang">
+      <i class="fa fa-chevron-left"></i> slice as function parameter in golang
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/bitmap-in-test.html" rel="prev" title="Application of bitmap algorithm in test system">
+      Application of bitmap algorithm in test system
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

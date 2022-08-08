@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/categories.html</link>
+    <description>Recent content in Categories on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 07 Aug 2022 00:35:53 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go</title>
+      <link>https://enblog.yangyanxing.com/categories/go.html</link>
+      <pubDate>Sun, 07 Aug 2022 00:35:53 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/categories/go.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>https://enblog.yangyanxing.com/categories/python.html</link>
+      <pubDate>Thu, 14 Jul 2022 21:59:53 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/categories/python.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://enblog.yangyanxing.com/categories/web.html</link>
+      <pubDate>Mon, 02 Aug 2021 16:38:51 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/categories/web.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>k8s</title>
+      <link>https://enblog.yangyanxing.com/categories/k8s.html</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/categories/k8s.html</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android</title>
+      <link>https://enblog.yangyanxing.com/categories/android.html</link>
+      <pubDate>Thu, 12 May 2016 01:04:03 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/categories/android.html</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

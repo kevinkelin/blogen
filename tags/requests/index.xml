@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>requests on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/requests.html</link>
+    <description>Recent content in requests on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 15 Jun 2014 23:20:53 +0000</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/requests/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Initial use of python&#39;s requests</title>
+      <link>https://enblog.yangyanxing.com/article/1079.html</link>
+      <pubDate>Sun, 15 Jun 2014 23:20:53 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/1079.html</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve heard that the requests library is powerful, but I haven&amp;rsquo;t touched it yet. I touched it today and found that using urllib, urllib2 and other methods before is really too rubbish&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Write some simple use preliminary as a record here&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

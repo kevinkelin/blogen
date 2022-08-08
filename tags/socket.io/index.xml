@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>socket.io on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/socket.io.html</link>
+    <description>Recent content in socket.io on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 24 Jul 2022 20:57:24 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/socket.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The pit that Socket.io stepped on in gin</title>
+      <link>https://enblog.yangyanxing.com/article/socketio-gin-experience.html</link>
+      <pubDate>Sun, 24 Jul 2022 20:57:24 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/socketio-gin-experience.html</guid>
+      <description>&lt;p&gt;Recently, golang is used to build the background system. The framework uses the very famous gin framework. Since socket.io needs to be used for long connection management in the project, the official recommended golang server is [go-socket.io](https:// github.com/googollee/go-socket.io), so according to the official document example, the background service is very simple.
+However, there are various problems when using the client to connect. This article records the solutions.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Tornado integrates socketio (1)</title>
+      <link>https://enblog.yangyanxing.com/article/use-socketio-in-tornado.html</link>
+      <pubDate>Tue, 18 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-socketio-in-tornado.html</guid>
+      <description>&lt;p&gt;In the project I am working on recently, I need to send the video stream or audio stream from the mobile phone to the server, and then the server will forward it to the browser. At first, I used redis as a relay to send the data to redis, and then the redis server Publish and subscribe function, the overall structure is as follows&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://yyxbloguse.oss-cn-beijing.aliyuncs.com/img/image-20210519225715299.png&#34; alt=&#34;image-20210519225715299&#34;&gt;&lt;/p&gt;
+&lt;p&gt;It mainly uses the pub/sub function of redis. There is no problem with this solution, but the overall performance bottleneck is affected by redis.&lt;/p&gt;
+&lt;p&gt;I recently came into contact with socketio and found that this requirement can be achieved by using it, but I found some information on the Internet. In the use of python, it is mainly flask-socketio and native applications. Since the current project uses Tornado to build, I use it. Fusion of socketio and Tornado for a few days.&lt;/p&gt;
+&lt;p&gt;This tutorial will be introduced in several parts, mainly the following chapters&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Introduction to socketio and the construction of scaffolding&lt;/li&gt;
+&lt;li&gt;Define message processing events&lt;/li&gt;
+&lt;li&gt;Use of namespaces&lt;/li&gt;
+&lt;li&gt;Message release and response&lt;/li&gt;
+&lt;li&gt;Use of room&lt;/li&gt;
+&lt;li&gt;Use socketio in front-end vue to communicate with back-end&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>automated test on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/automated-test.html</link>
+    <description>Recent content in automated test on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 26 Apr 2018 22:41:32 +0000</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/automated-test/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Use python to operate selenium to operate a third-party browser (360 browser)</title>
+      <link>https://enblog.yangyanxing.com/article/use-selenium-op-browser.html</link>
+      <pubDate>Thu, 26 Apr 2018 22:41:32 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-selenium-op-browser.html</guid>
+      <description>&lt;p&gt;Recently I was testing a project, using the 360 ​​browser to do some operations
+I have used selenium to operate chrome and FireFox before, record it here&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use Uiautomator for UI-based testing</title>
+      <link>https://enblog.yangyanxing.com/article/use-uiautomator-for-uitest.html</link>
+      <pubDate>Thu, 12 May 2016 01:04:03 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/use-uiautomator-for-uitest.html</guid>
+      <description>&lt;p&gt;I have been watching the test of the native &lt;code&gt;uiautomator&lt;/code&gt; in the past two days, and I have used it before, but I just implemented the official Android example simply, and there is no actual test meaning. [Implementation of the official Android example of uiautomator](http:/ /www.yangyanxing.com/article/1264.html), today combined with the automation project I am doing recently, I simply used uiautomator to implement it, just made a small example, but basically how to compile the jar and run it Well, here is also a simple record.
+I have also used the python packaged by others to do it before, and that one is relatively simple to write. [Using uiautomator&amp;rsquo;s python package for android UI testing](
+&lt;a href=&#34;http://www.yangyanxing.com/article/how-to-use-uiautomator&#34; title=&#34;http://www.yangyanxing.com/article/how-to-use-uiautomator&#34; rel=&#34;noopener external nofollow noreferrer&#34; target=&#34;_blank&#34; class=&#34; exturl&#34;&gt;
+    http://www.yangyanxing.com/article/how-to-use-uiautomator
+    &lt;i class=&#34;fa fa-external-link-alt&#34;&gt;&lt;/i&gt;
+&lt;/a&gt; -with-python.html)&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Use uiautomator&#39;s python package for android UI testing</title>
+      <link>https://enblog.yangyanxing.com/article/how-to-use-uiautomator-with-python.html</link>
+      <pubDate>Fri, 28 Aug 2015 01:17:30 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/how-to-use-uiautomator-with-python.html</guid>
+      <description>&lt;p&gt;In a recent project, there is a requirement to perform compatibility tests on applications on at least 100 mobile phones. The first thing that comes to mind is to automate the operation.&lt;/p&gt;
+&lt;p&gt;The basic requirements are as follows, install the application under test, start and exit, and then install the test sample to detect whether there is a corresponding pop-up window interception&lt;/p&gt;
+&lt;p&gt;Considering the various test frameworks on the market and the programming languages ​​that I am familiar with, I finally chose Google&amp;rsquo;s own uiautomator to do it. With the help of predecessors, it was encapsulated in python, so it was very smooth at the beginning, but the whole process was still There&amp;rsquo;s a lot to be aware of&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Basic operations of python operation selenium</title>
+      <link>https://enblog.yangyanxing.com/article/1085.html</link>
+      <pubDate>Tue, 17 Jun 2014 22:59:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/1085.html</guid>
+      <description>1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 #coding:utf-8 from selenium import webdriver from selenium.</description>
+    </item>
+    
+    <item>
+      <title>Windows automation testing using python (1)</title>
+      <link>https://enblog.yangyanxing.com/article/920.html</link>
+      <pubDate>Sat, 05 Oct 2013 01:41:33 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/920.html</guid>
+      <description>&lt;p&gt;Recently, I started to learn to organize the use of python in windows automation testing. I think it is very interesting.&lt;/p&gt;
+&lt;p&gt;The main idea, under Windows, is to start the process, then find the handle of the process, and then operate the handle, including clicking, filling in text, closing, getting text, etc.&lt;/p&gt;
+&lt;p&gt;The following is a simple operation of verifying the md5 value of a file to introduce a python application. Of course, there is a function for verifying md5 in python. You don&amp;rsquo;t have to use tools to verify it. Here is just an exercise to use python to automate operations.&lt;/p&gt;
+&lt;p&gt;The tools used are SpyLite, which is used to view window ID, handle and other information&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

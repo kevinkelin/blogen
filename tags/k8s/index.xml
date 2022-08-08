@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>k8s on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/k8s.html</link>
+    <description>Recent content in k8s on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Use dns to access services in kubernetes</title>
+      <link>https://enblog.yangyanxing.com/article/namespace-k8s.html</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/namespace-k8s.html</guid>
+      <description>In the previous article Communication between pods in kubernetes , we use environment variables to resolve the IP of the service, but you can use environment variables such as A limitation, all pods must be in one namespace, that is to say, pods in the same namespace will share environment variables. How to access them if they are not in the same namespace? Let&amp;rsquo;s take a python flask application as an example.</description>
+    </item>
+    
+    <item>
+      <title>Communication between pods in kubernetes</title>
+      <link>https://enblog.yangyanxing.com/article/pod-communite-k8s.html</link>
+      <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/pod-communite-k8s.html</guid>
+      <description>&lt;p&gt;If we create some pods, how do they communicate with each other? Because the ip address of the pod may change, here we mainly discuss several scenarios&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;How do different pods on the same network communicate?&lt;/li&gt;
+&lt;li&gt;How do different containers in the same pod communicate?&lt;/li&gt;
+&lt;li&gt;How do different pods communicate on different networks?&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>service types in kubernetes</title>
+      <link>https://enblog.yangyanxing.com/article/type-in-k8s.html</link>
+      <pubDate>Fri, 07 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/type-in-k8s.html</guid>
+      <description>&lt;p&gt;When we use deployment or RS to create some pods, such as creating a nginx pod, there are three replicas in the pod. At this time, if we view the pod status, it will look like this&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

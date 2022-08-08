@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Windows automation testing using python (1)" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Windows automation testing using python (1)" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/920.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2013-10-05 01:41:33 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2013-10-05 01:41:33 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Windows automation testing using python (1) - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-overview-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/920.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Windows automation testing using python (1)">
+      <meta itemprop="description" content="Recently, I started to learn to organize the use of python in windows automation testing. I think it is very interesting.
+The main idea, under Windows, is to start the process, then find the handle of the process, and then operate the handle, including clicking, filling in text, closing, getting text, etc.
+The following is a simple operation of verifying the md5 value of a file to introduce a python application. Of course, there is a function for verifying md5 in python. You don&rsquo;t have to use tools to verify it. Here is just an exercise to use python to automate operations.
+The tools used are SpyLite, which is used to view window ID, handle and other information">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Windows automation testing using python (1) </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2013-10-05 01:41:33 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2013-10-05 01:41:33 &#43;0000 UTC">2013-10-05</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1560</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>4min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>Recently, I started to learn to organize the use of python in windows automation testing. I think it is very interesting.</p>
+<p>The main idea, under Windows, is to start the process, then find the handle of the process, and then operate the handle, including clicking, filling in text, closing, getting text, etc.</p>
+<p>The following is a simple operation of verifying the md5 value of a file to introduce a python application. Of course, there is a function for verifying md5 in python. You don&rsquo;t have to use tools to verify it. Here is just an exercise to use python to automate operations.</p>
+<p>The tools used are SpyLite, which is used to view window ID, handle and other information</p>
+<p>Tool download</p>
+<p>
+<a href="http://www.xiazaiba.com/html/358.html" title="http://www.xiazaiba.com/html/358.html" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    http://www.xiazaiba.com/html/358.html
+    <i class="fa fa-external-link-alt"></i>
+</a> </p>
+<p>
+<a href="http://www.xiazaiba.com/html/5861.html" title="http://www.xiazaiba.com/html/5861.html" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    http://www.xiazaiba.com/html/5861.html
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
+<p>The goal we want to achieve is to save the md5 value of the file to a log file through the md5 verification tool</p>
+<p>Test directory structure</p>
+<p>&ndash;automd5&ndash;</p>
+<p>&ndash;needCheck&ndash;
+checkmd5.py
+SpyLite24.exe
+Hash.exe</p>
+<p>The needCheck directory puts the files that need to be checked for md5</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">148
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">149
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">150
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">151
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">152
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">153
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">154
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">155
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">156
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">157
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">158
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">159
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">160
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">161
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">162
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">163
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">164
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">165
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">166
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">167
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">168
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">169
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">170
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">171
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">172
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">173
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">174
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">175
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">176
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">177
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">178
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">179
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">180
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">181
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">182
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">183
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">184
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">185
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">186
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">187
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">188
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">189
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">190
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">191
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">192
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">193
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">194
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">195
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">196
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">197
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">198
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">199
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">200
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">201
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">202
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">203
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">204
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">205
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">206
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">207
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">208
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">209
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">210
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">211
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">212
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">213
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">214
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">215
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">216
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">217
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">218
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">219
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">220
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">221
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">222
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">223
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">224
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">225
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">226
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">227
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">228
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">229
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">230
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">231
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">232
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">233
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">234
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">235
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">236
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">237
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">238
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">239
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">240
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">241
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">242
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">243
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">244
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">245
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">246
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">247
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">248
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">249
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">250
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">251
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">252
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">253
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">254
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">255
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">256
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">257
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">258
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">259
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">260
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">261
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">262
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">263
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">264
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">265
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">266
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">267
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">268
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">269
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">270
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">271
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">272
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">273
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">274
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">275
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">276
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">277
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">278
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">279
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">280
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">281
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">282
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">283
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">284
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">285
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">286
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#! /usr/bin/env python</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#coding=gbk</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time<span style="color:#ff79c6">,</span> re<span style="color:#ff79c6">,</span> ctypes
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> os<span style="color:#ff79c6">,</span>sys<span style="color:#ff79c6">,</span>subprocess<span style="color:#ff79c6">,</span>win32gui<span style="color:#ff79c6">,</span>win32con<span style="color:#ff79c6">,</span>win32api
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> glob<span style="color:#ff79c6">,</span>time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Start process function</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">createProcess</span>(cmd, wait <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> wait:
+</span></span><span style="display:flex;"><span>        proc <span style="color:#ff79c6">=</span> tryExcept(subprocess<span style="color:#ff79c6">.</span>Popen, cmd, stdout <span style="color:#ff79c6">=</span> subprocess<span style="color:#ff79c6">.</span>PIPE, stderr <span style="color:#ff79c6">=</span> subprocess<span style="color:#ff79c6">.</span>PIPE)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        proc <span style="color:#ff79c6">=</span> tryExcept(subprocess<span style="color:#ff79c6">.</span>Popen, cmd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> isExcept(proc):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> wait:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> proc<span style="color:#ff79c6">.</span>pid
+</span></span><span style="display:flex;"><span>    proc<span style="color:#ff79c6">.</span>communicate()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">tryExcept</span>(func, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> func(<span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> Exception, e:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> e
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">isExcept</span>(e, eType <span style="color:#ff79c6">=</span> Exception):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#8be9fd;font-style:italic">isinstance</span>(e, eType)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">BaseWindow</span>:
+</span></span><span style="display:flex;"><span>    @staticmethod
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">parseClickConfig</span>(clkCfg):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> clkCfg <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">None</span>, <span style="color:#ff79c6">None</span>, <span style="color:#ff79c6">False</span>, <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">type</span>(clkCfg) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">None</span>, <span style="color:#ff79c6">None</span>, clkCfg, <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">type</span>(clkCfg) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">int</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">None</span>, <span style="color:#ff79c6">None</span>, <span style="color:#ff79c6">False</span>, clkCfg
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(clkCfg) <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">2</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">type</span>(clkCfg[<span style="color:#bd93f9">0</span>]) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">int</span> <span style="color:#ff79c6">and</span> <span style="color:#8be9fd;font-style:italic">type</span>(clkCfg[<span style="color:#bd93f9">1</span>]) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">int</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">return</span> clkCfg[<span style="color:#bd93f9">0</span>], clkCfg[<span style="color:#bd93f9">1</span>], <span style="color:#ff79c6">False</span>, <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">None</span>, <span style="color:#ff79c6">None</span>, clkCfg[<span style="color:#bd93f9">0</span>], clkCfg[<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">len</span>(clkCfg) <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">3</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">type</span>(clkCfg[<span style="color:#bd93f9">2</span>]) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">bool</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">return</span> clkCfg[<span style="color:#bd93f9">0</span>], clkCfg[<span style="color:#bd93f9">1</span>], clkCfg[<span style="color:#bd93f9">2</span>], <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span> clkCfg[<span style="color:#bd93f9">0</span>], clkCfg[<span style="color:#bd93f9">1</span>], <span style="color:#ff79c6">False</span>, clkCfg[<span style="color:#bd93f9">2</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> clkCfg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#click window</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#clkCfg:byDrv|mode|(x,y)|(byDrv,mode)|(x,y,byDrv)|(x,y,mode)|(x,y,byDrv,mode)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">clickWindow</span>(hwnd, clkCfg <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> isRawWindow(hwnd):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span>
+</span></span><span style="display:flex;"><span>    topWindow(hwnd)
+</span></span><span style="display:flex;"><span>    rect <span style="color:#ff79c6">=</span> getWindowRect(hwnd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> rect:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span>
+</span></span><span style="display:flex;"><span>    x, y, byDrv, mode <span style="color:#ff79c6">=</span> BaseWindow<span style="color:#ff79c6">.</span>parseClickConfig(clkCfg)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> x <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        x <span style="color:#ff79c6">=</span> (rect[<span style="color:#bd93f9">0</span>] <span style="color:#ff79c6">+</span> rect[<span style="color:#bd93f9">2</span>]) <span style="color:#ff79c6">/</span> <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">elif</span> x <span style="color:#ff79c6">&lt;</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>        x <span style="color:#ff79c6">+=</span> rect[<span style="color:#bd93f9">2</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        x <span style="color:#ff79c6">+=</span> rect[<span style="color:#bd93f9">0</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> y <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">None</span>:
+</span></span><span style="display:flex;"><span>        y <span style="color:#ff79c6">=</span> (rect[<span style="color:#bd93f9">1</span>] <span style="color:#ff79c6">+</span> rect[<span style="color:#bd93f9">3</span>]) <span style="color:#ff79c6">/</span> <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">elif</span> y <span style="color:#ff79c6">&lt;</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>        y <span style="color:#ff79c6">+=</span> rect[<span style="color:#bd93f9">3</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        y <span style="color:#ff79c6">+=</span> rect[<span style="color:#bd93f9">1</span>]
+</span></span><span style="display:flex;"><span>    clickMouse(x, y, byDrv, mode)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Click the mouse</span>
+</span></span><span style="display:flex;"><span>CLICK_MOUSE <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>CLICK_MOUSE_DOUBLE <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>CLICK_MOUSE_RIGHT <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">clickMouse</span>(x, y, byDrv <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>, mode <span style="color:#ff79c6">=</span> CLICK_MOUSE):
+</span></span><span style="display:flex;"><span>    moveMouse(x, y, byDrv)
+</span></span><span style="display:flex;"><span>    downMsg, upMsg <span style="color:#ff79c6">=</span> win32con<span style="color:#ff79c6">.</span>MOUSEEVENTF_LEFTDOWN, win32con<span style="color:#ff79c6">.</span>MOUSEEVENTF_LEFTUP
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> mode <span style="color:#ff79c6">==</span> CLICK_MOUSE_RIGHT:
+</span></span><span style="display:flex;"><span>        downMsg, upMsg <span style="color:#ff79c6">=</span> win32con<span style="color:#ff79c6">.</span>MOUSEEVENTF_RIGHTDOWN, win32con<span style="color:#ff79c6">.</span>MOUSEEVENTF_RIGHTUP
+</span></span><span style="display:flex;"><span>    win32api<span style="color:#ff79c6">.</span>mouse_event(downMsg, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>    win32api<span style="color:#ff79c6">.</span>mouse_event(upMsg, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> mode <span style="color:#ff79c6">==</span> CLICK_MOUSE_DOUBLE:
+</span></span><span style="display:flex;"><span>        win32api<span style="color:#ff79c6">.</span>mouse_event(downMsg, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>        win32api<span style="color:#ff79c6">.</span>mouse_event(upMsg, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#move the mouse</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">moveMouse</span>(x, y, byDrv <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>):
+</span></span><span style="display:flex;"><span>    w, h <span style="color:#ff79c6">=</span> win32api<span style="color:#ff79c6">.</span>GetSystemMetrics(<span style="color:#bd93f9">0</span>), win32api<span style="color:#ff79c6">.</span>GetSystemMetrics(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>    x, y <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">int</span>(<span style="color:#8be9fd;font-style:italic">float</span>(x) <span style="color:#ff79c6">/</span> w <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">65535</span>), <span style="color:#8be9fd;font-style:italic">int</span>(<span style="color:#8be9fd;font-style:italic">float</span>(y) <span style="color:#ff79c6">/</span> h <span style="color:#ff79c6">*</span> <span style="color:#bd93f9">65535</span>)
+</span></span><span style="display:flex;"><span>    win32api<span style="color:#ff79c6">.</span>mouse_event(win32con<span style="color:#ff79c6">.</span>MOUSEEVENTF_MOVE <span style="color:#ff79c6">|</span> win32con<span style="color:#ff79c6">.</span>MOUSEEVENTF_ABSOLUTE, x, y, <span style="color:#bd93f9">0</span>, <span style="color:#bd93f9">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#get window size</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getWindowRect</span>(hwnd):
+</span></span><span style="display:flex;"><span>    rect <span style="color:#ff79c6">=</span> tryExcept(win32gui<span style="color:#ff79c6">.</span>GetWindowRect, hwnd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> isExcept(rect):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> rect
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Top window</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">topWindow</span>(hwnd):
+</span></span><span style="display:flex;"><span>    fgHwnd <span style="color:#ff79c6">=</span> win32gui<span style="color:#ff79c6">.</span>GetForegroundWindow()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> fgHwnd <span style="color:#ff79c6">==</span> hwnd:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    rst <span style="color:#ff79c6">=</span> tryExcept(win32gui<span style="color:#ff79c6">.</span>SetForegroundWindow, hwnd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> isExcept(rst):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> getWindowClass(fgHwnd) <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;Progman&#39;</span> <span style="color:#ff79c6">and</span> getWindowText(fgHwnd) <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;Program Manager&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">##Get the window text</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getWindowText</span>(hwnd, buf <span style="color:#ff79c6">=</span> ctypes<span style="color:#ff79c6">.</span>c_buffer(<span style="color:#bd93f9">1024</span>)):
+</span></span><span style="display:flex;"><span>    size <span style="color:#ff79c6">=</span> ctypes<span style="color:#ff79c6">.</span>sizeof(buf)
+</span></span><span style="display:flex;"><span>    ctypes<span style="color:#ff79c6">.</span>memset(buf, <span style="color:#bd93f9">0</span>, size)
+</span></span><span style="display:flex;"><span>    tryExcept(win32gui<span style="color:#ff79c6">.</span>SendMessageTimeout, hwnd, win32con<span style="color:#ff79c6">.</span>WM_GETTEXT, size, buf, win32con<span style="color:#ff79c6">.</span>SMTO_ABORTIFHUNG, <span style="color:#bd93f9">10</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> buf<span style="color:#ff79c6">.</span>value<span style="color:#ff79c6">.</span>strip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#Get the window class name</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">getWindowClass</span>(hwnd, buf <span style="color:#ff79c6">=</span> ctypes<span style="color:#ff79c6">.</span>c_buffer(<span style="color:#bd93f9">1024</span>)):
+</span></span><span style="display:flex;"><span>    size <span style="color:#ff79c6">=</span> ctypes<span style="color:#ff79c6">.</span>sizeof(buf)
+</span></span><span style="display:flex;"><span>    ctypes<span style="color:#ff79c6">.</span>memset(buf, <span style="color:#bd93f9">0</span>, size)
+</span></span><span style="display:flex;"><span>    ctypes<span style="color:#ff79c6">.</span>windll<span style="color:#ff79c6">.</span>user32<span style="color:#ff79c6">.</span>GetClassNameA(hwnd, ctypes<span style="color:#ff79c6">.</span>addressof(buf), size)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> buf<span style="color:#ff79c6">.</span>value<span style="color:#ff79c6">.</span>strip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#find the first window</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#title:text,class,ctrlid</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#parentTitle:None,hwnd,text,class</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">findWindow</span>(title, parentTitle <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>, isRaw <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>):
+</span></span><span style="display:flex;"><span>    hwndList <span style="color:#ff79c6">=</span> findWindows(title, parentTitle, isRaw)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> hwndList:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> hwndList[<span style="color:#bd93f9">0</span>]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">findRawWindows</span>(title, parentTitle <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> findWindows(title, parentTitle, <span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4"># Determine whether it is an abnormal window</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">isRawWindow</span>(hwnd):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">not</span> win32gui<span style="color:#ff79c6">.</span>IsWindowVisible(hwnd) <span style="color:#ff79c6">or</span> <span style="color:#ff79c6">not</span> win32gui<span style="color:#ff79c6">.</span>IsWindowEnabled(hwnd) <span style="color:#ff79c6">or</span> ctypes<span style="color:#ff79c6">.</span>windll<span style="color:#ff79c6">.</span>user32<span style="color:#ff79c6">.</span>IsHungAppWindow(hwnd)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#查找窗口</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#title:text,class,ctrlid</span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#parentTitle:None,hwnd,text,class</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">findWindows</span>(title, parentTitle <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>, isRaw <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">False</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">__enumWindowHandler__</span>(hwnd, wndList):
+</span></span><span style="display:flex;"><span>        text <span style="color:#ff79c6">=</span> re<span style="color:#ff79c6">.</span>split(<span style="color:#f1fa8c">&#39;[r|n]+&#39;</span>, getWindowText(hwnd))[<span style="color:#bd93f9">0</span>]<span style="color:#ff79c6">.</span>strip()
+</span></span><span style="display:flex;"><span>        clazz <span style="color:#ff79c6">=</span> getWindowClass(hwnd)<span style="color:#ff79c6">.</span>strip()
+</span></span><span style="display:flex;"><span>        ctrlId <span style="color:#ff79c6">=</span> win32gui<span style="color:#ff79c6">.</span>GetDlgCtrlID(hwnd)
+</span></span><span style="display:flex;"><span>        wndList<span style="color:#ff79c6">.</span>append((hwnd, text, clazz, ctrlId))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> parentTitle:
+</span></span><span style="display:flex;"><span>        parentHwndList <span style="color:#ff79c6">=</span> [<span style="color:#ff79c6">None</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">elif</span> <span style="color:#8be9fd;font-style:italic">type</span>(parentTitle) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">int</span>:
+</span></span><span style="display:flex;"><span>        parentHwndList <span style="color:#ff79c6">=</span> [parentTitle]
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        parentHwndList <span style="color:#ff79c6">=</span> findRawWindows(parentTitle)
+</span></span><span style="display:flex;"><span>    hwndSet <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">set</span>()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> parentHwnd <span style="color:#ff79c6">in</span> parentHwndList:
+</span></span><span style="display:flex;"><span>        wndList <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#EnumWindows</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> parentHwnd:
+</span></span><span style="display:flex;"><span>            tryExcept(win32gui<span style="color:#ff79c6">.</span>EnumChildWindows, parentHwnd, __enumWindowHandler__, wndList)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            win32gui<span style="color:#ff79c6">.</span>EnumWindows(__enumWindowHandler__, wndList)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#FindWindowEx</span>
+</span></span><span style="display:flex;"><span>        hwnd, foundHwndList <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>, []
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>            hwnd <span style="color:#ff79c6">=</span> tryExcept(win32gui<span style="color:#ff79c6">.</span>FindWindowEx, parentHwnd, hwnd, <span style="color:#ff79c6">None</span>, <span style="color:#ff79c6">None</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> hwnd <span style="color:#ff79c6">or</span> isExcept(hwnd) <span style="color:#ff79c6">or</span> hwnd <span style="color:#ff79c6">in</span> foundHwndList:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">break</span>
+</span></span><span style="display:flex;"><span>            __enumWindowHandler__(hwnd, wndList)
+</span></span><span style="display:flex;"><span>            foundHwndList<span style="color:#ff79c6">.</span>append(hwnd)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#GetWindow</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> parentHwnd:
+</span></span><span style="display:flex;"><span>            hwnd <span style="color:#ff79c6">=</span> tryExcept(win32gui<span style="color:#ff79c6">.</span>GetWindow, parentHwnd, win32con<span style="color:#ff79c6">.</span>GW_CHILD)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            hwnd <span style="color:#ff79c6">=</span> tryExcept(win32gui<span style="color:#ff79c6">.</span>GetWindow, win32gui<span style="color:#ff79c6">.</span>GetDesktopWindow(), win32con<span style="color:#ff79c6">.</span>GW_CHILD)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">while</span> hwnd <span style="color:#ff79c6">and</span> <span style="color:#ff79c6">not</span> isExcept(hwnd):
+</span></span><span style="display:flex;"><span>            __enumWindowHandler__(hwnd, wndList)
+</span></span><span style="display:flex;"><span>            hwnd <span style="color:#ff79c6">=</span> tryExcept(win32gui<span style="color:#ff79c6">.</span>GetWindow, hwnd, win32con<span style="color:#ff79c6">.</span>GW_HWNDNEXT)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#Combine</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> hwnd, text, clazz, ctrlId <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">set</span>(wndList):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">type</span>(title) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">int</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">if</span> ctrlId <span style="color:#ff79c6">==</span> title:
+</span></span><span style="display:flex;"><span>                    hwndSet<span style="color:#ff79c6">.</span>add(hwnd)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">elif</span> text <span style="color:#ff79c6">==</span> title <span style="color:#ff79c6">or</span> re<span style="color:#ff79c6">.</span>match(<span style="color:#f1fa8c">&#39;^&#39;</span> <span style="color:#ff79c6">+</span> title <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#39;$&#39;</span>, text, re<span style="color:#ff79c6">.</span>S) <span style="color:#ff79c6">or</span> clazz <span style="color:#ff79c6">==</span> title <span style="color:#ff79c6">or</span> re<span style="color:#ff79c6">.</span>match(<span style="color:#f1fa8c">&#39;^&#39;</span> <span style="color:#ff79c6">+</span> title <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#39;$&#39;</span>, clazz, re<span style="color:#ff79c6">.</span>S):
+</span></span><span style="display:flex;"><span>                hwndSet<span style="color:#ff79c6">.</span>add(hwnd)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> parentHwnd:
+</span></span><span style="display:flex;"><span>                hwndSet<span style="color:#ff79c6">.</span>update(findRawWindows(title, hwnd))
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> isRaw:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> <span style="color:#8be9fd;font-style:italic">list</span>(hwndSet)
+</span></span><span style="display:flex;"><span>    hwndList <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> hwnd <span style="color:#ff79c6">in</span> hwndSet:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> isRawWindow(hwnd):
+</span></span><span style="display:flex;"><span>            hwndList<span style="color:#ff79c6">.</span>append(hwnd)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> hwndList
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#设置窗口文字</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">setWindowText</span>(hwnd, text):
+</span></span><span style="display:flex;"><span>    rst <span style="color:#ff79c6">=</span> tryExcept(win32gui<span style="color:#ff79c6">.</span>SendMessageTimeout, hwnd, win32con<span style="color:#ff79c6">.</span>WM_SETTEXT, <span style="color:#bd93f9">0</span>, text, win32con<span style="color:#ff79c6">.</span>SMTO_ABORTIFHUNG, <span style="color:#bd93f9">10</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">not</span> isExcept(rst)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#杀掉指定name的进程</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">killProcessByName</span>(pname, user <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>):
+</span></span><span style="display:flex;"><span>    killProcessByNames([pname], user)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">listFile</span>(path, isDeep<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>):
+</span></span><span style="display:flex;"><span>    _list <span style="color:#ff79c6">=</span> []
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> isDeep:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">for</span> root, dirs, files <span style="color:#ff79c6">in</span> os<span style="color:#ff79c6">.</span>walk(path):
+</span></span><span style="display:flex;"><span>                <span style="color:#ff79c6">for</span> fl <span style="color:#ff79c6">in</span> files:
+</span></span><span style="display:flex;"><span>                    _list<span style="color:#ff79c6">.</span>append(<span style="color:#f1fa8c">&#39;</span><span style="color:#f1fa8c">%s%s</span><span style="color:#f1fa8c">&#39;</span> <span style="color:#ff79c6">%</span> (root, fl))
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> fn <span style="color:#ff79c6">in</span> glob<span style="color:#ff79c6">.</span>glob( path <span style="color:#ff79c6">+</span> os<span style="color:#ff79c6">.</span>sep <span style="color:#ff79c6">+</span> <span style="color:#f1fa8c">&#39;*&#39;</span> ):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>isdir(fn):
+</span></span><span style="display:flex;"><span>                _list<span style="color:#ff79c6">.</span>append(<span style="color:#f1fa8c">&#39;</span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span> <span style="color:#ff79c6">%</span> path <span style="color:#ff79c6">+</span> os<span style="color:#ff79c6">.</span>sep <span style="color:#ff79c6">+</span> fn[fn<span style="color:#ff79c6">.</span>rfind(<span style="color:#f1fa8c">&#39;&#39;</span>)<span style="color:#ff79c6">+</span><span style="color:#bd93f9">1</span>:])
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> _list
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#杀掉指定name的进程列表</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">killProcessByNames</span>(pnameList, user <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">None</span>):
+</span></span><span style="display:flex;"><span>    cmd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#39;taskkill /F /T&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> user:
+</span></span><span style="display:flex;"><span>        cmd <span style="color:#ff79c6">+=</span> <span style="color:#f1fa8c">&#39; /FI &#34;USERNAME eq </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#34;&#39;</span> <span style="color:#ff79c6">%</span> user
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> pname <span style="color:#ff79c6">in</span> pnameList:
+</span></span><span style="display:flex;"><span>        cmd <span style="color:#ff79c6">+=</span> <span style="color:#f1fa8c">&#39; /IM </span><span style="color:#f1fa8c">%s</span><span style="color:#f1fa8c">&#39;</span> <span style="color:#ff79c6">%</span> pname
+</span></span><span style="display:flex;"><span>    createProcess(cmd, <span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#超时设置</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">handleTimeout</span>(func, timeout, <span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap):
+</span></span><span style="display:flex;"><span>    interval <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0.8</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> <span style="color:#8be9fd;font-style:italic">type</span>(timeout) <span style="color:#ff79c6">==</span> <span style="color:#8be9fd;font-style:italic">tuple</span>:
+</span></span><span style="display:flex;"><span>        timeout, interval <span style="color:#ff79c6">=</span> timeout
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> timeout <span style="color:#ff79c6">&gt;</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>        t <span style="color:#ff79c6">=</span> time<span style="color:#ff79c6">.</span>time()
+</span></span><span style="display:flex;"><span>        rst <span style="color:#ff79c6">=</span> func(<span style="color:#ff79c6">*</span>params, <span style="color:#ff79c6">**</span>paramMap)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> rst <span style="color:#ff79c6">and</span> <span style="color:#ff79c6">not</span> isExcept(rst):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">break</span>
+</span></span><span style="display:flex;"><span>        time<span style="color:#ff79c6">.</span>sleep(interval)
+</span></span><span style="display:flex;"><span>        timeout <span style="color:#ff79c6">-=</span> time<span style="color:#ff79c6">.</span>time() <span style="color:#ff79c6">-</span> t
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> rst
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">#写文件</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">setFileData</span>(filename, data, mode):
+</span></span><span style="display:flex;"><span>    f <span style="color:#ff79c6">=</span> <span style="color:#8be9fd;font-style:italic">open</span>(filename, mode)
+</span></span><span style="display:flex;"><span>    f<span style="color:#ff79c6">.</span>write(data)
+</span></span><span style="display:flex;"><span>    f<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">if</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>isfile(<span style="color:#f1fa8c">&#39;md5.log&#39;</span>):
+</span></span><span style="display:flex;"><span>        os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#39;del md5.log&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    parentHwnd <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;Hash.*?&#39;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">#setWindowText(textblack,&#39;123&#39;)</span>
+</span></span><span style="display:flex;"><span>    filedir <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>path<span style="color:#ff79c6">.</span>join(os<span style="color:#ff79c6">.</span>getcwd(),<span style="color:#f1fa8c">&#39;needCheck&#39;</span>)
+</span></span><span style="display:flex;"><span>    filelist <span style="color:#ff79c6">=</span> listFile(filedir)
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">#os.chdir(filedir)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> file <span style="color:#ff79c6">in</span> filelist:
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#启进程</span>
+</span></span><span style="display:flex;"><span>        createProcess(<span style="color:#f1fa8c">&#39;Hash.exe&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#查找浏览按钮</span>
+</span></span><span style="display:flex;"><span>        browse_button <span style="color:#ff79c6">=</span> findWindow(<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;浏览.*?&#39;</span>,parentHwnd)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#点击浏览按钮</span>
+</span></span><span style="display:flex;"><span>        clickWindow(browse_button)
+</span></span><span style="display:flex;"><span>        textblack <span style="color:#ff79c6">=</span> findWindow(<span style="color:#bd93f9">0x47C</span>,<span style="color:#f1fa8c">&#39;#32770&#39;</span>)
+</span></span><span style="display:flex;"><span>        handleTimeout(setWindowText,<span style="color:#bd93f9">10</span>,textblack,file)
+</span></span><span style="display:flex;"><span>        open_hwnd <span style="color:#ff79c6">=</span> findWindow(<span style="color:#f1fa8c">&#39;打开.*?&#39;</span>,<span style="color:#f1fa8c">&#39;#32770&#39;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#点击打开按钮</span>
+</span></span><span style="display:flex;"><span>        clickWindow(open_hwnd)
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#获取文件md5信息</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#需要内容的行号</span>
+</span></span><span style="display:flex;"><span>        expect_content_id <span style="color:#ff79c6">=</span> [<span style="color:#bd93f9">0</span>,<span style="color:#bd93f9">4</span>]
+</span></span><span style="display:flex;"><span>        content_hwnd <span style="color:#ff79c6">=</span> findWindow(<span style="color:#bd93f9">0x3EA</span>,<span style="color:#f1fa8c">r</span><span style="color:#f1fa8c">&#39;Hash.*?&#39;</span>)
+</span></span><span style="display:flex;"><span>        content_text <span style="color:#ff79c6">=</span> handleTimeout(getWindowText,<span style="color:#bd93f9">20</span>,content_hwnd)
+</span></span><span style="display:flex;"><span>        content <span style="color:#ff79c6">=</span> content_text<span style="color:#ff79c6">.</span>split(<span style="color:#f1fa8c">&#39;rn&#39;</span>)
+</span></span><span style="display:flex;"><span>        md5content <span style="color:#ff79c6">=</span> [i<span style="color:#ff79c6">.</span>split(<span style="color:#f1fa8c">&#39;: &#39;</span>)[<span style="color:#bd93f9">1</span>]<span style="color:#ff79c6">.</span>strip() <span style="color:#ff79c6">for</span> ind, i <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">enumerate</span>(content) <span style="color:#ff79c6">if</span> ind <span style="color:#ff79c6">in</span> expect_content_id]
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> md5content
+</span></span><span style="display:flex;"><span>        filename,md5value <span style="color:#ff79c6">=</span> md5content
+</span></span><span style="display:flex;"><span>        setFileData(<span style="color:#f1fa8c">&#39;md5.log&#39;</span>,<span style="color:#f1fa8c">&#39;文件名:&#39;</span><span style="color:#ff79c6">+</span>filename<span style="color:#ff79c6">+</span><span style="color:#f1fa8c">&#39;n&#39;</span><span style="color:#ff79c6">+</span><span style="color:#f1fa8c">&#39;md5:&#39;</span><span style="color:#ff79c6">+</span> md5value<span style="color:#ff79c6">+</span><span style="color:#f1fa8c">&#39;nn&#39;</span>,<span style="color:#f1fa8c">&#39;a&#39;</span>)
+</span></span><span style="display:flex;"><span>        killProcessByName(<span style="color:#f1fa8c">&#39;Hash.exe&#39;</span>)
+</span></span><span style="display:flex;"><span>    os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#39;pause&#39;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+    <a href="/tags/automated-test.html">
+    automated test
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Windows automation testing using python (1)
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/920.html" title="Windows automation testing using python (1)">https://enblog.yangyanxing.com/article/920.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/963.html" rel="next" title="logging module application in python">
+      <i class="fa fa-chevron-left"></i> logging module application in python
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/908.html" rel="prev" title="python handles cookies in web pages">
+      python handles cookies in web pages
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

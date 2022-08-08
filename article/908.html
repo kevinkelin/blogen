@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="python handles cookies in web pages" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="python handles cookies in web pages" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/908.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2013-09-10 11:16:49 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2013-09-10 11:16:49 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>python handles cookies in web pages - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-overview-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/908.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="python handles cookies in web pages">
+      <meta itemprop="description" content="Recently, I wanted to build a WeChat application for Xiaohuangji, but along the way, I found that many methods are no longer available. I tried it locally, and I also tried the method of getting the session through requests, but it didn&rsquo;t work, but after this toss , but I have a better understanding of cookies. The following example uses python to log in to Renren.com to introduce the use of cookies.
+The definition of cookie can refer to Baidu Encyclopedia, 
+
+    http://baike.baidu.com/subview/835/5062332.htm
+    
+ But it says inside Messy, and a lot of repetition, use tools such as firefox or fiddler to grab cookies
+Using the httpFox plug-in under firefox to check the login of Renren.com, the POST address is [http://www.renren.com/ajaxLogin](
+
+    http://www.renren.com/ajaxLogin
+    
+ &ldquo;
+
+    http://www.renren.com/ajaxLogin&#34;
+    
+ 
+
+    www.renren.com/ajaxLogin&#34;)&#160;
+    
+
+
+
+    
+">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">python handles cookies in web pages </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2013-09-10 11:16:49 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2013-09-10 11:16:49 &#43;0000 UTC">2013-09-10</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>758</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>4min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>Recently, I wanted to build a WeChat application for Xiaohuangji, but along the way, I found that many methods are no longer available. I tried it locally, and I also tried the method of getting the session through requests, but it didn&rsquo;t work, but after this toss , but I have a better understanding of cookies. The following example uses python to log in to Renren.com to introduce the use of cookies.
+The definition of cookie can refer to Baidu Encyclopedia, 
+<a href="http://baike.baidu.com/subview/835/5062332.htm" title="http://baike.baidu.com/subview/835/5062332.htm" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    http://baike.baidu.com/subview/835/5062332.htm
+    <i class="fa fa-external-link-alt"></i>
+</a> But it says inside Messy, and a lot of repetition, use tools such as firefox or fiddler to grab cookies
+Using the httpFox plug-in under firefox to check the login of Renren.com, the POST address is [http://www.renren.com/ajaxLogin](
+<a href="http://www.renren.com/ajaxLogin" title="http://www.renren.com/ajaxLogin" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    http://www.renren.com/ajaxLogin
+    <i class="fa fa-external-link-alt"></i>
+</a> &ldquo;
+<a href="http://www.renren.com/ajaxLogin%22" title="http://www.renren.com/ajaxLogin&#34;" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    http://www.renren.com/ajaxLogin"
+    <i class="fa fa-external-link-alt"></i>
+</a> 
+<a href="https://www.renren.com/ajaxLogin%22%29&amp;#160;" title="www.renren.com/ajaxLogin&#34;)&amp;#160;" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    www.renren.com/ajaxLogin")&#160;
+    <i class="fa fa-external-link-alt"></i>
+</a>
+
+<a href="/image/2013/09/getUrl.png" title="&lt;img src=&#34;/image/2013/09/getUrl_thumb.png&#34; alt=&#34;getUrl&#34; title=&#34;getUrl&#34;&gt;" >
+    <img src="/image/2013/09/getUrl_thumb.png" alt="getUrl" title="getUrl">
+</a></p>
+<p>And see that the DATA that needs POST includes email and password</p>
+<p>Python handles cookies through cookielib, the following is a simple code</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#ff79c6">import</span> urllib
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#ff79c6">import</span> urllib2<span style="color:#ff79c6">,</span>cookielib
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> login_page <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;http://www.renren.com/ajaxLogin&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> cj <span style="color:#ff79c6">=</span> cookielib<span style="color:#ff79c6">.</span>CookieJar()
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> opener <span style="color:#ff79c6">=</span> urllib2<span style="color:#ff79c6">.</span>build_opener(urllib2<span style="color:#ff79c6">.</span>HTTPCookieProcessor(cj))
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> opener<span style="color:#ff79c6">.</span>add_handler <span style="color:#ff79c6">=</span> [(<span style="color:#f1fa8c">&#39;User-agent&#39;</span>,<span style="color:#f1fa8c">&#39;Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)&#39;</span>)]
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> data <span style="color:#ff79c6">=</span> urllib<span style="color:#ff79c6">.</span>urlencode({<span style="color:#f1fa8c">&#34;email&#34;</span>:<span style="color:#f1fa8c">&#39;username&#39;</span>,<span style="color:#f1fa8c">&#34;password&#34;</span>:<span style="color:#f1fa8c">&#39;password&#39;</span>})
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> opener<span style="color:#ff79c6">.</span>open(login_page,data)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&lt;</span>addinfourl at <span style="color:#bd93f9">53653216</span> whose fp <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">&lt;</span>socket<span style="color:#ff79c6">.</span>_fileobject <span style="color:#8be9fd;font-style:italic">object</span> at <span style="color:#bd93f9">0x03307B70</span><span style="color:#ff79c6">&gt;&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#ff79c6">if</span> cj:
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">...</span><span style="color:#ff79c6">for</span> index,cookie <span style="color:#ff79c6">in</span> <span style="color:#8be9fd;font-style:italic">enumerate</span>(cj):
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">...</span> <span style="color:#8be9fd;font-style:italic">print</span> index,<span style="color:#f1fa8c">&#39;:&#39;</span>,cookie
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span> : <span style="color:#ff79c6">&lt;</span>Cookie _de<span style="color:#ff79c6">=</span><span style="color:#bd93f9">90</span>D533AE20EB964CA96710977F452897 <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">1</span> : <span style="color:#ff79c6">&lt;</span>Cookie anonymid<span style="color:#ff79c6">=</span>hlehtdzg<span style="color:#ff79c6">-</span><span style="color:#bd93f9">8359</span>yw <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">2</span> : <span style="color:#ff79c6">&lt;</span>Cookie first_login_flag<span style="color:#ff79c6">=</span><span style="color:#bd93f9">1</span> <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">3</span> : <span style="color:#ff79c6">&lt;</span>Cookie <span style="color:#8be9fd;font-style:italic">id</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">224967207</span> <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">4</span> : <span style="color:#ff79c6">&lt;</span>Cookie loginfrom<span style="color:#ff79c6">=</span>null <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">5</span> : <span style="color:#ff79c6">&lt;</span>Cookie p<span style="color:#ff79c6">=</span><span style="color:#bd93f9">9</span>beb60859c004bcaf0a32ff2c973473d7 <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">6</span> : <span style="color:#ff79c6">&lt;</span>Cookie societyguester<span style="color:#ff79c6">=</span><span style="color:#bd93f9">86</span>b6a6006002ab6316f708521ab50bfc7 <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">7</span> : <span style="color:#ff79c6">&lt;</span>Cookie t<span style="color:#ff79c6">=</span><span style="color:#bd93f9">86</span>b6a6006002ab6316f708521ab50bfc7 <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">8</span> : <span style="color:#ff79c6">&lt;</span>Cookie xnsid<span style="color:#ff79c6">=</span>fa53da51 <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">9</span> : <span style="color:#ff79c6">&lt;</span>Cookie t<span style="color:#ff79c6">=</span><span style="color:#bd93f9">30</span>af9ffe774f4d6f242e92da1ccd6670 <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/</span>xtalk<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">10</span> : <span style="color:#ff79c6">&lt;</span>Cookie feedType<span style="color:#ff79c6">=</span><span style="color:#bd93f9">224967207</span>_hot <span style="color:#ff79c6">for</span> <span style="color:#ff79c6">.</span>www<span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">11</span> : <span style="color:#ff79c6">&lt;</span>Cookie JSESSIONID<span style="color:#ff79c6">=</span>abc3IP9kEhTExblxcRfeu <span style="color:#ff79c6">for</span> www<span style="color:#ff79c6">.</span>renren<span style="color:#ff79c6">.</span>com<span style="color:#ff79c6">/&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be compared with the cookie obtained in firebug or httpFox. The value may be inconsistent, but the key is basically the same, and it should be inconsistent every time you log in.</p>
+<p>
+<a href="/image/2013/09/getCookie.png" title="&lt;img src=&#34;/image/2013/09/getCookie_thumb.png&#34; alt=&#34;getCookie&#34; title=&#34;getCookie&#34;&gt;" >
+    <img src="/image/2013/09/getCookie_thumb.png" alt="getCookie" title="getCookie">
+</a></p>
+<p> </p>
+<p>I&rsquo;ve also tried using fidder to simulate sending POST data without cookies, but I don&rsquo;t get the desired return value</p>
+<p>
+<a href="/image/2013/09/withoutcookie.png" title="&lt;img src=&#34;/image/2013/09/withoutcookie_thumb.png&#34; alt=&#34;withoutcookie&#34; title=&#34;withoutcookie&#34;&gt;" >
+    <img src="/image/2013/09/withoutcookie_thumb.png" alt="withoutcookie" title="withoutcookie">
+</a></p>
+<p>After adding the cookie information, you can normally jump to your own home page.</p>
+<p>
+<a href="/image/2013/09/withcookie.png" title="&lt;img src=&#34;/image/2013/09/withcookie_thumb.png&#34; alt=&#34;withcookie&#34; title=&#34;withcookie&#34;&gt;" >
+    <img src="/image/2013/09/withcookie_thumb.png" alt="withcookie" title="withcookie">
+</a></p>
+<p>
+<a href="/image/2013/09/pg.png" title="&lt;img src=&#34;/image/2013/09/pg_thumb.png&#34; alt=&#34;pg&#34; title=&#34;pg&#34;&gt;" >
+    <img src="/image/2013/09/pg_thumb.png" alt="pg" title="pg">
+</a></p>
+<p>Well, basically understand the use of cookies in python to send login information, now let&rsquo;s write a small script to log in to our Renren.com.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#encoding=utf-8</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> urllib2
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> urllib
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> cookielib
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">renrenBrower</span>(url, user, password):
+</span></span><span style="display:flex;"><span>    login_page <span style="color:#ff79c6">=</span> <span style="color:#f1fa8c">&#34;http://www.renren.com/ajaxLogin&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>        cj <span style="color:#ff79c6">=</span> cookielib<span style="color:#ff79c6">.</span>CookieJar()
+</span></span><span style="display:flex;"><span>        opener<span style="color:#ff79c6">=</span>urllib2<span style="color:#ff79c6">.</span>build_opener(urllib2<span style="color:#ff79c6">.</span>HTTPCookieProcessor(cj))
+</span></span><span style="display:flex;"><span>        opener<span style="color:#ff79c6">.</span>addheaders <span style="color:#ff79c6">=</span> [(<span style="color:#f1fa8c">&#39;User-agent&#39;</span>,<span style="color:#f1fa8c">&#39;Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)&#39;</span>)]
+</span></span><span style="display:flex;"><span>        data <span style="color:#ff79c6">=</span> urllib<span style="color:#ff79c6">.</span>urlencode({<span style="color:#f1fa8c">&#34;email&#34;</span>:<span style="color:#f1fa8c">&#39;user&#39;</span>,<span style="color:#f1fa8c">&#34;password&#34;</span>:<span style="color:#f1fa8c">&#39;password&#39;</span>})
+</span></span><span style="display:flex;"><span>        opener<span style="color:#ff79c6">.</span>open(login_page,data)
+</span></span><span style="display:flex;"><span>        op<span style="color:#ff79c6">=</span>opener<span style="color:#ff79c6">.</span>open(url)
+</span></span><span style="display:flex;"><span>        data<span style="color:#ff79c6">=</span> op<span style="color:#ff79c6">.</span>read()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">return</span> data
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">except</span> Exception,e:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span> <span style="color:#8be9fd;font-style:italic">str</span>(e)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span> renrenBrower(<span style="color:#f1fa8c">&#34;http://www.renren.com/home&#34;</span>,<span style="color:#f1fa8c">&#34;username&#34;</span>,<span style="color:#f1fa8c">&#34;password&#34;</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p> </p>
+<p>In this way, you can display the information on your homepage. In fact, after logging in, you can continue to write scripts to get the information you want, such as friends&rsquo; news,</p>
+<p>The point here is to use SGMLParser to parse the html code</p>
+<p>The following code reference
+<a href="http://www.oschina.net/code/snippet_148170_10661" title="http://www.oschina.net/code/snippet_148170_10661" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    http://www.oschina.net/code/snippet_148170_10661
+    <i class="fa fa-external-link-alt"></i>
+</a> </p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">52
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">53
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">54
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">55
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">56
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">57
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">58
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">59
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">60
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">61
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">62
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">63
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">64
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">65
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">66
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">67
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">68
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">69
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">70
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">71
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">72
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">73
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">74
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">75
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">76
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">77
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">78
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">79
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">80
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">81
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">82
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">83
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">84
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">85
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">86
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">87
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">88
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">89
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">90
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">91
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">92
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">93
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">from</span> sgmllib <span style="color:#ff79c6">import</span> SGMLParser
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> sys<span style="color:#ff79c6">,</span>urllib2<span style="color:#ff79c6">,</span>urllib<span style="color:#ff79c6">,</span>cookielib
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">spider</span>(SGMLParser):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> __init__(self, email, password):
+</span></span><span style="display:flex;"><span>        SGMLParser<span style="color:#ff79c6">.</span>__init__(self)
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>h3<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>h3_is_ready<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>div<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>h3_and_div<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>a<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>depth<span style="color:#ff79c6">=</span><span style="color:#bd93f9">0</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>names<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>dic<span style="color:#ff79c6">=</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>email<span style="color:#ff79c6">=</span>email
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>password<span style="color:#ff79c6">=</span>password
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>domain<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;renren.com&#39;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            cookie<span style="color:#ff79c6">=</span>cookielib<span style="color:#ff79c6">.</span>CookieJar()
+</span></span><span style="display:flex;"><span>            cookieProc<span style="color:#ff79c6">=</span>urllib2<span style="color:#ff79c6">.</span>HTTPCookieProcessor(cookie)
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">raise</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">else</span>:
+</span></span><span style="display:flex;"><span>            opener<span style="color:#ff79c6">=</span>urllib2<span style="color:#ff79c6">.</span>build_opener(cookieProc)
+</span></span><span style="display:flex;"><span>            urllib2<span style="color:#ff79c6">.</span>install_opener(opener)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">login</span>(self):
+</span></span><span style="display:flex;"><span>        url<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;http://www.renren.com/PLogin.do&#39;</span>
+</span></span><span style="display:flex;"><span>        postdata<span style="color:#ff79c6">=</span>{
+</span></span><span style="display:flex;"><span>                  <span style="color:#f1fa8c">&#39;email&#39;</span>: self<span style="color:#ff79c6">.</span>email,
+</span></span><span style="display:flex;"><span>                  <span style="color:#f1fa8c">&#39;password&#39;</span>:self<span style="color:#ff79c6">.</span>password,
+</span></span><span style="display:flex;"><span>                  <span style="color:#f1fa8c">&#39;domain&#39;</span>: self<span style="color:#ff79c6">.</span>domain
+</span></span><span style="display:flex;"><span>                  }
+</span></span><span style="display:flex;"><span>        req<span style="color:#ff79c6">=</span>urllib2<span style="color:#ff79c6">.</span>Request(
+</span></span><span style="display:flex;"><span>                            url,
+</span></span><span style="display:flex;"><span>                            urllib<span style="color:#ff79c6">.</span>urlencode(postdata)
+</span></span><span style="display:flex;"><span>                            )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>file<span style="color:#ff79c6">=</span>urllib2<span style="color:#ff79c6">.</span>urlopen(req)<span style="color:#ff79c6">.</span>read()
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#print self.file</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_h3</span>(self,attrs):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>h3 <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">end_h3</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>h3<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>h3_is_ready<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_a</span>(self,attrs):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>h3 <span style="color:#ff79c6">or</span> self<span style="color:#ff79c6">.</span>div:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>a<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">end_a</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#ff79c6">.</span>a<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">start_div</span>(self,attrs):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>h3_is_ready <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">False</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>div<span style="color:#ff79c6">==</span><span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>depth <span style="color:#ff79c6">+=</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> k,v <span style="color:#ff79c6">in</span> attrs:
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> k <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;class&#39;</span> <span style="color:#ff79c6">and</span> v <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;content&#39;</span>:
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff79c6">.</span>div<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>;
+</span></span><span style="display:flex;"><span>                self<span style="color:#ff79c6">.</span>h3_and_div<span style="color:#ff79c6">=</span><span style="color:#ff79c6">True</span>   <span style="color:#6272a4">#h3 and div is connected</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">end_div</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>depth <span style="color:#ff79c6">==</span> <span style="color:#bd93f9">0</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>div<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>h3_and_div<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>h3_is_ready<span style="color:#ff79c6">=</span><span style="color:#ff79c6">False</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>names<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>div <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>depth<span style="color:#ff79c6">-=</span><span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">handle_data</span>(self,text):
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#record the name</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>h3 <span style="color:#ff79c6">and</span> self<span style="color:#ff79c6">.</span>a:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>names<span style="color:#ff79c6">+=</span>text
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4">#record says</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>h3 <span style="color:#ff79c6">and</span> (self<span style="color:#ff79c6">.</span>a<span style="color:#ff79c6">==</span><span style="color:#ff79c6">False</span>):
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">if</span> <span style="color:#ff79c6">not</span> text:<span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">else</span>: self<span style="color:#ff79c6">.</span>dic<span style="color:#ff79c6">.</span>setdefault(self<span style="color:#ff79c6">.</span>names,[])<span style="color:#ff79c6">.</span>append(text)
+</span></span><span style="display:flex;"><span>            <span style="color:#ff79c6">return</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">if</span> self<span style="color:#ff79c6">.</span>h3_and_div:
+</span></span><span style="display:flex;"><span>            self<span style="color:#ff79c6">.</span>dic<span style="color:#ff79c6">.</span>setdefault(self<span style="color:#ff79c6">.</span>names,[])<span style="color:#ff79c6">.</span>append(text)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">show</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">type</span> <span style="color:#ff79c6">=</span> sys<span style="color:#ff79c6">.</span>getfilesystemencoding()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">for</span> key <span style="color:#ff79c6">in</span> self<span style="color:#ff79c6">.</span>dic:
+</span></span><span style="display:flex;"><span>            <span style="color:#8be9fd;font-style:italic">print</span> ( (<span style="color:#f1fa8c">&#39;&#39;</span><span style="color:#ff79c6">.</span>join(key))<span style="color:#ff79c6">.</span>replace(<span style="color:#f1fa8c">&#39; &#39;</span>,<span style="color:#f1fa8c">&#39;&#39;</span>))<span style="color:#ff79c6">.</span>decode(<span style="color:#f1fa8c">&#39;utf-8&#39;</span>)<span style="color:#ff79c6">.</span>encode(<span style="color:#8be9fd;font-style:italic">type</span>),
+</span></span><span style="display:flex;"><span>                  ( (<span style="color:#f1fa8c">&#39;&#39;</span><span style="color:#ff79c6">.</span>join(self<span style="color:#ff79c6">.</span>dic[key]))<span style="color:#ff79c6">.</span>replace(<span style="color:#f1fa8c">&#39; &#39;</span>,<span style="color:#f1fa8c">&#39;&#39;</span>))<span style="color:#ff79c6">.</span>decode(<span style="color:#f1fa8c">&#39;utf-8&#39;</span>)<span style="color:#ff79c6">.</span>encode(<span style="color:#8be9fd;font-style:italic">type</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span><span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    renrenspider<span style="color:#ff79c6">=</span>spider(<span style="color:#f1fa8c">&#39;email&#39;</span>,<span style="color:#f1fa8c">&#39;password&#39;</span>)
+</span></span><span style="display:flex;"><span>    renrenspider<span style="color:#ff79c6">.</span>login()
+</span></span><span style="display:flex;"><span>    renrenspider<span style="color:#ff79c6">.</span>feed(renrenspider<span style="color:#ff79c6">.</span>file)
+</span></span><span style="display:flex;"><span>    renrenspider<span style="color:#ff79c6">.</span>show()
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      python handles cookies in web pages
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/908.html" title="python handles cookies in web pages">https://enblog.yangyanxing.com/article/908.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/920.html" rel="next" title="Windows automation testing using python (1)">
+      <i class="fa fa-chevron-left"></i> Windows automation testing using python (1)
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/870.html" rel="prev" title="python sending email is a very simple thing">
+      python sending email is a very simple thing
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>

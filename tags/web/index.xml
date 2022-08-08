@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>web on KevinYang&#39;s blog</title>
+    <link>https://enblog.yangyanxing.com/tags/web.html</link>
+    <description>Recent content in web on KevinYang&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 02 Aug 2021 16:38:51 +0800</lastBuildDate><atom:link href="https://enblog.yangyanxing.com/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Application of bitmap algorithm in test system</title>
+      <link>https://enblog.yangyanxing.com/article/bitmap-in-test.html</link>
+      <pubDate>Mon, 02 Aug 2021 16:38:51 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/bitmap-in-test.html</guid>
+      <description>&lt;p&gt;In our test platform, there are many test mobile phones. For some mobile phones, we expect that it can only run specific tasks, or a mobile phone will have some specific states, such as charging, manual operation, mobile phone cleaning, when the mobile phone In different states, there will be some different processing actions. What solutions do we have at this time?&lt;/p&gt;
+&lt;p&gt;The first thing that comes to mind should be to tag, create a new field in the database, such as tag, and modify the status of a mobile phone, just modify the tag field.&lt;/p&gt;
+&lt;p&gt;But here is a question, if a phone has two or more tags, for example, the phone is charging, and it is manually operated, how much should this tag be set to? If this field can be set to &lt;code&gt;charging, oping&lt;/code&gt; in mysql, but it is a little troublesome when we search. For example, if I want to filter out the mobile phone that is charging, the sql statement is probably like this&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>hexo migrate hugo</title>
+      <link>https://enblog.yangyanxing.com/article/hexo-to-hugo.html</link>
+      <pubDate>Mon, 31 May 2021 22:03:53 +0800</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/hexo-to-hugo.html</guid>
+      <description>&lt;p&gt;Finally I can&amp;rsquo;t stand hexo anymore. I changed the computer. Basically, the original things can&amp;rsquo;t be migrated. The node version, the dependencies of various plug-ins, and different versions will be different. I encounter various compilation errors and the compilation is slow. . . .&lt;/p&gt;
+&lt;p&gt;I couldn&amp;rsquo;t take it anymore, and finally decided to migrate my blog from hexo to hugo. I was a little hesitant at first, but after I turned it over, it was really fragrant!&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Configure multiple ssh key pairs and manage multiple ssh permanently</title>
+      <link>https://enblog.yangyanxing.com/article/config-local-ssh.html</link>
+      <pubDate>Sat, 16 Jun 2018 23:53:38 +0000</pubDate>
+      
+      <guid>https://enblog.yangyanxing.com/article/config-local-ssh.html</guid>
+      <description>&lt;p&gt;I have been playing around with SSH in the past two days, and I have been ignorant of its use. Since I want to migrate my blog, I have to find out that I should deploy it to the domestic coding.
+I did it before, but because I reinstalled the git-for-windows client, I got an error when I deployed it with the hexo d command at the beginning.
+Taking advantage of this migration, I also took advantage of the local ssh management. Although there are still some problems, it is at least a little clearer than before. I also record the problems encountered during the process.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

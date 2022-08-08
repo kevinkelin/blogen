@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)" />
+<meta name="generator" content="Hugo 0.101.0" />
+<link rel="shortcut icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/x-icon" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
+<meta itemprop="name" content="Solve the problem that the mysql server actively disconnects after no operation timeout" />
+<meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
+<meta itemprop="datePublished" ZgotmplZ />
+<meta itemprop="dateModified" ZgotmplZ />
+<meta itemprop="image" content="https://enblog.yangyanxing.com/imgs/xxxx.png" />
+<meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Solve the problem that the mysql server actively disconnects after no operation timeout" />
+<meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
+<meta property="og:image" content="/imgs/xxxx.png" />
+<meta property="og:image:width" content="312" />
+<meta property="og:image:height" content="312" />
+<meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/connect_short_problem.html"/>
+<meta property="og:site_name" content="KevinYang&#39;s blog" />
+<meta property="og:locale" content="zh-CN"/>
+<meta property="article:author" content="KevinYang" />
+<meta property="article:published_time" content="2019-07-18 23:53:38 &#43;0000 UTC" />
+<meta property="article:modified_time" content="2019-07-18 23:53:38 &#43;0000 UTC" />
+
+
+  <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
+
+  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <style type="text/css">
+    .post-footer hr:after {
+      content: "~ end ~";
+    }
+  </style>
+  
+  <title>Solve the problem that the mysql server actively disconnects after no operation timeout - KevinYang&#39;s blog</title>
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage"  class="use-motion" >
+  <div class="headband"></div>
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner">
+<div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">KevinYang&#39;s blog</h1>
+      <i class="logo-line"></i>
+    </a>
+    
+      <p class="site-subtitle" itemprop="description">yangyanxing&#39;s blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+      
+      <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+    <li class="menu-item menu-item-home">
+      <a href="/" class="hvr-icon-pulse " rel="section"><i class="fa fa-home hvr-icon"></i>Home
+      </a>
+    </li>
+    <li class="menu-item menu-item-About">
+      <a href="/about.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-user hvr-icon"></i>about
+      </a>
+    </li>
+    <li class="menu-item menu-item-Archives">
+      <a href="/article.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-archive hvr-icon"></i>Archives
+      </a>
+    </li>
+    <li class="menu-item menu-item-commonweal">
+      <a href="/404.html" class="hvr-icon-pulse " rel="section"><i class="fa fa-heartbeat hvr-icon"></i>Welfare 404
+      </a>
+    </li>
+    <li class="menu-item menu-item-search">
+      <a role="button" class="popup-trigger hvr-icon-pulse"><i class="fa fa-search fa-fw hvr-icon"></i>Search
+      </a>
+    </li>
+
+  </ul>
+</nav>
+      </div>
+      <div class="toggle sidebar-toggle" role="button">
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+  <span class="toggle-line"></span>
+</div>
+<aside class="sidebar">
+  <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-toc">
+        TOC
+      </li>
+      <li class="sidebar-nav-overview">
+        Overview
+      </li>
+    </ul>
+    <div class="sidebar-panel-container">
+      
+      <div class="post-toc-wrap sidebar-panel">
+        <div class="post-toc animated"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#view-the-timeout-of-mysql">View the timeout of mysql</a></li>
+        <li><a href="#query-using-pymysql">Query using pymysql</a></li>
+        <li><a href="#query-after-connection-timeout">Query after connection timeout</a></li>
+        <li><a href="#solution">Solution</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+      
+      <div class="site-overview-wrap sidebar-panel">
+        
+<div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="KevinYang"
+      src="/imgs/xxxx.png">
+  <p class="site-author-name" itemprop="name">KevinYang</p>
+  <div class="site-description" itemprop="description">Focus on python, Go language (golang), test development, project management</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+    <div class="site-state-item site-state-posts">
+      <a href="/article.html">
+        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-name">Posts</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-categories">
+      <a href="/categories.html">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">Categories</span>
+      </a>
+    </div>
+    <div class="site-state-item site-state-tags">
+      <a href="/tags.html">
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">Tags</span>
+      </a>
+    </div>
+  </nav>
+</div>
+<div class="links-of-social site-overview-item animated">
+
+
+  <span class="links-of-social-item">
+    <a href="https://github.com/kevinkelin" title="Github → https://github.com/kevinkelin" rel="noopener" class="hvr-icon-pulse" target="_blank">
+      <i class="fab fa-github fa-fw  hvr-icon "></i>Github
+    </a>
+  </span>
+</div>
+<div class="cc-license animated" itemprop="license">
+  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank" title="Creative Commons">
+    <img src="/imgs/cc/big/by_nc_sa.svg" alt="Creative Commons">
+  </a>
+</div>
+<div class="links-of-blogroll site-overview-item animated">
+  <div class="links-of-blogroll-title">links
+  </div>
+  <ul class="links-of-blogroll-list">
+    <li class="links-of-blogroll-item">
+      <a href="https://www.liaoxuefeng.com/" title="https://www.liaoxuefeng.com/" target="_blank">廖雪峰</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://testerhome.com/" title="https://testerhome.com/" target="_blank">TesterHome</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://opentest.360.cn/" title="https://opentest.360.cn/" target="_blank">360开测</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.dongwm.com/" title="https://www.dongwm.com/" target="_blank">董伟明</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://studygolang.com/" title="https://studygolang.com/" target="_blank">go语言中文网</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://greyli.com/" title="https://greyli.com/" target="_blank">李辉的个人网站</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://www.flysnow.org/" title="https://www.flysnow.org/" target="_blank">飞雪无情</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://unknwon.cn/" title="https://unknwon.cn/" target="_blank">无闻</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://eddycjy.com/" title="https://eddycjy.com/" target="_blank">煎鱼</a>
+    </li>
+    <li class="links-of-blogroll-item">
+      <a href="https://chai2010.cn/" title="https://chai2010.cn/" target="_blank">柴树杉</a>
+    </li>
+  </ul>
+</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div class="sidebar-dimmer"></div>
+    </header>
+    
+    
+  <div class="back-to-top" role="button" aria-label="Top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+    <div class="main-inner post posts-expand">
+      
+  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/connect_short_problem.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Solve the problem that the mysql server actively disconnects after no operation timeout">
+      <meta itemprop="description" content="When we use the mysql service, under normal circumstances, the timeout set by mysql is 8 hours (28800 seconds), that is to say, if a connection does not operate for 8 hours, then mysql will actively disconnect the connection. When this connection tries to query again, it will report a &ldquo;MySQL server has gone away&rdquo; error, but sometimes, due to some settings made by the mysql server, in many cases, the connection timeout will be shortened to ensure more connections. available. Sometimes the settings are abnormal, very short, 30 seconds, so that the client side needs to do some operations to ensure that mysql does not take the initiative to disconnect.">
+    </span>
+    <header class="post-header">
+       <h1 class="post-title" itemprop="name headline">Solve the problem that the mysql server actively disconnects after no operation timeout </h1> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2019-07-18 23:53:38 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-07-18 23:53:38 &#43;0000 UTC">2019-07-18</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">Python</span>
+    </a>
+  </span>
+</span>
+  </div>
+  <div class="post-meta-items">
+    
+<span class="post-meta-item" title="Words">
+  <span class="post-meta-item-icon">
+    <i class="far fa-file-word"></i>
+  </span>
+  <span class="post-meta-item-text">Words:</span><span>1507</span>
+</span>
+    
+<span class="post-meta-item" title="Read">
+  <span class="post-meta-item-icon">
+    <i class="far fa-clock"></i>
+  </span>
+  <span class="post-meta-item-text">Read:&asymp;</span>
+  <span>8min</span>
+</span>
+
+    
+
+
+
+  </div>
+  
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>When we use the mysql service, under normal circumstances, the timeout set by mysql is 8 hours (28800 seconds), that is to say, if a connection does not operate for 8 hours, then mysql will actively disconnect the connection. When this connection tries to query again, it will report a &ldquo;MySQL server has gone away&rdquo; error, but sometimes, due to some settings made by the mysql server, in many cases, the connection timeout will be shortened to ensure more connections. available. Sometimes the settings are abnormal, very short, 30 seconds, so that the client side needs to do some operations to ensure that mysql does not take the initiative to disconnect.</p>
+<h2 id="view-the-timeout-of-mysql">View the timeout of mysql</h2>
+<p>Use the client tool or Mysql command line tool to enter <code>show global variables like '%timeout%';</code> to display the properties related to timeout. Here I use docker to simulate a test environment.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span>mysql<span style="color:#ff79c6">&gt;</span> <span style="color:#ff79c6">show</span> variables <span style="color:#ff79c6">like</span> <span style="color:#f1fa8c">&#39;%timeout%&#39;</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">+-----------------------------+------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> Variable_name <span style="color:#ff79c6">|</span> Value <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">+-----------------------------+------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> connect_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">10</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> delayed_insert_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">300</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> have_statement_timeout <span style="color:#ff79c6">|</span> YES <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> innodb_flush_log_at_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> innodb_lock_wait_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">50</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> innodb_rollback_on_timeout <span style="color:#ff79c6">|</span> OFF <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> interactive_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">30</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> lock_wait_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">31536000</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span>net_read_timeout<span style="color:#ff79c6">|</span><span style="color:#bd93f9">30</span><span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span>net_write_timeout<span style="color:#ff79c6">|</span><span style="color:#bd93f9">60</span><span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> rpl_stop_slave_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">31536000</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> slave_net_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">60</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> wait_timeout <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">30</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">+-----------------------------+------------+</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">13</span> rows <span style="color:#ff79c6">in</span> <span style="color:#8be9fd">set</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>wait_timeout: The number of seconds the server waits for activity before closing a non-interactive connection, which is when you make a program call in your project
+interactive_timeout: The number of seconds the server waits for activity before closing the interactive connection, which is when you open the mysql client on your local machine, the kind of cmd</p>
+<h2 id="query-using-pymysql">Query using pymysql</h2>
+<p>I randomly created a table in the database and inserted two pieces of data</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-mysql" data-lang="mysql"><span style="display:flex;"><span>mysql<span style="color:#ff79c6">&gt;</span> <span style="color:#ff79c6">select</span> <span style="color:#ff79c6">*</span> <span style="color:#ff79c6">from</span> person;
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">+----+------+-----+</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> id <span style="color:#ff79c6">|</span> name <span style="color:#ff79c6">|</span> age <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">+----+------+-----+</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> <span style="color:#bd93f9">1</span> <span style="color:#ff79c6">|</span> yang <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">18</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">|</span> <span style="color:#bd93f9">2</span> <span style="color:#ff79c6">|</span> fan <span style="color:#ff79c6">|</span> <span style="color:#bd93f9">16</span> <span style="color:#ff79c6">|</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">+----+------+-----+</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">2</span> rows <span style="color:#ff79c6">in</span> <span style="color:#8be9fd">set</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I use the pymysql library to query it, it&rsquo;s very simple</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pymysql
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mytest</span>():
+</span></span><span style="display:flex;"><span>    connection <span style="color:#ff79c6">=</span> pymysql<span style="color:#ff79c6">.</span>connect(
+</span></span><span style="display:flex;"><span>    host<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;localhost&#39;</span>,
+</span></span><span style="display:flex;"><span>    port<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3306</span>,
+</span></span><span style="display:flex;"><span>    user<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;root&#39;</span>,
+</span></span><span style="display:flex;"><span>    password<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;123456&#39;</span>,
+</span></span><span style="display:flex;"><span>    db<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;mytest&#39;</span>,
+</span></span><span style="display:flex;"><span>    charset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;utf8&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    mytest()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>get the correct result</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(<span style="color:#bd93f9">1</span>, <span style="color:#f1fa8c">&#39;yang&#39;</span>, <span style="color:#bd93f9">18</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#bd93f9">2</span>, <span style="color:#f1fa8c">&#39;fan&#39;</span>, <span style="color:#bd93f9">16</span>)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="query-after-connection-timeout">Query after connection timeout</h2>
+<p>The above results can be obtained normally because when a link is created, the query is performed immediately, and its timeout time has not been exceeded. If I sleep for a while, see what the effect is.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pymysql
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mytest</span>():
+</span></span><span style="display:flex;"><span>    connection <span style="color:#ff79c6">=</span> pymysql<span style="color:#ff79c6">.</span>connect(
+</span></span><span style="display:flex;"><span>    host<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;localhost&#39;</span>,
+</span></span><span style="display:flex;"><span>    port<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3306</span>,
+</span></span><span style="display:flex;"><span>    user<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;root&#39;</span>,
+</span></span><span style="display:flex;"><span>    password<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;123456&#39;</span>,
+</span></span><span style="display:flex;"><span>    db<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;mytest&#39;</span>,
+</span></span><span style="display:flex;"><span>    charset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;utf8&#39;</span>)
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">31</span>)
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data2 <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data2:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    mytest()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>There are two queries here, because I set the wait_timeout of mysql to 30 seconds, so I stopped for 31 seconds after the first query, in order to make the mysql service actively disconnect from the connection I just created, and the result is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(<span style="color:#bd93f9">1</span>, <span style="color:#f1fa8c">&#39;yang&#39;</span>, <span style="color:#bd93f9">18</span>)
+</span></span><span style="display:flex;"><span>(<span style="color:#bd93f9">2</span>, <span style="color:#f1fa8c">&#39;fan&#39;</span>, <span style="color:#bd93f9">16</span>)
+</span></span><span style="display:flex;"><span>Traceback (most recent call last):
+</span></span><span style="display:flex;"><span>  File <span style="color:#f1fa8c">&#34;F:/python/python3Test/mysqltest.py&#34;</span>, line <span style="color:#bd93f9">29</span>, <span style="color:#ff79c6">in</span> <span style="color:#ff79c6">&lt;</span>module<span style="color:#ff79c6">&gt;</span>
+</span></span><span style="display:flex;"><span>    mytest()
+</span></span><span style="display:flex;"><span>  File <span style="color:#f1fa8c">&#34;F:/python/python3Test/mysqltest.py&#34;</span>, line <span style="color:#bd93f9">22</span>, <span style="color:#ff79c6">in</span> mytest
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">...</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">...</span>
+</span></span><span style="display:flex;"><span>  File <span style="color:#f1fa8c">&#34;C:\Python35\lib\site-packages\pymysql\connections.py&#34;</span>, line <span style="color:#bd93f9">702</span>, <span style="color:#ff79c6">in</span> _read_bytes
+</span></span><span style="display:flex;"><span>    CR<span style="color:#ff79c6">.</span>CR_SERVER_LOST, <span style="color:#f1fa8c">&#34;Lost connection to MySQL server during query&#34;</span>)
+</span></span><span style="display:flex;"><span>pymysql<span style="color:#ff79c6">.</span>err<span style="color:#ff79c6">.</span>OperationalError: (<span style="color:#bd93f9">2013</span>, <span style="color:#f1fa8c">&#39;Lost connection to MySQL server during query&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Process finished <span style="color:#ff79c6">with</span> exit code <span style="color:#bd93f9">1</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen that after stopping for 31 seconds, using the connection to query again will throw the <code>2013, 'Lost connection to MySQL server during query'</code> error.</p>
+<h2 id="solution">Solution</h2>
+<p>There are two solutions. Since the timeout here is due to the fact that there is no operation within the specified time, mysql actively closes the connection. The connection object of pymysql has a ping() method, which can check whether the connection is valid and execute the query each time. Execute the ping() method before the operation. This method has a reconnect parameter by default, which is True by default. If the connection is lost, it will reconnect.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pymysql
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mytest</span>():
+</span></span><span style="display:flex;"><span>    connection <span style="color:#ff79c6">=</span> pymysql<span style="color:#ff79c6">.</span>connect(
+</span></span><span style="display:flex;"><span>    host<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;localhost&#39;</span>,
+</span></span><span style="display:flex;"><span>    port<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3306</span>,
+</span></span><span style="display:flex;"><span>    user<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;root&#39;</span>,
+</span></span><span style="display:flex;"><span>    password<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;123456&#39;</span>,
+</span></span><span style="display:flex;"><span>    db<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;mytest&#39;</span>,
+</span></span><span style="display:flex;"><span>    charset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;utf8&#39;</span>)
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>ping()
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">31</span>)
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>ping()
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data2 <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data2:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    mytest()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>I have tried using another thread to ping() nonstop, but when I do that the connection is lost and subsequent operations cannot proceed. I will study this issue again.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">46
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">47
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">48
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">49
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">50
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">51
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pymysql
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> traceback
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">ping</span>(conn):
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">while</span> <span style="color:#ff79c6">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">try</span>:
+</span></span><span style="display:flex;"><span>            conn<span style="color:#ff79c6">.</span>ping()
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">except</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#8be9fd;font-style:italic">print</span>(traceback<span style="color:#ff79c6">.</span>format_exc())
+</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">finally</span>:
+</span></span><span style="display:flex;"><span>            time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mytest</span>():
+</span></span><span style="display:flex;"><span>    connection <span style="color:#ff79c6">=</span> pymysql<span style="color:#ff79c6">.</span>connect(
+</span></span><span style="display:flex;"><span>    host<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;localhost&#39;</span>,
+</span></span><span style="display:flex;"><span>    port<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3306</span>,
+</span></span><span style="display:flex;"><span>    user<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;root&#39;</span>,
+</span></span><span style="display:flex;"><span>    password<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;123456&#39;</span>,
+</span></span><span style="display:flex;"><span>    db<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;mytest&#39;</span>,
+</span></span><span style="display:flex;"><span>    charset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;utf8&#39;</span>)
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># You can&#39;t put it here, you have to wait for an execute of the cursor before running it</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># th = threading. Thread(target=ping, args=(connection,))</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># th.setDaemon(True)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># th.start()</span>
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4"># Threads can be started here</span>
+</span></span><span style="display:flex;"><span>    th <span style="color:#ff79c6">=</span> threading<span style="color:#ff79c6">.</span>Thread(target<span style="color:#ff79c6">=</span>ping, args<span style="color:#ff79c6">=</span>(connection,))
+</span></span><span style="display:flex;"><span>    th<span style="color:#ff79c6">.</span>setDaemon(<span style="color:#ff79c6">True</span>)
+</span></span><span style="display:flex;"><span>    th<span style="color:#ff79c6">.</span>start()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">31</span>)
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data2 <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data2:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    mytest()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Another method is to use a connection pool. The connection pool maintains a specified number of available connections, and each time a valid connection is retrieved for query operations. Pymysql itself does not have the function of connection pooling, so you need to borrow DBUtils</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pymysql
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> DBUtils.PooledDB <span style="color:#ff79c6">import</span> PooledDB, SharedDBConnection
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mytest</span>():
+</span></span><span style="display:flex;"><span>    pool <span style="color:#ff79c6">=</span> PooledDB(
+</span></span><span style="display:flex;"><span>        creator<span style="color:#ff79c6">=</span>pymysql,
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># During initialization, the connection pool creates at least idle connections, 0 means not created</span>
+</span></span><span style="display:flex;"><span>        maxconnections<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># The maximum number of idle connections in the connection pool, 0 and None means no limit</span>
+</span></span><span style="display:flex;"><span>        mincached<span style="color:#ff79c6">=</span><span style="color:#bd93f9">2</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># The maximum number of shared connections in the connection pool, 0 and None means all shared (actually useless)</span>
+</span></span><span style="display:flex;"><span>        maxcached<span style="color:#ff79c6">=</span><span style="color:#bd93f9">5</span>,
+</span></span><span style="display:flex;"><span>        maxshared<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span>,
+</span></span><span style="display:flex;"><span>        host<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;localhost&#39;</span>,
+</span></span><span style="display:flex;"><span>        port<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3306</span>,
+</span></span><span style="display:flex;"><span>        user<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;root&#39;</span>,
+</span></span><span style="display:flex;"><span>        password<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;123456&#39;</span>,
+</span></span><span style="display:flex;"><span>        db<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;mytest&#39;</span>,
+</span></span><span style="display:flex;"><span>        charset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;utf8&#39;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    connection <span style="color:#ff79c6">=</span> pool<span style="color:#ff79c6">.</span>connection()
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">40</span>)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data2 <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data2:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    mytest()
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Although this method can obtain the results correctly, it is not used in the actual project. Instead, the connection should be closed after the query statement is executed. Note that the closing here is not the real closing, but just returning the connection to the Connection pool for others to use.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">45
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#6272a4">#coding:utf-8</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> pymysql
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">from</span> DBUtils.PooledDB <span style="color:#ff79c6">import</span> PooledDB, SharedDBConnection
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">mytest</span>():
+</span></span><span style="display:flex;"><span>    pool <span style="color:#ff79c6">=</span> PooledDB(
+</span></span><span style="display:flex;"><span>        creator<span style="color:#ff79c6">=</span>pymysql,
+</span></span><span style="display:flex;"><span>        maxconnections<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># During initialization, the connection pool creates at least idle connections, 0 means not created</span>
+</span></span><span style="display:flex;"><span>        mincached<span style="color:#ff79c6">=</span><span style="color:#bd93f9">2</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># The maximum number of idle connections in the connection pool, 0 and None means no limit</span>
+</span></span><span style="display:flex;"><span>        maxcached<span style="color:#ff79c6">=</span><span style="color:#bd93f9">5</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#6272a4"># The maximum number of shared connections in the connection pool, 0 and None means all shared (actually useless)</span>
+</span></span><span style="display:flex;"><span>        maxshared<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3</span>,
+</span></span><span style="display:flex;"><span>        host<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;localhost&#39;</span>,
+</span></span><span style="display:flex;"><span>        port<span style="color:#ff79c6">=</span><span style="color:#bd93f9">3306</span>,
+</span></span><span style="display:flex;"><span>        user<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;root&#39;</span>,
+</span></span><span style="display:flex;"><span>        password<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;123456&#39;</span>,
+</span></span><span style="display:flex;"><span>        db<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;mytest&#39;</span>,
+</span></span><span style="display:flex;"><span>        charset<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#39;utf8&#39;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    connection <span style="color:#ff79c6">=</span> pool<span style="color:#ff79c6">.</span>connection()
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    <span style="color:#6272a4">#Close the connection, not really closed, just return the connection to the connection pool</span>
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    time<span style="color:#ff79c6">.</span>sleep(<span style="color:#bd93f9">40</span>)
+</span></span><span style="display:flex;"><span>    connection <span style="color:#ff79c6">=</span> pool<span style="color:#ff79c6">.</span>connection()
+</span></span><span style="display:flex;"><span>    cursor <span style="color:#ff79c6">=</span> connection<span style="color:#ff79c6">.</span>cursor()
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>execute(<span style="color:#f1fa8c">&#34;select * from person&#34;</span>)
+</span></span><span style="display:flex;"><span>    data2 <span style="color:#ff79c6">=</span> cursor<span style="color:#ff79c6">.</span>fetchall()
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">for</span> i <span style="color:#ff79c6">in</span> data2:
+</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(i)
+</span></span><span style="display:flex;"><span>    cursor<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>    connection<span style="color:#ff79c6">.</span>close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">if</span> __name__ <span style="color:#ff79c6">==</span> <span style="color:#f1fa8c">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    mytest()
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+
+    </div>
+    <footer class="post-footer">
+      
+
+<div class="post-tags">
+  
+    <a href="/tags/python.html">
+    python
+  </a>
+</div>
+
+<hr/>
+
+
+
+<div class="post-copyright">
+  <img src="/imgs/cc/cc.svg" width="75" height="75" align="right" />
+  <ul>
+    <li class="post-copyright-title">
+      <strong>Post Title:</strong>
+      Solve the problem that the mysql server actively disconnects after no operation timeout
+    </li>
+    <li class="post-copyright-author">
+      <strong>Post Author: </strong>
+      KevinYang
+    </li>
+    <li class="post-copyright-link"> 
+      <strong>Post Link:</strong>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/connect_short_problem.html" title="Solve the problem that the mysql server actively disconnects after no operation timeout">https://enblog.yangyanxing.com/article/connect_short_problem.html</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>Copyright Notice: </strong>
+      All articles in this blog are licensed under <i class="fab fa-fw fa-creative-commons"></i><a target='_blank' href='https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh'>BY-NC-SA</a> unless stating additionally.
+    </li>
+  </ul>
+</div>
+
+  <div class="followme">
+  <span>Welcome to my other publishing channels</span>
+  <div class="social-list">
+    
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/image/qrcode.jpg">
+          <span class="icon">
+            <i class="fab fa-weixin"></i>
+          </span>
+          <span class="label">WeChat</span>
+        </a>
+      </div>
+    <div class="social-item">
+        <a target="_blank" class="social-link" href="/index.xml">
+          <span class="icon">
+            <i class="fa fa-rss"></i>
+          </span>
+          <span class="label">RSS</span>
+        </a>
+      </div>
+  </div>
+</div>
+<div class="post-nav">
+  <div class="post-nav-next post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/aiomysql_in_python.html" rel="next" title="Use aiomysql to operate mysql asynchronously">
+      <i class="fa fa-chevron-left"></i> Use aiomysql to operate mysql asynchronously
+    </a>
+  </div>
+  <div class="post-nav-prev post-nav-item">
+    <a href="https://enblog.yangyanxing.com/article/use_filter_in_python_logging.html" rel="prev" title="Use Filter to filter log output in python">
+      Use Filter to filter log output in python
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
+    </footer>
+  </article>
+</div>
+<div class="post-comments">
+  <div class="comment-head">
+    <div class="comment-headline">
+      <i class="fas fa-comments fa-fw"></i>
+      <span>Comments</span>
+    </div>
+  </div>
+  <div class="comment-wrap">
+  
+    <div><div class="comment-loading">
+  <i class="fa fa-sync fa-spin"></i>
+</div>
+<script src="https://utteranc.es/client.js" 
+repo="kevinkelin/blogissue" 
+issue-term="pathname" 
+label="comments" 
+crossorigin="anonymous" 
+theme="preferred-color-scheme" async>
+</script>
+
+    </div>
+  </div>
+</div>
+
+    </div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner">
+<div class="copyright">
+  &copy;
+  <span itemprop="copyrightYear">
+    2010 - 2022
+  </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">KevinYang</span>
+</div>
+
+<div class="powered-by">
+  Power by <a href='https://gohugo.io' target='_blank'>Hugo</a> &amp; <a href='https://github.com/hugo-next/hugo-theme-next' target='_blank'>Hugo NexT.Gemini</a>
+</div>
+
+
+    </div>
+  </footer>
+  <script type="text/javascript" src="//unpkg.com/animejs@3.2.1/lib/anime.min.js" defer></script>
+  <script type="text/javascript" src="//unpkg.com/mathjax@3.2.0/es5/tex-mml-chtml.js" defer></script>
+
+
+
+
+<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+</body>
+
+</html>
