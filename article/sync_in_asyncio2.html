@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
   <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
 
-  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <link rel="stylesheet" href="/css/main.min.12a5162e791bfe9b10f12aa13cf06e69eeb09b4721ea1150327fc6cdef9dd9b3.css">
   <style type="text/css">
     .post-footer hr:after {
       content: "~ end ~";
@@ -290,7 +290,7 @@
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>2725</span>
+  <span class="post-meta-item-text">Words:</span><span>2835</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -298,7 +298,7 @@
     <i class="far fa-clock"></i>
   </span>
   <span class="post-meta-item-text">Read:&asymp;</span>
-  <span>13min</span>
+  <span>14min</span>
 </span>
 
     
@@ -450,22 +450,43 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>output result</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 9208)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 8720)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started 9368)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started 8320)&gt;
-
-Pinging https.qq.com [123.151.137.18] with 32 bytes of data:
-Reply from 123.151.137.18: bytes=32 time=4ms TTL=53
-
-Pinging www.a.shifen.com [220.181.38.150] with 32 bytes of data:
-Reply from 220.181.38.150: bytes=32 time=1ms TTL=54
-
-Pinging yangyanxing.coding.me [119.28.76.36] with 32 bytes of data:
-....
-....
-The blocking function finishes running
-</code></pre><p>As you can see, the main thread and the child thread run in different threads.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 9208<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 8720<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started 9368<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started 8320<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Pinging https.qq.com <span style="color:#ff79c6">[</span>123.151.137.18<span style="color:#ff79c6">]</span> with <span style="color:#bd93f9">32</span> bytes of data:
+</span></span><span style="display:flex;"><span>Reply from 123.151.137.18: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> <span style="color:#8be9fd;font-style:italic">time</span><span style="color:#ff79c6">=</span>4ms <span style="color:#8be9fd;font-style:italic">TTL</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">53</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Pinging www.a.shifen.com <span style="color:#ff79c6">[</span>220.181.38.150<span style="color:#ff79c6">]</span> with <span style="color:#bd93f9">32</span> bytes of data:
+</span></span><span style="display:flex;"><span>Reply from 220.181.38.150: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> <span style="color:#8be9fd;font-style:italic">time</span><span style="color:#ff79c6">=</span>1ms <span style="color:#8be9fd;font-style:italic">TTL</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Pinging yangyanxing.coding.me <span style="color:#ff79c6">[</span>119.28.76.36<span style="color:#ff79c6">]</span> with <span style="color:#bd93f9">32</span> bytes of data:
+</span></span><span style="display:flex;"><span>....
+</span></span><span style="display:flex;"><span>....
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> finishes running
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>As you can see, the main thread and the child thread run in different threads.</p>
 <h2 id="dynamically-add-synchronization-functions-to-the-event-loop">Dynamically add synchronization functions to the event loop</h2>
 <p>The solution is to start a child thread first, this thread is used to run the event loop loop, and then dynamically add the synchronization function to the event loop</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -540,18 +561,35 @@ The blocking function finishes running
 </div>
 </div><p>Since I get a lot of output from the ping command, I modified the function a little bit, just simulate printing a line of text, but the time.sleep(2) in the function is a blocking function
 The output obtained is</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 7924)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
-The main thread does not block
-Simulate ping output www.baidu.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
-Simulate ping output www.qq.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
-Simulate ping output www.yangyanxing.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-1, started 10716)&gt;
-</code></pre><p>It can be seen from the output that <code>loop.call_soon_threadsafe()</code> and the main thread are running in the same thread, although <code>loop.call_soon_threadsafe()</code> does not block the running of the main thread, but because the function ping that needs to run is blocked The function is called three times, and the results of these three times are executed sequentially, and no concurrency is achieved.
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 7924<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 10716<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The main thread does not block
+</span></span><span style="display:flex;"><span>Simulate ping output www.baidu.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 10716<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 10716<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Simulate ping output www.qq.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 10716<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 10716<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Simulate ping output www.yangyanxing.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 10716<span style="color:#ff79c6">)</span>&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen from the output that <code>loop.call_soon_threadsafe()</code> and the main thread are running in the same thread, although <code>loop.call_soon_threadsafe()</code> does not block the running of the main thread, but because the function ping that needs to run is blocked The function is called three times, and the results of these three times are executed sequentially, and no concurrency is achieved.
 If you want to achieve concurrency, you need to execute the synchronization function in an executor through <code>run_in_executor</code>. This method needs to pass in three parameters, <code>run_in_executor(self, executor, func, *args)</code> The first one is the executor, and None can be passed in by default. If None is passed in, the default executor will be used, generally Executors can use thread or process executors.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -628,18 +666,35 @@ If you want to achieve concurrency, you need to execute the synchronization func
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>the output obtained</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 8588)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 9068)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started daemon 7200)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-4, started daemon 10924)&gt;
-The main thread does not block
-Simulate ping output www.yangyanxing.com
-Simulate ping output www.baidu.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-4, started daemon 10924)&gt;
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 9068)&gt;
-Simulate ping output www.qq.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-3, started daemon 7200)&gt;
-</code></pre><p>It can be seen that the synchronization functions achieve concurrency, but they run in different threads, which is the same as the traditional use of multithreading.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 8588<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 9068<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started daemon 7200<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-4, started daemon 10924<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The main thread does not block
+</span></span><span style="display:flex;"><span>Simulate ping output www.yangyanxing.com
+</span></span><span style="display:flex;"><span>Simulate ping output www.baidu.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-4, started daemon 10924<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 9068<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Simulate ping output www.qq.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started daemon 7200<span style="color:#ff79c6">)</span>&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen that the synchronization functions achieve concurrency, but they run in different threads, which is the same as the traditional use of multithreading.</p>
 <p>As mentioned above, the first parameter of run_in_executor is the executor. Here the executor uses two classes under <code>concurrent.futures</code>, one is thread and the other is process, that is, the executor can be divided into thread executor and process Actuator. They all have a <code>max_workers</code> parameter when they are initialized. If they are not passed, it will be determined by the system itself.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -722,31 +777,65 @@ The blocking function ends, the current thread ID is: &lt;Thread(Thread-3, start
 </div><p>Two executors are initialized here, one is a thread and the other is a process.
 They have the same effect, except that one runs in multiple threads and the other runs in multiple processes.
 The result of using the <code>concurrent.futures.ThreadPoolExecutor()</code> executor is</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 7688)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt; The process ID is: 8188
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started daemon 9068)&gt; The process ID is: 8188
-The main thread does not block
-Simulate ping output www.baidu.com
-Simulate ping output www.qq.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt;
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-3, started daemon 9068)&gt;
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt; The process ID is: 8188
-Simulate ping output www.yangyanxing.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 10924)&gt;
-</code></pre><p>The process IDs of these are all 8188, and they are running under the same process. Also note that I passed a max_workers value of 2 during initialization here, pay attention to the output of the result, it executes the first two first, and then starts to execute the third one after one is executed, instead of three running at the same time of.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 7688<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 10924<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">8188</span>
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started daemon 9068<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">8188</span>
+</span></span><span style="display:flex;"><span>The main thread does not block
+</span></span><span style="display:flex;"><span>Simulate ping output www.baidu.com
+</span></span><span style="display:flex;"><span>Simulate ping output www.qq.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 10924<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started daemon 9068<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 10924<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">8188</span>
+</span></span><span style="display:flex;"><span>Simulate ping output www.yangyanxing.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 10924<span style="color:#ff79c6">)</span>&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The process IDs of these are all 8188, and they are running under the same process. Also note that I passed a max_workers value of 2 during initialization here, pay attention to the output of the result, it executes the first two first, and then starts to execute the third one after one is executed, instead of three running at the same time of.</p>
 <p>Execution result of using <code>concurrent.futures.ProcessPoolExecutor()</code> executor</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 10220)&gt;
-The main thread does not block
-The blocking function starts to run, the current thread ID is: &lt;_MainThread(MainThread, started 3928)&gt; The process ID is: 6652
-The blocking function starts to run, the current thread ID is: &lt;_MainThread(MainThread, started 10992)&gt; The process ID is: 9436
-The blocking function starts to run, the current thread ID is: &lt;_MainThread(MainThread, started 9740)&gt; The process ID is: 9000
-Simulate ping output www.qq.com
-The blocking function ends, the current thread ID is: &lt;_MainThread(MainThread, started 3928)&gt;
-Simulate ping output www.baidu.com
-The blocking function ends, the current thread ID is: &lt;_MainThread(MainThread, started 10992)&gt;
-Simulate ping output www.yangyanxing.com
-The blocking function ends, the current thread ID is: &lt;_MainThread(MainThread, started 9740)&gt;
-</code></pre><p>It can be seen that their process IDs are different.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 10220<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The main thread does not block
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 3928<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">6652</span>
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 10992<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">9436</span>
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 9740<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">9000</span>
+</span></span><span style="display:flex;"><span>Simulate ping output www.qq.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 3928<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Simulate ping output www.baidu.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 10992<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Simulate ping output www.yangyanxing.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 9740<span style="color:#ff79c6">)</span>&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen that their process IDs are different.</p>
 <p>In this way, using <code>run_in_executor</code> is actually the same as using multiprocessing and multithreading. Don&rsquo;t worry, you&rsquo;ll see the difference after talking about asynchronous functions.</p>
 <h2 id="dynamically-add-async-functions-to-the-event-loop">Dynamically add async functions to the event loop</h2>
 <p>Dynamically bind a coroutine to the event loop via the <code>asyncio.run_coroutine_threadsafe</code> method without blocking the main thread</p>
@@ -841,21 +930,41 @@ The blocking function ends, the current thread ID is: &lt;_MainThread(MainThread
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Four coroutine functions are bound to the loop through <code>asyncio.run_coroutine_threadsafe</code>, and the output result is</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 4772)&gt;
-Suspending func1
-The main thread does not block
-Suspending func1
-Suspending func2
-Suspending func2
-func func1 &lt;Thread(Thread-1, started 3948)&gt;
-Resuming func1
-func func2 &lt;Thread(Thread-1, started 3948)&gt;
-Resuming func2
-func func1 &lt;Thread(Thread-1, started 3948)&gt;
-Resuming func1
-func func2 &lt;Thread(Thread-1, started 3948)&gt;
-Resuming func2
-</code></pre><p>The main thread will not be blocked, and the results of the four coroutine functions that are started almost return at the same time, but note that the thread where the coroutine is located and the main thread are not the same thread, because the event loop loop is placed in another child thread at this time. run, so at this time these four coroutines are put into the thread of the event loop to run.Note that there is only <code>run_coroutine_threadsafe</code> method, no <code>run_coroutine_thread</code> method.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 4772<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>The main thread does not block
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>Suspending func2
+</span></span><span style="display:flex;"><span>Suspending func2
+</span></span><span style="display:flex;"><span>func func1 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 3948<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>func func2 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 3948<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func2
+</span></span><span style="display:flex;"><span>func func1 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 3948<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>func func2 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 3948<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The main thread will not be blocked, and the results of the four coroutine functions that are started almost return at the same time, but note that the thread where the coroutine is located and the main thread are not the same thread, because the event loop loop is placed in another child thread at this time. run, so at this time these four coroutines are put into the thread of the event loop to run.Note that there is only <code>run_coroutine_threadsafe</code> method, no <code>run_coroutine_thread</code> method.</p>
 <h2 id="get-the-return-result-of-the-coroutine">Get the return result of the coroutine</h2>
 <p>To get the result, you can use the <code>asyncio.gather()</code> method, where <code>coros_or_futures</code> is a coroutine or task object, and <code>asyncio.run_coroutine_threadsafe()</code> and <code>run_in_executor()</code> return both Future objects, so you can Put them together in gather and get the return value.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -1053,44 +1162,87 @@ Resuming func2
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Code execution result:</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 6052)&gt;
-The loop thread id is &lt;Thread(Thread-1, started 2388)&gt;
-The main thread does not block
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-2, started daemon 11644)&gt; The process ID is: 12280
-The blocking function starts to run, the current thread ID is: &lt;Thread(Thread-3, started daemon 1180)&gt; The process ID is: 12280
-Suspending func1
-Suspending func2
-Suspending func1
-Suspending func2
-Suspending func1
-Suspending func2
-func func1 &lt;Thread(Thread-1, started 2388)&gt;
-Resuming func1
-func func1 &lt;Thread(Thread-1, started 2388)&gt;
-Resuming func1
-func func1 &lt;Thread(Thread-1, started 2388)&gt;
-Resuming func1
-The task finishes running, and its result is: func1
-The task finishes running, and its result is: func1
-The task finishes running, and its result is: func1
-func func2 &lt;Thread(Thread-1, started 2388)&gt;
-Resuming func2
-func func2 &lt;Thread(Thread-1, started 2388)&gt;
-Resuming func2
-func func2 &lt;Thread(Thread-1, started 2388)&gt;
-Resuming func2
-The task finishes running, and its result is: func2
-The task finishes running, and its result is: func2
-The task finishes running, and its result is: func2
-Simulate ping output www.baidu.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-2, started daemon 11644)&gt;
-Simulate ping output www.yangyanxing.com
-The blocking function ends, the current thread ID is: &lt;Thread(Thread-3, started daemon 1180)&gt;
-The task finishes running, and its result is: www.baidu.com
-The task finishes running, and its result is: www.yangyanxing.com
-[&#39;func1&#39;, &#39;func2&#39;, &#39;www.baidu.com&#39;, &#39;www.yangyanxing.com&#39;, &#39;func1&#39;, &#39;func2&#39;]
-It took 4.002800464630127 time in total
-</code></pre><p>The total time depends on the longest of all running functions, here the sync function has a blocking sleep(4) , so the total time is a little over 4 seconds.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 6052<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The loop thread id is &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 2388<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The main thread does not block
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 11644<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">12280</span>
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> starts to run, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started daemon 1180<span style="color:#ff79c6">)</span>&gt; The process ID is: <span style="color:#bd93f9">12280</span>
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>Suspending func2
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>Suspending func2
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>Suspending func2
+</span></span><span style="display:flex;"><span>func func1 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 2388<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>func func1 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 2388<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>func func1 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 2388<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func1
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func1
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func1
+</span></span><span style="display:flex;"><span>func func2 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 2388<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func2
+</span></span><span style="display:flex;"><span>func func2 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 2388<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func2
+</span></span><span style="display:flex;"><span>func func2 &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 2388<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func2
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func2
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func2
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func2
+</span></span><span style="display:flex;"><span>Simulate ping output www.baidu.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started daemon 11644<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Simulate ping output www.yangyanxing.com
+</span></span><span style="display:flex;"><span>The blocking <span style="color:#ff79c6">function</span> ends, the current thread ID is: &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started daemon 1180<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: www.baidu.com
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: www.yangyanxing.com
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[</span><span style="color:#f1fa8c">&#39;func1&#39;</span>, <span style="color:#f1fa8c">&#39;func2&#39;</span>, <span style="color:#f1fa8c">&#39;www.baidu.com&#39;</span>, <span style="color:#f1fa8c">&#39;www.yangyanxing.com&#39;</span>, <span style="color:#f1fa8c">&#39;func1&#39;</span>, <span style="color:#f1fa8c">&#39;func2&#39;</span><span style="color:#ff79c6">]</span>
+</span></span><span style="display:flex;"><span>It took 4.002800464630127 <span style="color:#8be9fd;font-style:italic">time</span> in total
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The total time depends on the longest of all running functions, here the sync function has a blocking sleep(4) , so the total time is a little over 4 seconds.</p>
 <p>So much about the processing flow in asynchronous coroutines, and then learn to summarize a variety of asynchronous-related libraries such as the use of aiohttp and so on.</p>
 
     </div>

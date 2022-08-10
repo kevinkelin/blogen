@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
   <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
 
-  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <link rel="stylesheet" href="/css/main.min.12a5162e791bfe9b10f12aa13cf06e69eeb09b4721ea1150327fc6cdef9dd9b3.css">
   <style type="text/css">
     .post-footer hr:after {
       content: "~ end ~";
@@ -305,7 +305,7 @@ Use socketio in front-end vue to communicate with back-end
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>1878</span>
+  <span class="post-meta-item-text">Words:</span><span>1849</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -359,11 +359,36 @@ Use socketio in front-end vue to communicate with back-end
     <i class="fa fa-external-link-alt"></i>
 </a></p>
 <p>But note that different versions are not compatible, refer to the table below</p>
-<p>| JavaScript Socket.IO version | Socket.IO protocol revision | Engine.IO protocol revision | python-socketio version |
-| &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash; &mdash;&mdash;- | &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&ndash; | &mdash;&mdash;&mdash;&mdash;&ndash; &mdash;&mdash;&mdash; |
-| 0.9.x | 1, 2 | 1, 2 | Not supported |
-| 1.x and 2.x | 3, 4 | 3 | 4.x |
-| 3.x and 4.x | 5 | 4 | 5.x |</p>
+<table>
+<thead>
+<tr>
+<th>JavaScript Socket.IO version</th>
+<th>Socket.IO protocol revision</th>
+<th>Engine.IO protocol revision</th>
+<th>python-socketio version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.9.x</td>
+<td>1, 2</td>
+<td>1, 2</td>
+<td>Not supported</td>
+</tr>
+<tr>
+<td>1.x and 2.x</td>
+<td>3, 4</td>
+<td>3</td>
+<td>4.x</td>
+</tr>
+<tr>
+<td>3.x and 4.x</td>
+<td>5</td>
+<td>4</td>
+<td>5.x</td>
+</tr>
+</tbody>
+</table>
 <p>For example, if python-socketio uses 5.x, the front end should use 3.x or 4.x socket.io library, and different versions are not compatible.</p>
 <p>In addition, the python version I use is 3.7.8 when I demonstrate. When I try to install python-socketio in python on 3.5, the installation will fail, and it will fail when installing a dependent library didict.</p>
 <p>My environment is as follows</p>
@@ -748,9 +773,17 @@ Use socketio in front-end vue to communicate with back-end
 </div>
 </div><p>When the server receives the <code>my event</code> event, it sends a <code>client event</code> event to the client. Note that since the server uses asynchronous, the function should be changed to <code>async def</code>, and the emit function is also Requires the use of <code>await</code>.</p>
 <p>Then connect the calling client, then the client will get the following output</p>
-<pre tabindex="0"><code>I&#39;m connected!
-get server message: hello tNp1Yb7OONZn2FwxAAAB
-</code></pre><p><code>I'm connected!</code> triggers the connect event, and <code>get server message:hello tNp1Yb7OONZn2FwxAAAB</code> triggers the <code>client event</code> event.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>I&#39;m connected!
+</span></span><span style="display:flex;"><span>get server message: hello tNp1Yb7OONZn2FwxAAAB
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>I'm connected!</code> triggers the connect event, and <code>get server message:hello tNp1Yb7OONZn2FwxAAAB</code> triggers the <code>client event</code> event.</p>
 <h2 id="ten-automatic-reconnection">Ten, automatic reconnection</h2>
 <p>When we turn off the server, the client&rsquo;s script does not exit at this time. When the server is started again, the client can automatically connect. This is also the convenience of the library. If you want to write a long connection yourself, Also consider reconnection issues.</p>
 <p>At this point, I have mastered the most basic use of socketio and Tornado, and can send messages to each other. Later articles will introduce more detailed namespaces and interaction with the web front end.</p>

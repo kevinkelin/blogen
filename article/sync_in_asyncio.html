@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
   <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
 
-  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <link rel="stylesheet" href="/css/main.min.12a5162e791bfe9b10f12aa13cf06e69eeb09b4721ea1150327fc6cdef9dd9b3.css">
   <style type="text/css">
     .post-footer hr:after {
       content: "~ end ~";
@@ -288,7 +288,7 @@
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>1348</span>
+  <span class="post-meta-item-text">Words:</span><span>1377</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -400,12 +400,23 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The output is</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 6140)&gt;
-Suspending func1
-func func1 &lt;_MainThread(MainThread, started 6140)&gt;
-Resuming func1
-task result is func1
-</code></pre><p>The main thread and the running coroutine function are in the same thread.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 6140<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>func func1 &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 6140<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>task result is func1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The main thread and the running coroutine function are in the same thread.</p>
 <p>You can also add a callback method to the task object</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -460,12 +471,23 @@ task result is func1
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The output is</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 11248)&gt;
-Suspending func1
-func func1 &lt;_MainThread(MainThread, started 11248)&gt;
-Resuming func1
-The task finishes running, and its result is: func1
-</code></pre><p><code>loop.run_until_complete</code> is a blocking method. Only when the coroutine in it finishes running, the method ends, and the following code is run.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 11248<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>func func1 &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 11248<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>loop.run_until_complete</code> is a blocking method. Only when the coroutine in it finishes running, the method ends, and the following code is run.</p>
 <p>In fact, you can also not call the <code>loop.run_until_complete</code> method. After creating a task, the coroutine function is already running, but when the event loop is ready to run, the task status at this time is <code>pending</code>, if not If the event loop is called, the coroutine function will not be run. Since the main thread runs out, the child thread will be destroyed, as the code is written as follows:</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -610,16 +632,31 @@ With the experience of the single coroutine above, we can also use the event loo
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The output is</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 8040)&gt;
-Suspending func1
-Suspending func2
-func func1 &lt;_MainThread(MainThread, started 8040)&gt;
-Resuming func1
-func func2 &lt;_MainThread(MainThread, started 8040)&gt;
-Resuming func2
-The task finishes running, and its result is: func1
-The task finishes running, and its result is: func2
-</code></pre><p>At this point, because the loop calls the run_forever method, and there is no method to call the stop method, the program will always be stuck.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">9
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 8040<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>Suspending func2
+</span></span><span style="display:flex;"><span>func func1 &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 8040<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>func func2 &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 8040<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func2
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func1
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this point, because the loop calls the run_forever method, and there is no method to call the stop method, the program will always be stuck.</p>
 <p>In this way, multiple coroutines can be run, but such processing is cumbersome and inconvenient for the recovery of results.</p>
 <p>asyncio has a gather method that can pass in multiple task objects. When calling await asyncio.gather(*), it will return all the results</p>
 <p>Since await can only be written in async def functions, a new function needs to be created here</p>
@@ -667,17 +704,33 @@ The task finishes running, and its result is: func2
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The output obtained is</p>
-<pre tabindex="0"><code>In main thread &lt;_MainThread(MainThread, started 7016)&gt;
-Suspending func1
-Suspending func2
-func func1 &lt;_MainThread(MainThread, started 7016)&gt;
-Resuming func1
-func func2 &lt;_MainThread(MainThread, started 7016)&gt;
-Resuming func2
-The task finishes running, and its result is: func1
-The task finishes running, and its result is: func2
-[&#39;func1&#39;, &#39;func2&#39;]
-</code></pre><p>In this way, the parallelism of the coroutine and the recovery of the result are achieved.
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>In main thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 7016<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Suspending func1
+</span></span><span style="display:flex;"><span>Suspending func2
+</span></span><span style="display:flex;"><span>func func1 &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 7016<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func1
+</span></span><span style="display:flex;"><span>func func2 &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 7016<span style="color:#ff79c6">)</span>&gt;
+</span></span><span style="display:flex;"><span>Resuming func2
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func1
+</span></span><span style="display:flex;"><span>The task finishes running, and its result is: func2
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">[</span><span style="color:#f1fa8c">&#39;func1&#39;</span>, <span style="color:#f1fa8c">&#39;func2&#39;</span><span style="color:#ff79c6">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In this way, the parallelism of the coroutine and the recovery of the result are achieved.
 This article briefly introduces it here, and then continues to analyze the execution of synchronous code.</p>
 
     </div>

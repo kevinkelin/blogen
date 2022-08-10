@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
   <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
 
-  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <link rel="stylesheet" href="/css/main.min.12a5162e791bfe9b10f12aa13cf06e69eeb09b4721ea1150327fc6cdef9dd9b3.css">
   <style type="text/css">
     .post-footer hr:after {
       content: "~ end ~";
@@ -293,7 +293,7 @@
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>2646</span>
+  <span class="post-meta-item-text">Words:</span><span>2674</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -474,9 +474,17 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>This small script executes very smoothly, and the result is obtained</p>
-<pre tabindex="0"><code>(1, &#39;yang&#39;, 18)
-(2, &#39;fan&#39;, 16)
-</code></pre><p>A brief description of this script, since <code>aiomysql.connect</code> is asynchronous, the <code>async</code> keyword cannot be used in the <code>__init__</code> method in python, that is, the initialization of the object cannot be asynchronous, so I will obtain the connection operation separately Use the singleton mode to create a connection, of course, you can also not use a singleton, every time you query, you will get a new connection connection.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#ff79c6">(</span>1, <span style="color:#f1fa8c">&#39;yang&#39;</span>, 18<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">(</span>2, <span style="color:#f1fa8c">&#39;fan&#39;</span>, 16<span style="color:#ff79c6">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>A brief description of this script, since <code>aiomysql.connect</code> is asynchronous, the <code>async</code> keyword cannot be used in the <code>__init__</code> method in python, that is, the initialization of the object cannot be asynchronous, so I will obtain the connection operation separately Use the singleton mode to create a connection, of course, you can also not use a singleton, every time you query, you will get a new connection connection.</p>
 <h3 id="handling-connection-no-operation-timeout-problem">Handling connection no-operation timeout problem</h3>
 <p>It’s still the same old question. If a connection does not operate for a period of time, mysql will actively disconnect the connection. I set 5 seconds here, so let’s see what happens if we try the query operation again after a pause of 6 seconds?</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -510,19 +518,37 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>After sleeping for 6 seconds, when you use the cursor object of the connection to perform query operations again, the mysql service has closed the connection, so you will get the error <code>2013, 'Lost connection to MySQL server during query'</code>.</p>
-<pre tabindex="0"><code>C:\Python35\python.exe F:/python/python3Test/mysqltest3.py
-(1, &#39;yang&#39;, 18)
-(2, &#39;fan&#39;, 16)
-Traceback (most recent call last):
-  File &#34;C:\Python35\lib\site-packages\aiomysql\connection.py&#34;, line 598, in _read_bytes
-...
-...
-  File &#34;C:\Python35\lib\site-packages\aiomysql\connection.py&#34;, line 601, in _read_bytes
-    raise OperationalError(2013, msg) from e
-pymysql.err.OperationalError: (2013, &#39;Lost connection to MySQL server during query&#39;)
-...
-...
-</code></pre><p>The solution is still the same as the previous synchronization version. Before performing the query operation, use the <code>connection.ping()</code> method to check whether the connection is valid. By default, this method will reconnect when the connection is invalid. Here I directly modify the query method of the Pmysql class</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>C:<span style="color:#f1fa8c">\P</span>ython35<span style="color:#f1fa8c">\p</span>ython.exe F:/python/python3Test/mysqltest3.py
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">(</span>1, <span style="color:#f1fa8c">&#39;yang&#39;</span>, 18<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">(</span>2, <span style="color:#f1fa8c">&#39;fan&#39;</span>, 16<span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span>Traceback <span style="color:#ff79c6">(</span>most recent call last<span style="color:#ff79c6">)</span>:
+</span></span><span style="display:flex;"><span>  File <span style="color:#f1fa8c">&#34;C:\Python35\lib\site-packages\aiomysql\connection.py&#34;</span>, line 598, in _read_bytes
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>  File <span style="color:#f1fa8c">&#34;C:\Python35\lib\site-packages\aiomysql\connection.py&#34;</span>, line 601, in _read_bytes
+</span></span><span style="display:flex;"><span>    raise OperationalError<span style="color:#ff79c6">(</span>2013, msg<span style="color:#ff79c6">)</span> from e
+</span></span><span style="display:flex;"><span>pymysql.err.OperationalError: <span style="color:#ff79c6">(</span>2013, <span style="color:#f1fa8c">&#39;Lost connection to MySQL server during query&#39;</span><span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>...
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The solution is still the same as the previous synchronization version. Before performing the query operation, use the <code>connection.ping()</code> method to check whether the connection is valid. By default, this method will reconnect when the connection is invalid. Here I directly modify the query method of the Pmysql class</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -756,9 +782,17 @@ I personally infer that I should use a singleton, they share a connection and th
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The result obtained is:</p>
-<pre tabindex="0"><code>test... 1719190377360
-test2.. 1719190377976
-</code></pre><p>Surprisingly, they don&rsquo;t use the same connection&hellip; So is the problem in the initialization connection function in the singleton mode&hellip;
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>test... <span style="color:#bd93f9">1719190377360</span>
+</span></span><span style="display:flex;"><span>test2.. <span style="color:#bd93f9">1719190377976</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Surprisingly, they don&rsquo;t use the same connection&hellip; So is the problem in the initialization connection function in the singleton mode&hellip;
 Let&rsquo;s go back and look at the connection initialization condition <code>if Pmysql.__connection == None:</code>, if <code>__connection</code> is None, the initialization operation will be performed. Based on this, I infer that because I share a global between the two coroutines mysqlobj, <code>mysqlobj = Pmysql()</code>, so when <code>await Pmysql.getconnection()</code> is called at the same time at the beginning of the operation of these two coroutines, because at this time, the <code>__connection</code> of this mysqlobj is empty, so this The judgments of the two coroutines are empty at this time, so they both perform the database connection operation again, and then assign the conn obtained by their initialization to mysqlobj.connection, but this is a problem, an attribute of the same object The value has changed, so there will be problems when using the cursor object of the connection to perform database query operations later&hellip;
 Then I suspend one of the coroutines before acquiring the connection object, and let the other coroutine acquire the connection first, so that when the other coroutine acquires it again, it can directly obtain the previously initialized connection.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -801,15 +835,29 @@ Then I suspend one of the coroutines before acquiring the connection object, and
 </div>
 </div><p>I sleep(0.1) seconds before the test2() function gets the connection
 At this time, the connection obtained in the test() function and the test2() function is the same, but the script still reports an error</p>
-<pre tabindex="0"><code>test... 2286181241800
-test2.. 2286181241800
-Traceback (most recent call last):
-  ...
-  ...
-  &#34;C:\Python35\lib\site-packages\aiomysql\connection.py&#34;, line 1064, in _ensure_alive
-    raise InterfaceError(&#34;(0, &#39;Not connected&#39;)&#34;)
-pymysql.err.InterfaceError: (0, &#39;Not connected&#39;)
-</code></pre><p>The script reported a <code>0, 'Not connected'</code> error. This is because the mysqlobj.connection.close() operation is executed after the test() and test2() functions are executed to close the connection. In the asynchronous operation, It is not necessarily whoever finishes the execution first, and whoever finishes executing first will close the connection, but if you close it, other coroutines may still be used, so the Not connected error is reported here.
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>test... <span style="color:#bd93f9">2286181241800</span>
+</span></span><span style="display:flex;"><span>test2.. <span style="color:#bd93f9">2286181241800</span>
+</span></span><span style="display:flex;"><span>Traceback <span style="color:#ff79c6">(</span>most recent call last<span style="color:#ff79c6">)</span>:
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  ...
+</span></span><span style="display:flex;"><span>  <span style="color:#f1fa8c">&#34;C:\Python35\lib\site-packages\aiomysql\connection.py&#34;</span>, line 1064, in _ensure_alive
+</span></span><span style="display:flex;"><span>    raise InterfaceError<span style="color:#ff79c6">(</span><span style="color:#f1fa8c">&#34;(0, &#39;Not connected&#39;)&#34;</span><span style="color:#ff79c6">)</span>
+</span></span><span style="display:flex;"><span>pymysql.err.InterfaceError: <span style="color:#ff79c6">(</span>0, <span style="color:#f1fa8c">&#39;Not connected&#39;</span><span style="color:#ff79c6">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>The script reported a <code>0, 'Not connected'</code> error. This is because the mysqlobj.connection.close() operation is executed after the test() and test2() functions are executed to close the connection. In the asynchronous operation, It is not necessarily whoever finishes the execution first, and whoever finishes executing first will close the connection, but if you close it, other coroutines may still be used, so the Not connected error is reported here.
 The solution is to note out mysqlobj.connection.close(), and close the connection after all the scripts are executed.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
@@ -874,11 +922,21 @@ The solution is to note out mysqlobj.connection.close(), and close the connectio
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>At this point, the correct execution result is obtained</p>
-<pre tabindex="0"><code>test... 1732819440584
-test2.. 1732819440584
-((1, &#39;yang&#39;, 18), (2, &#39;fan&#39;, 16))
-((1, &#39;yang&#39;, 18),)
-</code></pre><p>In fact, you can also not use the global mysqlobj here, use their own independent objects for each query, and use a separate connection connection</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>test... <span style="color:#bd93f9">1732819440584</span>
+</span></span><span style="display:flex;"><span>test2.. <span style="color:#bd93f9">1732819440584</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">((</span>1, <span style="color:#f1fa8c">&#39;yang&#39;</span>, 18<span style="color:#ff79c6">)</span>, <span style="color:#ff79c6">(</span>2, <span style="color:#f1fa8c">&#39;fan&#39;</span>, 16<span style="color:#ff79c6">))</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">((</span>1, <span style="color:#f1fa8c">&#39;yang&#39;</span>, 18<span style="color:#ff79c6">)</span>,<span style="color:#ff79c6">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In fact, you can also not use the global mysqlobj here, use their own independent objects for each query, and use a separate connection connection</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1

@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
   <link rel="stylesheet" href="//unpkg.com/animate.css@3.1.1/animate.min.css">
 
-  <link rel="stylesheet" href="/css/main.min.7c5113ee442b14a1faba425503ad7883de282eee3c038f25121f41ed343d9f2f.css">
+  <link rel="stylesheet" href="/css/main.min.12a5162e791bfe9b10f12aa13cf06e69eeb09b4721ea1150327fc6cdef9dd9b3.css">
   <style type="text/css">
     .post-footer hr:after {
       content: "~ end ~";
@@ -291,7 +291,7 @@
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>2797</span>
+  <span class="post-meta-item-text">Words:</span><span>2885</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -352,17 +352,33 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Here I create a global int variable d, and its value is 5. When I call the test function in 5 threads, I pass d as a parameter, so do these 5 threads have the same d? I printed their IDs through <code>id(data)</code> in the test function, and got the following results</p>
-<pre tabindex="0"><code>in thread &lt;Thread(Thread-1, started 6624)&gt; name is Yang Yanxing
-data is 5 id(data) is 1763791776
-in thread &lt;Thread(Thread-2, started 8108)&gt; name is Yang Yanxing
-data is 5 id(data) is 1763791776
-in thread &lt;Thread(Thread-3, started 3356)&gt; name is Yang Yanxing
-data is 5 id(data) is 1763791776
-in thread &lt;Thread(Thread-4, started 13728)&gt; name is Yang Yanxing
-data is 5 id(data) is 1763791776
-in thread &lt;Thread(Thread-5, started 3712)&gt; name is Yang Yanxing
-data is 5 id(data) is 1763791776
-</code></pre><p>It can be seen from the results that in the 5 sub-threads, the id of data is 1763791776, indicating that the variable d is created in the main thread, which can be shared in the sub-threads, and the changes to the shared elements in the sub-threads will be Affects other threads, so if you want to modify shared variables, that is, thread-unsafe, you need to lock.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 6624<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">5</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791776</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started 8108<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">5</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791776</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started 3356<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">5</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791776</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-4, started 13728<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">5</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791776</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-5, started 3712<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">5</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791776</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>It can be seen from the results that in the 5 sub-threads, the id of data is 1763791776, indicating that the variable d is created in the main thread, which can be shared in the sub-threads, and the changes to the shared elements in the sub-threads will be Affects other threads, so if you want to modify shared variables, that is, thread-unsafe, you need to lock.</p>
 <h2 id="custom-type-objects-are-shared-between-threads">Custom type objects are shared between threads</h2>
 <p>What if we want to customize a class and pass an object as a variable in the child thread? What will be the effect?</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -422,18 +438,35 @@ data is 5 id(data) is 1763791776
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>Here I define a simple class, initialize an object d of this type in the main thread, and then pass it as a parameter to the child thread, the main thread and the child thread respectively print the id of this object, let&rsquo;s take a look at the result</p>
-<pre tabindex="0"><code>in main thread id(data) is 2849240813864
-in thread &lt;Thread(Thread-1, started 11648)&gt; name is Yang Yanxing
-data is 10 id(data) is 2849240813864
-in thread &lt;Thread(Thread-2, started 11016)&gt; name is Yang Yanxing
-data is 10 id(data) is 2849240813864
-in thread &lt;Thread(Thread-3, started 10416)&gt; name is Yang Yanxing
-data is 10 id(data) is 2849240813864
-in thread &lt;Thread(Thread-4, started 8668)&gt; name is Yang Yanxing
-data is 10 id(data) is 2849240813864
-in thread &lt;Thread(Thread-5, started 4420)&gt; name is Yang Yanxing
-data is 10 id(data) is 2849240813864
-</code></pre><p>We see that in the main thread and the child thread, the id of this object is the same, indicating that they use the same object.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in main thread id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2849240813864</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 11648<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2849240813864</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started 11016<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2849240813864</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started 10416<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2849240813864</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-4, started 8668<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2849240813864</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-5, started 4420<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2849240813864</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We see that in the main thread and the child thread, the id of this object is the same, indicating that they use the same object.</p>
 <p>Whether it is a standard data type or a complex custom data type, they share the same one among multiple threads, but is this the case in multiple processes?</p>
 <h1 id="shared-data-between-multiple-processes">Shared data between multiple processes</h1>
 <h2 id="standard-data-types-are-shared-between-processes">Standard data types are shared between processes</h2>
@@ -477,18 +510,35 @@ data is 10 id(data) is 2849240813864
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The result obtained is</p>
-<pre tabindex="0"><code>in main thread id(data) is 1763791936
-in thread &lt;_MainThread(MainThread, started 9364)&gt; name is Yang Yanxing
-data is 10 id(data) is 1763791936
-in thread &lt;_MainThread(MainThread, started 9464)&gt; name is Yang Yanxing
-data is 10 id(data) is 1763791936
-in thread &lt;_MainThread(MainThread, started 3964)&gt; name is Yang Yanxing
-data is 10 id(data) is 1763791936
-in thread &lt;_MainThread(MainThread, started 10480)&gt; name is Yang Yanxing
-data is 10 id(data) is 1763791936
-in thread &lt;_MainThread(MainThread, started 13608)&gt; name is Yang Yanxing
-data is 10 id(data) is 1763791936
-</code></pre><p>You can see that their ids are the same, indicating that the same variable is used, but when I tried to change d from int to string, I found that they were different&hellip;</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in main thread id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791936</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 9364<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791936</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 9464<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791936</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 3964<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791936</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 10480<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791936</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 13608<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1763791936</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>You can see that their ids are the same, indicating that the same variable is used, but when I tried to change d from int to string, I found that they were different&hellip;</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -510,18 +560,35 @@ data is 10 id(data) is 1763791936
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>The result obtained at this time is</p>
-<pre tabindex="0"><code>in main thread id(data) is 2629633397040
-in thread &lt;_MainThread(MainThread, started 9848)&gt; name is Yang Yanxing
-data is yangyanxing id(data) is 1390942032880
-in thread &lt;_MainThread(MainThread, started 988)&gt; name is Yang Yanxing
-data is yangyanxing id(data) is 2198251377648
-in thread &lt;_MainThread(MainThread, started 3728)&gt; name is Yang Yanxing
-data is yangyanxing id(data) is 2708672287728
-in thread &lt;_MainThread(MainThread, started 5288)&gt; name is Yang Yanxing
-data is yangyanxing id(data) is 2376058999792
-in thread &lt;_MainThread(MainThread, started 12508)&gt; name is Yang Yanxing
-data is yangyanxing id(data) is 2261044040688
-</code></pre><p>So I tried list, Tuple, dict again, they are all different, I went back and tried to use list tuples and dictionaries in multithreading, the result is that their id is still the same in multithreading.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in main thread id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2629633397040</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 9848<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is yangyanxing id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1390942032880</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 988<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is yangyanxing id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2198251377648</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 3728<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is yangyanxing id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2708672287728</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 5288<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is yangyanxing id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2376058999792</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 12508<span style="color:#ff79c6">)</span>&gt; name is Yang Yanxing
+</span></span><span style="display:flex;"><span>data is yangyanxing id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2261044040688</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>So I tried list, Tuple, dict again, they are all different, I went back and tried to use list tuples and dictionaries in multithreading, the result is that their id is still the same in multithreading.</p>
 <p>There is an interesting problem here. If it is an int type, when the value is less than or equal to 256, their ids among multiple processes are the same. If it is greater than 256, their ids will be different. I have not checked the reason.</p>
 <h2 id="custom-type-objects-are-shared-between-processes">Custom type objects are shared between processes</h2>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
@@ -583,18 +650,35 @@ data is yangyanxing id(data) is 2261044040688
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>得到的结果是</p>
-<pre tabindex="0"><code>in main thread id(data) is 1927286591728
-in thread &lt;_MainThread(MainThread, started 2408)&gt; name is 杨彦星
-data is 10 id(data) is 1561177927752
-in thread &lt;_MainThread(MainThread, started 5728)&gt; name is 杨彦星
-data is 10 id(data) is 2235260514376
-in thread &lt;_MainThread(MainThread, started 1476)&gt; name is 杨彦星
-data is 10 id(data) is 2350586073040
-in thread &lt;_MainThread(MainThread, started 996)&gt; name is 杨彦星
-data is 10 id(data) is 2125002248088
-in thread &lt;_MainThread(MainThread, started 10740)&gt; name is 杨彦星
-data is 10 id(data) is 1512231669656
-</code></pre><p>可以看到它们的id是不同的，也就是不同的对象。</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in main thread id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1927286591728</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 2408<span style="color:#ff79c6">)</span>&gt; name is 杨彦星
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1561177927752</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 5728<span style="color:#ff79c6">)</span>&gt; name is 杨彦星
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2235260514376</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 1476<span style="color:#ff79c6">)</span>&gt; name is 杨彦星
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2350586073040</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 996<span style="color:#ff79c6">)</span>&gt; name is 杨彦星
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2125002248088</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 10740<span style="color:#ff79c6">)</span>&gt; name is 杨彦星
+</span></span><span style="display:flex;"><span>data is <span style="color:#bd93f9">10</span> id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1512231669656</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到它们的id是不同的，也就是不同的对象。</p>
 <h2 id="在多进程间如何共享数据">在多进程间如何共享数据</h2>
 <p>我们看到，数据在多进程间是不共享的(小于256的int类型除外)，但是我们又想在主进程和子进程间共享一个数据对象时该如何操作呢？</p>
 <p>在看这个问题之前，我们先将之前的多线程代码做下修改</p>
@@ -674,18 +758,35 @@ data is 10 id(data) is 1512231669656
 </div>
 </div><p>我们这个代码的目的是这样，使用自定义的Data类型对象，当经过5个子线程操作以后，每个子线程对其data值进行加1操作，最后在主线程打印对象的data值。
 该输出结果如下</p>
-<pre tabindex="0"><code>in thread &lt;Thread(Thread-1, started 3296)&gt; name is yang
-data is &lt;__main__.Data object at 0x000001A451139198&gt; id(data) is 1805246501272
-in thread &lt;Thread(Thread-2, started 9436)&gt; name is yang
-data is &lt;__main__.Data object at 0x000001A451139198&gt; id(data) is 1805246501272
-in thread &lt;Thread(Thread-3, started 760)&gt; name is yang
-data is &lt;__main__.Data object at 0x000001A451139198&gt; id(data) is 1805246501272
-in thread &lt;Thread(Thread-4, started 1952)&gt; name is yang
-data is &lt;__main__.Data object at 0x000001A451139198&gt; id(data) is 1805246501272
-in thread &lt;Thread(Thread-5, started 5988)&gt; name is yang
-data is &lt;__main__.Data object at 0x000001A451139198&gt; id(data) is 1805246501272
-5
-</code></pre><p>可以看到在主线程最后打印出来了5，符合我们的预期，但是如果放到多进程中呢？因为多进程下，每个子进程所持有的对象是不同的，所以每个子进程操作的是各自的Data对象，对于主进程的Data对象应该是没有影响的，我们来看下它的结果</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-1, started 3296<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__main__.Data object at 0x000001A451139198&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1805246501272</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-2, started 9436<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__main__.Data object at 0x000001A451139198&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1805246501272</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-3, started 760<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__main__.Data object at 0x000001A451139198&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1805246501272</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-4, started 1952<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__main__.Data object at 0x000001A451139198&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1805246501272</span>
+</span></span><span style="display:flex;"><span>in thread &lt;Thread<span style="color:#ff79c6">(</span>Thread-5, started 5988<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__main__.Data object at 0x000001A451139198&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1805246501272</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">5</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到在主线程最后打印出来了5，符合我们的预期，但是如果放到多进程中呢？因为多进程下，每个子进程所持有的对象是不同的，所以每个子进程操作的是各自的Data对象，对于主进程的Data对象应该是没有影响的，我们来看下它的结果</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -761,18 +862,35 @@ data is &lt;__main__.Data object at 0x000001A451139198&gt; id(data) is 180524650
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>它的输出结果是:</p>
-<pre tabindex="0"><code>in thread &lt;_MainThread(MainThread, started 7604)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000001D110130EB8&gt; id(data) is 1997429477048
-in thread &lt;_MainThread(MainThread, started 12108)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000002C4E88E0E80&gt; id(data) is 3044738469504
-in thread &lt;_MainThread(MainThread, started 3848)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x0000027827270EF0&gt; id(data) is 2715076202224
-in thread &lt;_MainThread(MainThread, started 12368)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000002420EA80E80&gt; id(data) is 2482736991872
-in thread &lt;_MainThread(MainThread, started 4152)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000001B1577F0E80&gt; id(data) is 1861188783744
-0
-</code></pre><p>最后的输出是0，说明了子进程对于主进程传入的Data对象操作其实对于主进程的对象是不起作用的，我们需要怎样的操作才能实现子进程可以操作主进程的对象呢？我们可以使用<code>multiprocessing.managers 下的 BaseManager</code> 来实现</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 7604<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000001D110130EB8&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1997429477048</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 12108<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000002C4E88E0E80&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">3044738469504</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 3848<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x0000027827270EF0&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2715076202224</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 12368<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000002420EA80E80&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2482736991872</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 4152<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000001B1577F0E80&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1861188783744</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后的输出是0，说明了子进程对于主进程传入的Data对象操作其实对于主进程的对象是不起作用的，我们需要怎样的操作才能实现子进程可以操作主进程的对象呢？我们可以使用<code>multiprocessing.managers 下的 BaseManager</code> 来实现</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -870,19 +988,37 @@ data is &lt;__mp_main__.Data object at 0x000001B1577F0E80&gt; id(data) is 186118
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>After introducing BaseManager using <code>from multiprocessing.managers import BaseManager</code>, after defining the Data type, use <code>BaseManager.register(&quot;mydata&quot;,Data)</code> to register the Data type in BaseManager, and give it a name called <code>mydata </code>, then you can use the name of the <code>BaseManager</code> object to initialize the object, let&rsquo;s take a look at the output</p>
-<pre tabindex="0"><code>C:\Python35\python.exe F:/python/python3Test/multask.py
-in thread &lt;_MainThread(MainThread, started 12244)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id(data) is 2222932504080
-in thread &lt;_MainThread(MainThread, started 2860)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id(data) is 1897574510096
-in thread &lt;_MainThread(MainThread, started 2748)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id(data) is 2053415775760
-in thread &lt;_MainThread(MainThread, started 7812)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id(data) is 2766155820560
-in thread &lt;_MainThread(MainThread, started 2384)&gt; name is yang
-data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id(data) is 2501159890448
-5
-</code></pre><p>We see that although different objects are used in each child process, their values ​​can be &ldquo;shared&rdquo;.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>C:<span style="color:#f1fa8c">\P</span>ython35<span style="color:#f1fa8c">\p</span>ython.exe F:/python/python3Test/multask.py
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 12244<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2222932504080</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 2860<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">1897574510096</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 2748<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2053415775760</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 7812<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2766155820560</span>
+</span></span><span style="display:flex;"><span>in thread &lt;_MainThread<span style="color:#ff79c6">(</span>MainThread, started 2384<span style="color:#ff79c6">)</span>&gt; name is yang
+</span></span><span style="display:flex;"><span>data is &lt;__mp_main__.Data object at 0x000001FE1B7D9668&gt; id<span style="color:#ff79c6">(</span>data<span style="color:#ff79c6">)</span> is <span style="color:#bd93f9">2501159890448</span>
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">5</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>We see that although different objects are used in each child process, their values ​​can be &ldquo;shared&rdquo;.</p>
 <p>Standard data types can also be passed through the Value object in the multiprocessing library, to give a simple example</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
