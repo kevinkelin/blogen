@@ -135,7 +135,7 @@
   <nav class="site-state">
     <div class="site-state-item site-state-posts">
       <a href="/article.html">
-        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-count">80</span>
         <span class="site-state-item-name">Posts</span>
       </a>
     </div>
@@ -223,6 +223,208 @@
     <div class="main-inner index posts-expand">
       
 
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/map-slice-in-func-params.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="function parameters of map and slice in golang">
+      <meta itemprop="description" content="In the function parameters of golang, if the parameter is a value type, if the parameter value is modified in the function, it will not affect the original variable, because a value copy will be performed in the function operation. If you want the modification of the function to affect the original variable, You need to pass pointers. The following code will not change the value of the original variable.
+
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+package main
+
+import (
+	&#34;fmt&#34;
+)
+
+func teststr(s string) {
+	s = &#34;bbb&#34;
+}
+
+func main() {
+	ss := &#34;aaaa&#34;
+	teststr(ss)
+	fmt.Println(ss) // still aaaa, not bbb
+}
+
+
+After the teststr function, the variable ss has not been modified. If you want to affect the original variable, you need to pass in a pointer">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/map-slice-in-func-params.html" itemprop="url" class="post-title-link">function parameters of map and slice in golang</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2022-08-13 18:22:17 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-08-13 18:22:17 &#43;0800 CST">2022-08-13</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In the function parameters of golang, if the parameter is a value type, if the parameter value is modified in the function, it will not affect the original variable, because a value copy will be performed in the function operation. If you want the modification of the function to affect the original variable, You need to pass pointers. The following code will not change the value of the original variable.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">teststr</span>(s <span style="color:#8be9fd">string</span>) {
+</span></span><span style="display:flex;"><span>	s = <span style="color:#f1fa8c">&#34;bbb&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	ss <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;aaaa&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#50fa7b">teststr</span>(ss)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(ss) <span style="color:#6272a4">// still aaaa, not bbb
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>After the teststr function, the variable ss has not been modified. If you want to affect the original variable, you need to pass in a pointer</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/map-slice-in-func-params.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/create-map-in-golang.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Creation and initialization of map in golang">
+      <meta itemprop="description" content="I wrote a lot of python scripts before. For dictionary type data in python, the creation is very simple and flexible, but sometimes I am not used to it in golang, which causes some troubles.
+This article records some details of creating maps in golang.
+Variables in golang are divided into value types and references. Value types include integers, floating-point types, bool types, string arrays, and structure variable addresses. Values ​​are stored directly. For value-type variables, after declaration, if no assignment is made, then the variable The value of the value is the zero value of the type, such as the integer type is 0, the bool type is false, the reference types of golang include slice, map, channel, function, pointer, etc., if there is no assignment, it is nil, for nil variables, is it not? can be used directly.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/create-map-in-golang.html" itemprop="url" class="post-title-link">Creation and initialization of map in golang</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2022-08-11 23:45:36 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-08-11 23:45:36 &#43;0800 CST">2022-08-11</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>I wrote a lot of python scripts before. For dictionary type data in python, the creation is very simple and flexible, but sometimes I am not used to it in golang, which causes some troubles.
+This article records some details of creating maps in golang.</p>
+<p>Variables in golang are divided into value types and references. Value types include integers, floating-point types, bool types, string arrays, and structure variable addresses. Values ​​are stored directly. For value-type variables, after declaration, if no assignment is made, then the variable The value of the value is the zero value of the type, such as the integer type is 0, the bool type is false, the reference types of golang include slice, map, channel, function, pointer, etc., if there is no assignment, it is nil, for nil variables, is it not? can be used directly.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/create-map-in-golang.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
 <div class="post-block">
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/cros-build-in-go.html">
@@ -729,130 +931,6 @@ Recently, I was looking at the source code of sanic and found that there are man
     </footer>
   </article>
 </div>
-<div class="post-block">
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/orm-sql-performance.html">
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/imgs/xxxx.png">
-      <meta itemprop="name" content="KevinYang">
-    </span>
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KevinYang">
-      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
-    </span>
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Performance comparison between ORM and raw SQL">
-      <meta itemprop="description" content="Recently, I used the framework sanic, which is known as the most powerful performance among python web frameworks, to build the basic environment and project framework of the project, but I have made a choice syndrome when using ORM. For a framework that pursues performance, After using ORM, it will definitely have some impact on performance, but how big is the impact? The existence of ORM also has its reasons, so can its advantages eliminate its performance loss?">
-    </span>
-    <header class="post-header">
-       <h2 class="post-title" itemprop="name headline">
-  <a href="/article/orm-sql-performance.html" itemprop="url" class="post-title-link">Performance comparison between ORM and raw SQL</a> </h2> <div class="post-meta-container">
-  <div class="post-meta-items">
-    
-
-
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-calendar"></i>
-  </span>
-  <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2022-04-11 16:28:11 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-04-11 16:28:11 &#43;0800 CST">2022-04-11</time>
-</span>
-    
-    
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-folder-open"></i>
-  </span>
-  <span class="post-meta-item-text">Classify at:</span>
-  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/python.html" itemprop="url" rel="index">
-      <span itemprop="name">python</span>
-    </a>
-  </span>
-</span>
-  </div>
-</div>
-
-    </header>
-    <div class="post-body" itemprop="articleBody">
-      
-  <p>Recently, I used the framework <strong>sanic</strong>, which is known as the most powerful performance among python web frameworks, to build the basic environment and project framework of the project, but I have made a choice syndrome when using ORM. For a framework that pursues performance, After using ORM, it will definitely have some impact on performance, but how big is the impact? The existence of ORM also has its reasons, so can its advantages eliminate its performance loss?</p>
-
-    </div>
-    <footer class="post-footer">
-      
-<div class="post-button">
-  <a class="btn" href="/article/orm-sql-performance.html#more" rel="contents">
-    Read More &raquo;
-  </a>
-</div>
-<div class="post-eof"></div>
-    </footer>
-  </article>
-</div>
-<div class="post-block">
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/use-go-gin-cors.html">
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/imgs/xxxx.png">
-      <meta itemprop="name" content="KevinYang">
-    </span>
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KevinYang">
-      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
-    </span>
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Cross-domain problem of using gin to build api backend system">
-      <meta itemprop="description" content="In the development mode of front-end and back-end separation, the cross-domain problem has always been a common problem. The general solution is divided into front-end and back-end. The front-end is mainly solved by jsonp, but the back-end solution will be more convenient. This article records the use of gin The framework solves cross-domain problems in the backend.">
-    </span>
-    <header class="post-header">
-       <h2 class="post-title" itemprop="name headline">
-  <a href="/article/use-go-gin-cors.html" itemprop="url" class="post-title-link">Cross-domain problem of using gin to build api backend system</a> </h2> <div class="post-meta-container">
-  <div class="post-meta-items">
-    
-
-
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-calendar"></i>
-  </span>
-  <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2022-01-14 23:41:15 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-01-14 23:41:15 &#43;0800 CST">2022-01-14</time>
-</span>
-    
-    
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-folder-open"></i>
-  </span>
-  <span class="post-meta-item-text">Classify at:</span>
-  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/go.html" itemprop="url" rel="index">
-      <span itemprop="name">Go</span>
-    </a>
-  </span>
-</span>
-  </div>
-</div>
-
-    </header>
-    <div class="post-body" itemprop="articleBody">
-      
-  <p>In the development mode of front-end and back-end separation, the cross-domain problem has always been a common problem. The general solution is divided into front-end and back-end. The front-end is mainly solved by jsonp, but the back-end solution will be more convenient. This article records the use of gin The framework solves cross-domain problems in the backend.</p>
-
-    </div>
-    <footer class="post-footer">
-      
-<div class="post-button">
-  <a class="btn" href="/article/use-go-gin-cors.html#more" rel="contents">
-    Read More &raquo;
-  </a>
-</div>
-<div class="post-eof"></div>
-    </footer>
-  </article>
-</div>
 <nav class="pagination">
         <span class="page-number current">1</span>
         <a class="page-number" href="/page/2.html">2</a>
@@ -894,7 +972,7 @@ Recently, I was looking at the source code of sanic and found that there are man
 
 
 
-<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+<script type="text/javascript" src="/js/hugo-next.min.4d6845f3c05c507503b924619adb98e0d97d6bda17dc63300f92d6ce9622857d.js" defer></script> 
 </body>
 
 </html>

@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
-<meta itemprop="name" content="functools.partial usage in python" />
+<meta itemprop="name" content="Creation and initialization of map in golang" />
 <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
 <meta itemprop="datePublished" ZgotmplZ />
 <meta itemprop="dateModified" ZgotmplZ />
@@ -18,18 +18,18 @@
 <meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content="functools.partial usage in python" />
+<meta property="og:title" content="Creation and initialization of map in golang" />
 <meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
 <meta property="og:image" content="/imgs/xxxx.png" />
 <meta property="og:image:width" content="312" />
 <meta property="og:image:height" content="312" />
 <meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
-<meta property="og:url" content="https://enblog.yangyanxing.com/article/useage-partial.html"/>
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/create-map-in-golang.html"/>
 <meta property="og:site_name" content="KevinYang&#39;s blog" />
 <meta property="og:locale" content="zh-CN"/>
 <meta property="article:author" content="KevinYang" />
-<meta property="article:published_time" content="2020-09-20 00:00:00 &#43;0000 UTC" />
-<meta property="article:modified_time" content="2020-09-20 00:00:00 &#43;0000 UTC" />
+<meta property="article:published_time" content="2022-08-11 23:45:36 &#43;0800 CST" />
+<meta property="article:modified_time" content="2022-08-11 23:45:36 &#43;0800 CST" />
 
 
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
@@ -42,7 +42,7 @@
     }
   </style>
   
-  <title>functools.partial usage in python - KevinYang&#39;s blog</title>
+  <title>Creation and initialization of map in golang - KevinYang&#39;s blog</title>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -129,11 +129,10 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#basic-usage-of-functoolspartial">Basic usage of functools.partial</a></li>
-        <li><a href="#where-did-this-4-come-from">Where did this 4 come from?</a></li>
-        <li><a href="#more-complex-example">more complex example</a></li>
-        <li><a href="#parameters-of-type-kwargs">Parameters of type kwargs</a></li>
-        <li><a href="#what-is-functoolspartial-for">What is functools.partial for?</a></li>
+        <li><a href="#creation-of-value-type-variables">Creation of value type variables</a></li>
+        <li><a href="#several-ways-to-create-a-map">Several ways to create a map</a></li>
+        <li><a href="#json-application">json application</a></li>
+        <li><a href="#reference-articles">Reference articles</a></li>
       </ul>
     </li>
   </ul>
@@ -241,7 +240,7 @@
       
   <div class="post-block">
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/useage-partial.html">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/create-map-in-golang.html">
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/imgs/xxxx.png">
       <meta itemprop="name" content="KevinYang">
@@ -251,11 +250,13 @@
       <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
     </span>
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="functools.partial usage in python">
-      <meta itemprop="description" content="I often see some code using functools.partial to wrap a function. I didn&rsquo;t know much about its usage before, but I just wrote it according to other people&rsquo;s code. I took a closer look at its usage today. The basic usage is still very simple. .">
+      <meta itemprop="name" content="Creation and initialization of map in golang">
+      <meta itemprop="description" content="I wrote a lot of python scripts before. For dictionary type data in python, the creation is very simple and flexible, but sometimes I am not used to it in golang, which causes some troubles.
+This article records some details of creating maps in golang.
+Variables in golang are divided into value types and references. Value types include integers, floating-point types, bool types, string arrays, and structure variable addresses. Values ​​are stored directly. For value-type variables, after declaration, if no assignment is made, then the variable The value of the value is the zero value of the type, such as the integer type is 0, the bool type is false, the reference types of golang include slice, map, channel, function, pointer, etc., if there is no assignment, it is nil, for nil variables, is it not? can be used directly.">
     </span>
     <header class="post-header">
-       <h1 class="post-title" itemprop="name headline">functools.partial usage in python </h1> <div class="post-meta-container">
+       <h1 class="post-title" itemprop="name headline">Creation and initialization of map in golang </h1> <div class="post-meta-container">
   <div class="post-meta-items">
     
 
@@ -265,7 +266,7 @@
     <i class="far fa-calendar"></i>
   </span>
   <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2020-09-20 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2020-09-20 00:00:00 &#43;0000 UTC">2020-09-20</time>
+  <time title="Publish:2022-08-11 23:45:36 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-08-11 23:45:36 &#43;0800 CST">2022-08-11</time>
 </span>
     
     
@@ -275,8 +276,8 @@
   </span>
   <span class="post-meta-item-text">Classify at:</span>
   <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/python.html" itemprop="url" rel="index">
-      <span itemprop="name">python</span>
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
     </a>
   </span>
 </span>
@@ -287,7 +288,7 @@
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>732</span>
+  <span class="post-meta-item-text">Words:</span><span>722</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -309,32 +310,11 @@
     </header>
     <div class="post-body" itemprop="articleBody">
       
-  <p>I often see some code using <code>functools.partial</code> to wrap a function. I didn&rsquo;t know much about its usage before, but I just wrote it according to other people&rsquo;s code. I took a closer look at its usage today. The basic usage is still very simple. .</p>
-<h2 id="basic-usage-of-functoolspartial">Basic usage of functools.partial</h2>
-<p>Suppose we have a function that returns the result of adding 1 to the incoming parameter</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">addOne</span>(x):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">+</span><span style="color:#bd93f9">1</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Calling this function normally is simple</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>f <span style="color:#ff79c6">=</span> addOne(<span style="color:#bd93f9">3</span>)
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(f)
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>will output 4, which is very simple.</p>
-<p>If we then generate a new function based on <code>addOne</code></p>
+  <p>I wrote a lot of python scripts before. For dictionary type data in python, the creation is very simple and flexible, but sometimes I am not used to it in golang, which causes some troubles.
+This article records some details of creating maps in golang.</p>
+<p>Variables in golang are divided into value types and references. Value types include integers, floating-point types, bool types, string arrays, and structure variable addresses. Values ​​are stored directly. For value-type variables, after declaration, if no assignment is made, then the variable The value of the value is the zero value of the type, such as the integer type is 0, the bool type is false, the reference types of golang include slice, map, channel, function, pointer, etc., if there is no assignment, it is nil, for nil variables, is it not? can be used directly.</p>
+<h2 id="creation-of-value-type-variables">Creation of value type variables</h2>
+<p>The data of the value type can be declared through <code>var xxx type</code>. You can declare it without assigning a value. If you don&rsquo;t assign a value, it will be the default zero value. You can also use the short variable declaration method, <code>a := xxx</code>, where golang will itself Determine the type of the variable based on the following value.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -343,23 +323,23 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">addOne</span>(x):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">+</span><span style="color:#bd93f9">1</span>
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>add <span style="color:#ff79c6">=</span> functools<span style="color:#ff79c6">.</span>partial(addOne, <span style="color:#bd93f9">3</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#6272a4"># call the add function</span>
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(add())
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> s <span style="color:#8be9fd">string</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> i <span style="color:#8be9fd">int</span>
+</span></span><span style="display:flex;"><span>	ii <span style="color:#ff79c6">:=</span> <span style="color:#ff79c6">false</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s, i, ii, <span style="color:#ff79c6">&amp;</span>s, <span style="color:#ff79c6">&amp;</span>i, <span style="color:#ff79c6">&amp;</span>ii)
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>This will also output 4.</p>
-<h2 id="where-did-this-4-come-from">Where did this 4 come from?</h2>
-<p>First, we define a new variable <code>add</code> through <code>add = functools.partial(addOne, 3)</code>, which is equivalent to the result of <code>addOne(3)</code>, the variable add at this time is a function, when execute add() In fact, addOne(3) is executed, and the result is also the result of addOne(3). The 4 returned by this add() function is also the result of addOne(3). This is how the 4 comes.</p>
-<h2 id="more-complex-example">more complex example</h2>
-<p>The addOne function above has only one parameter, we add one more parameter and let it return the sum of the two parameters</p>
+</div><p>In the above code, s is &ldquo;&rdquo;, i is 0, ii is false, and it is a bool type.</p>
+<p>For value type data, no matter whether it is displayed or not initialized, when we try to print its address, we can get the address normally, that is, the address of the variable is not nil</p>
+<h2 id="several-ways-to-create-a-map">Several ways to create a map</h2>
+<ol>
+<li>Use the var method
+Use <code>var m map[string]int</code> to declare a variable of type <code>map[string]int</code>, let&rsquo;s print the memory address of the variable, which is <code>0x0</code></li>
+</ol>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -372,21 +352,51 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">sum</span>(x, y):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> x<span style="color:#ff79c6">+</span>y
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#8be9fd;font-style:italic">sum</span>(<span style="color:#bd93f9">5</span>, <span style="color:#bd93f9">6</span>))
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> m <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> m <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">nil</span> {
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;m is nil&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>sumY <span style="color:#ff79c6">=</span> functools<span style="color:#ff79c6">.</span>partial(<span style="color:#8be9fd;font-style:italic">sum</span>, <span style="color:#bd93f9">5</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(sumY(<span style="color:#bd93f9">6</span>))
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, m)
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Output result:</p>
-<p><code>print(sum(5, 6))</code> This output 11 There is nothing to say, <code>print(sumY(6))</code> This also outputs 11, how does this come from?</p>
-<p>When using <code>sumY = functools.partial(sum, 5)</code> to define the sumY variable, it actually fixes the x value in the <code>sum(x, y)</code> function to 5, so when calling sumY(6), it actually It returns the value of sum(5, 6), that is to say, the sumY function does not need to pass in the x parameter, but is fixed to 5.</p>
-<h2 id="parameters-of-type-kwargs">Parameters of type kwargs</h2>
-<p>When the parameters of a function are k, v, how to define a partial function?</p>
+</div><p>When judging whether it is nil, <code>m is nil</code> is printed.</p>
+<p>When trying to assign a value to a nil map, it crashes directly
+<code>m[&quot;age&quot;] = 18</code>, panic when executing this code.</p>
+<ol start="2">
+<li>new way
+The <code>new(Type)</code> method returns <code>*Type</code>, which returns a pointer. The pointer here is no longer a null pointer, but has a specific memory address.</li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	m <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">new</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> m <span style="color:#ff79c6">==</span> <span style="color:#ff79c6">nil</span> {
+</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;m is nil&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, m)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">*</span>m)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>This fails to judge <code>m==nil</code>.</p>
+<p>But still can&rsquo;t assign value to this m, <code>(*m)[&quot;age&quot;]=18</code> still prompts to assign value to nil map, you need to point m to a specific value before assigning it normally</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -396,21 +406,22 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">show</span>(name<span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;yyx&#34;</span>, age<span style="color:#ff79c6">=</span><span style="color:#bd93f9">100</span>):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> (name, age)
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
 </span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	m <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">new</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">*</span>m = <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>{}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>showP <span style="color:#ff79c6">=</span> functools<span style="color:#ff79c6">.</span>partial(show, age<span style="color:#ff79c6">=</span><span style="color:#bd93f9">18</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">print</span>(showP(<span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>))
+</span></span><span style="display:flex;"><span>	(<span style="color:#ff79c6">*</span>m)[<span style="color:#f1fa8c">&#34;name&#34;</span>] = <span style="color:#bd93f9">18</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">*</span>m)
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>You can define the corresponding parameters when defining the partial function. If age=18 above, the newly generated function is equivalent to <code>show(name=&quot;yyx&quot;, age=18)</code></p>
-<p>Note that if you use partial to define the parameters of the function, you cannot pass the corresponding parameters when calling again. For example, age=18 has been defined in the showP function above. When calling showP(), only The name parameter can be passed, that is, only showP(&ldquo;yangyanxing&rdquo;) can be used, and an age parameter cannot be passed in, showP(&ldquo;yangyanxing&rdquo;, 28). If the age parameter is added, an error will be reported.</p>
-<h2 id="what-is-functoolspartial-for">What is functools.partial for?</h2>
-<p>From the above usage, it seems that using functools.partial is useless, it just fixes the value of a certain parameter, so that the original call passes one less parameter, but we may have some kind of function scene, its parameter is also A function, such as a callback function.</p>
+</div><ol start="3">
+<li>Make method</li>
+</ol>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -420,32 +431,57 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">show</span>(name, age):
-</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;my name is </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> and age is </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> &#34;</span><span style="color:#ff79c6">.</span>format(name, age))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(callback):
-</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;do some opt....&#34;</span>)
-</span></span><span style="display:flex;"><span>    callback()
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	m <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, m)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(m)
+</span></span><span style="display:flex;"><span>	m[<span style="color:#f1fa8c">&#34;age&#34;</span>] = <span style="color:#bd93f9">9</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(m)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, m)
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>We define a test function, which will first execute some of its own logic, and then call the incoming callback function. If we want to pass the show function as a callback parameter to the test function, note that the callback function here has no parameters. So how do we pass the name and age parameters to the show function?</p>
-<p>We can rewrite the test() function</p>
+</div><p>Using the make method can return a declared and initialized variable, and for this variable, we can directly operate on it.
+The output of the above code is</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(callback, name, age):
-</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;do some opt....&#34;</span>)
-</span></span><span style="display:flex;"><span>    callback(name, age)
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#bd93f9">0xc00006e180</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">map</span>[]
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">map</span>[age:<span style="color:#bd93f9">9</span>]
+</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0xc00006e180</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>This can solve the case where the callback function is show, but what if the callback function is something else? fly(h), eat(), run(date), etc. You can&rsquo;t predict the parameters of this function, and you don&rsquo;t know how the caller will call it, so you can use <code>functools.partial</code> to generate a new function</p>
+</div><ol start="4">
+<li>When declared and initialized
+This approach is more traditional, think of it as <code>var s string = &quot;name&quot;</code></li>
+</ol>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>(){
+</span></span><span style="display:flex;"><span>  <span style="color:#8be9fd;font-style:italic">var</span> m = <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>{} <span style="color:#6272a4">//{} here cannot be less
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>  m[<span style="color:#f1fa8c">&#34;age&#34;</span>] = <span style="color:#bd93f9">18</span>
+</span></span><span style="display:flex;"><span>  fmt.<span style="color:#50fa7b">Pringln</span>(m)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="json-application">json application</h2>
+<p>Many times, when we deserialize json, it will be converted into a structure or map,</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -460,35 +496,35 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">show</span>(name, age):
-</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;my name is </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> and age is </span><span style="color:#f1fa8c">{}</span><span style="color:#f1fa8c"> &#34;</span><span style="color:#ff79c6">.</span>format(name, age))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>showP <span style="color:#ff79c6">=</span> functools<span style="color:#ff79c6">.</span>partial(show, <span style="color:#f1fa8c">&#34;yangyanxing&#34;</span>, <span style="color:#bd93f9">19</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">def</span> <span style="color:#50fa7b">test</span>(callback):
-</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;do some opt....&#34;</span>)
-</span></span><span style="display:flex;"><span>    callback()
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>test(showP)
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	jstr <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">`{&#34;name&#34;:&#34;yangyanxing&#34;, &#34;age&#34;: 18}`</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> m <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd;font-style:italic">interface</span>{}
+</span></span><span style="display:flex;"><span>	mm <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">make</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd;font-style:italic">interface</span>{})
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> mmm = <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd;font-style:italic">interface</span>{}{}
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> mmmm = <span style="color:#8be9fd;font-style:italic">new</span>(<span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd;font-style:italic">interface</span>{})
+</span></span><span style="display:flex;"><span>	json.<span style="color:#50fa7b">Unmarshal</span>([]<span style="color:#8be9fd;font-style:italic">byte</span>(jsr), <span style="color:#ff79c6">&amp;</span>m)
+</span></span><span style="display:flex;"><span>	json.<span style="color:#50fa7b">Unmarshal</span>([]<span style="color:#8be9fd;font-style:italic">byte</span>(jsr), <span style="color:#ff79c6">&amp;</span>mm)
+</span></span><span style="display:flex;"><span>	json.<span style="color:#50fa7b">Unmarshal</span>([]<span style="color:#8be9fd;font-style:italic">byte</span>(jsr), <span style="color:#ff79c6">&amp;</span>mmm)
+</span></span><span style="display:flex;"><span>	json.<span style="color:#50fa7b">Unmarshal</span>([]<span style="color:#8be9fd;font-style:italic">byte</span>(jsr), mmmm)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(m)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(mm)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(mmm)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#ff79c6">*</span>mmmm)
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>In this way, the caller can control the parameters of the function by himself.</p>
-<p>The output above is</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#ff79c6">do</span> some opt....
-</span></span><span style="display:flex;"><span>my name is yangyanxing and age is <span style="color:#bd93f9">19</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div>
+</div><p>The map object is initialized in the above four ways. In the <code>json.Unmarshl</code> method, json can be converted into a map. Note that the return returned by new is a pointer, so there is no need to use <code>&amp;</code> to take the address character. The address character can also get the same result.</p>
+<h2 id="reference-articles">Reference articles</h2>
+<p>
+<a href="https://juejin.cn/post/7085915779006201870" title="Interviewer: What is the difference between new and make in Golang? " rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
+    Interviewer: What is the difference between new and make in Golang? 
+    <i class="fa fa-external-link-alt"></i>
+</a></p>
 
     </div>
     <footer class="post-footer">
@@ -496,8 +532,8 @@
 
 <div class="post-tags">
   
-    <a href="/tags/python.html">
-    python
+    <a href="/tags/go.html">
+    Go
   </a>
 </div>
 
@@ -510,7 +546,7 @@
   <ul>
     <li class="post-copyright-title">
       <strong>Post Title:</strong>
-      functools.partial usage in python
+      Creation and initialization of map in golang
     </li>
     <li class="post-copyright-author">
       <strong>Post Author: </strong>
@@ -518,7 +554,7 @@
     </li>
     <li class="post-copyright-link"> 
       <strong>Post Link:</strong>
-       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/useage-partial.html" title="functools.partial usage in python">https://enblog.yangyanxing.com/article/useage-partial.html</a>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/create-map-in-golang.html" title="Creation and initialization of map in golang">https://enblog.yangyanxing.com/article/create-map-in-golang.html</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright Notice: </strong>
@@ -551,13 +587,13 @@
 </div>
 <div class="post-nav">
   <div class="post-nav-next post-nav-item">
-    <a href="https://enblog.yangyanxing.com/article/python-aiolog.html" rel="next" title="Send logs asynchronously to a remote server in python">
-      <i class="fa fa-chevron-left"></i> Send logs asynchronously to a remote server in python
+    <a href="https://enblog.yangyanxing.com/article/map-slice-in-func-params.html" rel="next" title="function parameters of map and slice in golang">
+      <i class="fa fa-chevron-left"></i> function parameters of map and slice in golang
     </a>
   </div>
   <div class="post-nav-prev post-nav-item">
-    <a href="https://enblog.yangyanxing.com/article/namespace-k8s.html" rel="prev" title="Use dns to access services in kubernetes">
-      Use dns to access services in kubernetes
+    <a href="https://enblog.yangyanxing.com/article/cros-build-in-go.html" rel="prev" title="An example to explain the application of go build tag tags in cross-compilation">
+      An example to explain the application of go build tag tags in cross-compilation
       <i class="fa fa-chevron-right"></i>
     </a>
   </div>

@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
-<meta itemprop="name" content="Several ways to execute commands in the go language" />
+<meta itemprop="name" content="function parameters of map and slice in golang" />
 <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
 <meta itemprop="datePublished" ZgotmplZ />
 <meta itemprop="dateModified" ZgotmplZ />
@@ -18,18 +18,18 @@
 <meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Several ways to execute commands in the go language" />
+<meta property="og:title" content="function parameters of map and slice in golang" />
 <meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
 <meta property="og:image" content="/imgs/xxxx.png" />
 <meta property="og:image:width" content="312" />
 <meta property="og:image:height" content="312" />
 <meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
-<meta property="og:url" content="https://enblog.yangyanxing.com/article/exec_command_in_go.html"/>
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/map-slice-in-func-params.html"/>
 <meta property="og:site_name" content="KevinYang&#39;s blog" />
 <meta property="og:locale" content="zh-CN"/>
 <meta property="article:author" content="KevinYang" />
-<meta property="article:published_time" content="2019-08-23 00:00:00 &#43;0000 UTC" />
-<meta property="article:modified_time" content="2019-08-23 00:00:00 &#43;0000 UTC" />
+<meta property="article:published_time" content="2022-08-13 18:22:17 &#43;0800 CST" />
+<meta property="article:modified_time" content="2022-08-13 18:22:17 &#43;0800 CST" />
 
 
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
@@ -42,7 +42,7 @@
     }
   </style>
   
-  <title>Several ways to execute commands in the go language - KevinYang&#39;s blog</title>
+  <title>function parameters of map and slice in golang - KevinYang&#39;s blog</title>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -129,10 +129,9 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#only-execute-the-command-do-not-output-the-result">Only execute the command, do not output the result</a></li>
-        <li><a href="#execute-the-command-and-get-the-output">Execute the command and get the output</a></li>
-        <li><a href="#command-line-input">command line input</a></li>
-        <li><a href="#execute-commands-not-in-environment-variables">Execute commands not in environment variables</a></li>
+        <li><a href="#when-the-parameter-is-map-or-slice">When the parameter is map or slice</a></li>
+        <li><a href="#the-structure-of-the-slice-is-changed-inside-the-function">The structure of the slice is changed inside the function</a></li>
+        <li><a href="#summarize">Summarize</a></li>
       </ul>
     </li>
   </ul>
@@ -240,7 +239,7 @@
       
   <div class="post-block">
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/exec_command_in_go.html">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/map-slice-in-func-params.html">
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/imgs/xxxx.png">
       <meta itemprop="name" content="KevinYang">
@@ -250,16 +249,48 @@
       <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
     </span>
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Several ways to execute commands in the go language">
-      <meta itemprop="description" content="The commands used by the go language to execute all systems are still a bit complicated compared to python. Executing commands is a very common requirement, such as calling a system command, starting an exe, etc. There are several situations here, which will be summarized later.
+      <meta itemprop="name" content="function parameters of map and slice in golang">
+      <meta itemprop="description" content="In the function parameters of golang, if the parameter is a value type, if the parameter value is modified in the function, it will not affect the original variable, because a value copy will be performed in the function operation. If you want the modification of the function to affect the original variable, You need to pass pointers. The following code will not change the value of the original variable.
 
-only execute the command, do not output the result
-Execute the command and get the output
-Blocking and asynchronous execution
-">
+
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+
+
+package main
+
+import (
+	&#34;fmt&#34;
+)
+
+func teststr(s string) {
+	s = &#34;bbb&#34;
+}
+
+func main() {
+	ss := &#34;aaaa&#34;
+	teststr(ss)
+	fmt.Println(ss) // still aaaa, not bbb
+}
+
+
+After the teststr function, the variable ss has not been modified. If you want to affect the original variable, you need to pass in a pointer">
     </span>
     <header class="post-header">
-       <h1 class="post-title" itemprop="name headline">Several ways to execute commands in the go language </h1> <div class="post-meta-container">
+       <h1 class="post-title" itemprop="name headline">function parameters of map and slice in golang </h1> <div class="post-meta-container">
   <div class="post-meta-items">
     
 
@@ -269,7 +300,7 @@ Blocking and asynchronous execution
     <i class="far fa-calendar"></i>
   </span>
   <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2019-08-23 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2019-08-23 00:00:00 &#43;0000 UTC">2019-08-23</time>
+  <time title="Publish:2022-08-13 18:22:17 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-08-13 18:22:17 &#43;0800 CST">2022-08-13</time>
 </span>
     
     
@@ -291,7 +322,7 @@ Blocking and asynchronous execution
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>1155</span>
+  <span class="post-meta-item-text">Words:</span><span>1211</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -313,70 +344,7 @@ Blocking and asynchronous execution
     </header>
     <div class="post-body" itemprop="articleBody">
       
-  <p>The commands used by the go language to execute all systems are still a bit complicated compared to python. Executing commands is a very common requirement, such as calling a system command, starting an exe, etc. There are several situations here, which will be summarized later.</p>
-<ul>
-<li>only execute the command, do not output the result</li>
-<li>Execute the command and get the output</li>
-<li>Blocking and asynchronous execution</li>
-</ul>
-<p>The following takes ping 
-<a href="https://www.baidu.com" title="www.baidu.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
-    www.baidu.com
-    <i class="fa fa-external-link-alt"></i>
-</a> as an example to execute various commands in sequence, mainly using os/exec in the standard library</p>
-<p>When executing commands, we mainly use the Cmd structure method of the os/exec package owner. The Cmd structure is defined as follows
-
-<a href="https://studygolang.com/static/pkgdoc/pkg/os_exec.htm#Cmd" title="Cmd structure definition" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
-    Cmd structure definition
-    <i class="fa fa-external-link-alt"></i>
-</a></p>
-<p>The main parameters are</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>Path <span style="color:#8be9fd">string</span>
-</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Args stores the parameters of the command, including the command name as the first parameter; if it is an empty slice or nil, it is equivalent to a command without parameters.
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">//
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// In typical usage, both Path and Args should be set by the Command function.
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>Args[]<span style="color:#8be9fd">string</span>
-</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Env specifies the environment of the process. If it is nil, it is executed in the environment of the current process.
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>Stdinio.Reader
-</span></span><span style="display:flex;"><span><span style="color:#6272a4">// Stdout and Stderr specify the standard output and standard error output of the process.
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">//
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// If any one is nil, the Run method will associate the corresponding file descriptor to the empty device (os.DevNull)
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">//
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// If two fields are the same, at most one thread can write at the same time.
-</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>Stdout io.Writer
-</span></span><span style="display:flex;"><span>Stderr io.Writer
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>But we generally do not construct the Cmd structure directly, but return a Cmd structure pointer through the exec.Command() function
-For example, exec.Command(&ldquo;ping&rdquo;,&ldquo;
-<a href="https://www.baidu.com" title="www.baidu.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
-    www.baidu.com
-    <i class="fa fa-external-link-alt"></i>
-</a>&rdquo;) ping is the command, and &ldquo;
-<a href="https://www.baidu.com" title="www.baidu.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
-    www.baidu.com
-    <i class="fa fa-external-link-alt"></i>
-</a>&rdquo; is the parameter. After getting *Cmd, the structure method Run, Start and other methods are used to execute the actual execution. Order.</p>
-<h2 id="only-execute-the-command-do-not-output-the-result">Only execute the command, do not output the result</h2>
-<p>The output here just shows that the command is executed, but we don&rsquo;t care about its specific output. In this kind of practical use, we just want to execute the command. In python, we can use the os.system() function to execute, Of course this is blocking execution</p>
+  <p>In the function parameters of golang, if the parameter is a value type, if the parameter value is modified in the function, it will not affect the original variable, because a value copy will be performed in the function operation. If you want the modification of the function to affect the original variable, You need to pass pointers. The following code will not change the value of the original variable.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -396,65 +364,24 @@ For example, exec.Command(&ldquo;ping&rdquo;,&ldquo;
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> <span style="color:#ff79c6">import</span> os
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> r <span style="color:#ff79c6">=</span> os<span style="color:#ff79c6">.</span>system(<span style="color:#f1fa8c">&#34;ping www.baidu.com&#34;</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Pinging www<span style="color:#ff79c6">.</span>a<span style="color:#ff79c6">.</span>shifen<span style="color:#ff79c6">.</span>com [<span style="color:#bd93f9">39.156.66.18</span>] <span style="color:#ff79c6">with</span> <span style="color:#bd93f9">32</span> <span style="color:#8be9fd;font-style:italic">bytes</span> of data:
-</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
-</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">28</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
-</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">6</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
-</span></span><span style="display:flex;"><span>Reply <span style="color:#ff79c6">from</span> <span style="color:#bd93f9">39.156.66.18</span>: <span style="color:#8be9fd;font-style:italic">bytes</span><span style="color:#ff79c6">=</span><span style="color:#bd93f9">32</span> time<span style="color:#ff79c6">=</span><span style="color:#bd93f9">7</span>ms TTL<span style="color:#ff79c6">=</span><span style="color:#bd93f9">54</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Ping stats <span style="color:#ff79c6">for</span> <span style="color:#bd93f9">39.156.66.18</span>:
-</span></span><span style="display:flex;"><span>    Packets: Sent <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">4</span>, Received <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">4</span>, Lost <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span> (<span style="color:#bd93f9">0</span><span style="color:#ff79c6">%</span> lost),
-</span></span><span style="display:flex;"><span>Estimated time of <span style="color:#8be9fd;font-style:italic">round</span> trip <span style="color:#ff79c6">in</span> milliseconds:
-</span></span><span style="display:flex;"><span>    Minimum <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">6</span>ms, Maximum <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">28</span>ms, Average <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">11</span>ms
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">&gt;&gt;&gt;</span> r
-</span></span><span style="display:flex;"><span><span style="color:#bd93f9">0</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>The r here just gets the execution result of the command, 0 means there is no error, but the output of the executed command is like Ping 
-<a href="https://www.a.shifen.com" title="www.a.shifen.com" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
-    www.a.shifen.com
-    <i class="fa fa-external-link-alt"></i>
-</a>&hellip;.. We don&rsquo;t care</p>
-<p>To execute a command, you can use the Run() or Start() method. Run is a blocking execution, and Start() is a non-blocking execution.</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
 </span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;fmt&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;os/exec&#34;</span>
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
-</span></span><span style="display:flex;"><span>	command <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;ping&#34;</span>,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
-</span></span><span style="display:flex;"><span>	err <span style="color:#ff79c6">:=</span> command.<span style="color:#50fa7b">Run</span>()
-</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
-</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
-</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">teststr</span>(s <span style="color:#8be9fd">string</span>) {
+</span></span><span style="display:flex;"><span>	s = <span style="color:#f1fa8c">&#34;bbb&#34;</span>
 </span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	ss <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;aaaa&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#50fa7b">teststr</span>(ss)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(ss) <span style="color:#6272a4">// still aaaa, not bbb
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The program outputs nothing, but exits after a pause. If you replace it with <code>command.Start()</code>, the program will stop immediately after running.</p>
-<p>If you want to get the execution result of os.system like python, in fact, the result here should be ExitError, the exit code of the program, what should you do? There is a special structure <code>ExitError</code> in the exec package. You can use some of its methods to get the ExitCode, but if you want to get the ExitCode, you can get the end of the command, that is, the operation to be blocked. Use the Run() method above to block Wait for the execution result. After using the Start() method, you can also use the Wait() method to wait for the execution to end.</p>
+</div><p>After the teststr function, the variable ss has not been modified. If you want to affect the original variable, you need to pass in a pointer</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -472,49 +399,28 @@ For example, exec.Command(&ldquo;ping&rdquo;,&ldquo;
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
-</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;fmt&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;os/exec&#34;</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#f1fa8c">&#34;syscall&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">teststr</span>(s <span style="color:#ff79c6">*</span><span style="color:#8be9fd">string</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">*</span>s = <span style="color:#f1fa8c">&#34;bbb&#34;</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
-</span></span><span style="display:flex;"><span>	command <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;ping&#34;</span>,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
-</span></span><span style="display:flex;"><span>	err <span style="color:#ff79c6">:=</span> command.<span style="color:#50fa7b">Start</span>()
-</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err = command.<span style="color:#50fa7b">Wait</span>();err<span style="color:#ff79c6">!=</span><span style="color:#ff79c6">nil</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
-</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Pid</span>())
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Sys</span>().(syscall.WaitStatus).ExitCode)
-</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	ss <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">&#34;aaaa&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#50fa7b">teststr</span>(<span style="color:#ff79c6">&amp;</span>ss)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(ss)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>pass</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>command.ProcessState.<span style="color:#50fa7b">Sys</span>().(syscall.WaitStatus).ExitCode
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>to get the exit code of the command execution</p>
-<h2 id="execute-the-command-and-get-the-output">Execute the command and get the output</h2>
-<p>The output here is the standard output or error output of the command line, that is, stdout or stderr, which is stored by bytes.Buffer</p>
+</div><p>After the above modification, the value of the original variable ss has been modified to <code>bbb</code>.</p>
+<h2 id="when-the-parameter-is-map-or-slice">When the parameter is map or slice</h2>
+<p>But what if the parameter is a map or a slice?</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -542,85 +448,57 @@ For example, exec.Command(&ldquo;ping&rdquo;,&ldquo;
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;bytes&#34;</span>
 </span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;os/exec&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;syscall&#34;</span>
 </span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">test</span>(m <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#6272a4">// modify the value of map in the function
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	m[<span style="color:#f1fa8c">&#34;age&#34;</span>] = m[<span style="color:#f1fa8c">&#34;age&#34;</span>] <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">testslice</span>(s[]<span style="color:#8be9fd">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#6272a4">// modify the slice value in the function
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	s[<span style="color:#bd93f9">0</span>] = s[<span style="color:#bd93f9">0</span>] <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
-</span></span><span style="display:flex;"><span>	command <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;ping&#34;</span>,<span style="color:#f1fa8c">&#34;www.baidu.com&#34;</span>)
-</span></span><span style="display:flex;"><span>	outinfo <span style="color:#ff79c6">:=</span> bytes.Buffer{}
-</span></span><span style="display:flex;"><span>	command.Stdout = <span style="color:#ff79c6">&amp;</span>outinfo
-</span></span><span style="display:flex;"><span>	err <span style="color:#ff79c6">:=</span> command.<span style="color:#50fa7b">Start</span>()
-</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> err = command.<span style="color:#50fa7b">Wait</span>();err<span style="color:#ff79c6">!=</span><span style="color:#ff79c6">nil</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(err.<span style="color:#50fa7b">Error</span>())
-</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Pid</span>())
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(command.ProcessState.<span style="color:#50fa7b">Sys</span>().(syscall.WaitStatus).ExitCode)
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(outinfo.<span style="color:#50fa7b">String</span>())
-</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	m <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd">int</span>{<span style="color:#f1fa8c">&#34;age&#34;</span>: <span style="color:#bd93f9">10</span>}
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(m)
+</span></span><span style="display:flex;"><span>	<span style="color:#50fa7b">test</span>(m)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(m)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	s <span style="color:#ff79c6">:=</span> []<span style="color:#8be9fd">int</span>{<span style="color:#bd93f9">10</span>, <span style="color:#bd93f9">20</span>}
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s)
+</span></span><span style="display:flex;"><span>	<span style="color:#50fa7b">testslice</span>(s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The Chinese output obtained here is garbled
-<img src="/image/2019/go2.png" alt=""></p>
-<p>I checked this, it is generally said to set the console output chcp or use</p>
-<pre tabindex="0"><code>golang.org/x/text/encoding/simplifiedchinese
-</code></pre><p>I don&rsquo;t want to use this package for conversion. I&rsquo;ll talk about it later when I find a way.</p>
-<h2 id="command-line-input">command line input</h2>
-<p>Sometimes entering the command line will wait for user interaction, such as entering nslookup</p>
+</div><p>The output of the above code is</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;bytes&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;os/exec&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;strings&#34;</span>
-</span></span><span style="display:flex;"><span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
-</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> outInfo bytes.Buffer
-</span></span><span style="display:flex;"><span>	cmd <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;nslookup&#34;</span>)
-</span></span><span style="display:flex;"><span>	cmd.Stdin = strings.<span style="color:#50fa7b">NewReader</span>(<span style="color:#f1fa8c">&#34;set q=mx\npython.org\nexit\n&#34;</span>)
-</span></span><span style="display:flex;"><span>	cmd.Stdout = <span style="color:#ff79c6">&amp;</span>outInfo
-</span></span><span style="display:flex;"><span>	cmd.<span style="color:#50fa7b">Run</span>()
-</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(outInfo.<span style="color:#50fa7b">String</span>())
-</span></span><span style="display:flex;"><span>}
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">map</span>[age:<span style="color:#bd93f9">10</span>]
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">map</span>[age:<span style="color:#bd93f9">11</span>]
+</span></span><span style="display:flex;"><span>[<span style="color:#bd93f9">10</span> <span style="color:#bd93f9">20</span>]
+</span></span><span style="display:flex;"><span>[<span style="color:#bd93f9">11</span> <span style="color:#bd93f9">20</span>]
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="execute-commands-not-in-environment-variables">Execute commands not in environment variables</h2>
-<p>Like the ping command above, because in windows or linux, this command is in the environment variable, but like the copy command in windows, it is not in the environment variable. Under normal circumstances, you can use the copy command in cmd, but if In the go language, it is not possible to use it directly as above.
-For example using the above code, replace the copy command</p>
+</div><p>That is to say, modifying the map and slice in the function will affect the original variable.</p>
+<h2 id="the-structure-of-the-slice-is-changed-inside-the-function">The structure of the slice is changed inside the function</h2>
+<p>According to the above results, if we pass in the slice in the function, we can actually pass the variable itself instead of the pointer of the variable. However, there is a problem to pay attention to here. If the expansion of the slice occurs, that is, the cap of the slice. If the value changes, a new slice will be generated inside the function, and any modification to the slice will not affect the original slice.</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -646,28 +524,43 @@ For example using the above code, replace the copy command</p>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;bytes&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;os/exec&#34;</span>
-</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">testslice</span>(s[]<span style="color:#8be9fd">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#6272a4">// modify the slice value in the function
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	s = <span style="color:#8be9fd;font-style:italic">append</span>(s, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">3</span>, <span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>	s[<span style="color:#bd93f9">0</span>] = s[<span style="color:#bd93f9">0</span>] <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;in testslice: &#34;</span>, s) <span style="color:#6272a4">//in testslice: [11 0 2 3 4]
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
-</span></span><span style="display:flex;"><span>	cmd <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;copy&#34;</span>,<span style="color:#f1fa8c">&#34;1.txt&#34;</span>,<span style="color:#f1fa8c">&#34;2.txt&#34;</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> output bytes.Buffer
-</span></span><span style="display:flex;"><span>	cmd.Stdout = <span style="color:#ff79c6">&amp;</span>output
-</span></span><span style="display:flex;"><span>	e <span style="color:#ff79c6">:=</span>cmd.<span style="color:#50fa7b">Run</span>()
-</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> e <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;run error :&#34;</span> <span style="color:#ff79c6">+</span> e.<span style="color:#50fa7b">Error</span>())
-</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(output.<span style="color:#50fa7b">String</span>())
-</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	s <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">make</span>([]<span style="color:#8be9fd">int</span>, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">2</span>)
+</span></span><span style="display:flex;"><span>	s[<span style="color:#bd93f9">0</span>] = <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s) <span style="color:#6272a4">//[10 0]
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	<span style="color:#50fa7b">testslice</span>(s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s) <span style="color:#6272a4">//[10 0]
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The resulting output is</p>
-<pre tabindex="0"><code>run error :exec: &#34;copy&#34;: executable file not found in %PATH%
-</code></pre><p><code>cmd&quot;, &quot;/C&quot; copy </code> command should be used</p>
+</div><p>First initialize a <code>[]int</code> slice with a cap of 2 and a len of 2, and expand the slice in testslice. Since the cap of the original slice is 2, after adding three numbers, it will definitely exceed the original size. capacity, so a new slice will be generated at this time. If the value is modified in the function, the newly generated slice is modified, so <code>in testslice: [11 0 2 3 4]</code> is printed in testslice. , the addition of one to the first value of the slice will not affect the original slice.
+So the s printed on the last line of the main function is still <code>[10,0]</code>, and the first value will not become 11.</p>
+<p>But if we initialize the s slice variable in the main function, set the length parameter to a relatively large value, and set a sufficient length in the function that uses the slice, as in the above example, if we set the length to the s variable When the cap is 8, <code>s := make([]int, 2, 8)</code>, even if three numbers are added to the testslice, it will not exceed the capacity of the slice.</p>
+<p>The output obtained at this time is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>[<span style="color:#bd93f9">10</span> <span style="color:#bd93f9">0</span>]
+</span></span><span style="display:flex;"><span>in testslice: [<span style="color:#bd93f9">11</span> <span style="color:#bd93f9">0</span> <span style="color:#bd93f9">2</span> <span style="color:#bd93f9">3</span> <span style="color:#bd93f9">4</span>]
+</span></span><span style="display:flex;"><span>[<span style="color:#bd93f9">11</span> <span style="color:#bd93f9">0</span>]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>At this time, the modification in the function will affect the external variables, but it is still a bit strange. Inside the testslice, s is <code>[11 0 2 3 4]</code>, and at the end of the main function, it is still <code>[11, 0]</code> , without the following <code>[2,3,4]</code>.</p>
+<p>Let&rsquo;s try to print the address of the variable</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -681,32 +574,140 @@ For example using the above code, replace the copy command</p>
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
-</span></span><span style="display:flex;"><span>	cmd <span style="color:#ff79c6">:=</span> exec.<span style="color:#50fa7b">Command</span>(<span style="color:#f1fa8c">&#34;cmd&#34;</span>,<span style="color:#f1fa8c">&#34;/C&#34;</span>,<span style="color:#f1fa8c">&#34;copy&#34;</span>,<span style="color:#f1fa8c">&#34;1.txt&#34;</span>,<span style="color:#f1fa8c">&#34;2.txt&#34;</span>)
-</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> output bytes.Buffer
-</span></span><span style="display:flex;"><span>	cmd.Stdout = <span style="color:#ff79c6">&amp;</span>output
-</span></span><span style="display:flex;"><span>	e <span style="color:#ff79c6">:=</span>cmd.<span style="color:#50fa7b">Run</span>()
-</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">if</span> e <span style="color:#ff79c6">!=</span> <span style="color:#ff79c6">nil</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;run error :&#34;</span> <span style="color:#ff79c6">+</span> e.<span style="color:#50fa7b">Error</span>())
-</span></span><span style="display:flex;"><span>	}<span style="color:#ff79c6">else</span>{
-</span></span><span style="display:flex;"><span>		fmt.<span style="color:#50fa7b">Println</span>(output.<span style="color:#50fa7b">String</span>())
-</span></span><span style="display:flex;"><span>	}
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> <span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">testslice</span>(s[]<span style="color:#8be9fd">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#6272a4">// modify the slice value in the function
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;s1, p: %p\n&#34;</span>, s) <span style="color:#6272a4">//0xc0000200c0
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	s = <span style="color:#8be9fd;font-style:italic">append</span>(s, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">3</span>, <span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;s2, p: %p\n&#34;</span>, s) <span style="color:#6272a4">//0xc0000200c0
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	s[<span style="color:#bd93f9">0</span>] = s[<span style="color:#bd93f9">0</span>] <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;in testslice: &#34;</span>, s) <span style="color:#6272a4">//[11 0 2 3 4]
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	s <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">make</span>([]<span style="color:#8be9fd">int</span>, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">8</span>)
+</span></span><span style="display:flex;"><span>	s[<span style="color:#bd93f9">0</span>] = <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, s) <span style="color:#6272a4">//0xc0000200c0
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	fmt.<span style="color:#50fa7b">Println</span>(s) <span style="color:#6272a4">//[10 0]
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	<span style="color:#50fa7b">testslice</span>(s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, s) <span style="color:#6272a4">//0xc0000200c0
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	fmt.<span style="color:#50fa7b">Println</span>(s) <span style="color:#6272a4">// [11 0]
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>Reference article</p>
-<p>
-<a href="https://www.jianshu.com/p/9787e30552ce" title="golang exec command execution" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
-    golang exec command execution
-    <i class="fa fa-external-link-alt"></i>
-</a></p>
-<p>
-<a href="https://blog.csdn.net/rznice/article/details/88122923" title="Under Windows, the solution to Chinese garbled characters when executing Go under CMD" rel="noopener external nofollow noreferrer" target="_blank" class=" exturl">
-    Under Windows, the solution to Chinese garbled characters when executing Go under CMD
-    <i class="fa fa-external-link-alt"></i>
-</a></p>
+</div><p>You can see that the address of the s variable has not changed, but why is the final variable different?</p>
+<p>Here we try to print the length <code>len</code> and capacity <code>cap</code> of an s variable</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">testslice</span>(s[]<span style="color:#8be9fd">int</span>) {
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// modify the slice value in the function
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;s1, p: %p\n&#34;</span>, s)
+</span></span><span style="display:flex;"><span>	s = <span style="color:#8be9fd;font-style:italic">append</span>(s, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">3</span>, <span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;s2, p: %p\n&#34;</span>, s)
+</span></span><span style="display:flex;"><span>	s[<span style="color:#bd93f9">0</span>] = s[<span style="color:#bd93f9">0</span>] <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(<span style="color:#f1fa8c">&#34;in testslice: &#34;</span>, s, <span style="color:#8be9fd;font-style:italic">cap</span>(s), <span style="color:#8be9fd;font-style:italic">len</span>(s)) <span style="color:#6272a4">//[11 0 2 3 4] 8 5
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	s <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">make</span>([]<span style="color:#8be9fd">int</span>, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">8</span>)
+</span></span><span style="display:flex;"><span>	s[<span style="color:#bd93f9">0</span>] = <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s, <span style="color:#8be9fd;font-style:italic">cap</span>(s), <span style="color:#8be9fd;font-style:italic">len</span>(s)) <span style="color:#6272a4">//[10 0] 8 2
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	<span style="color:#50fa7b">testslice</span>(s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%p\n&#34;</span>, s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s, <span style="color:#8be9fd;font-style:italic">cap</span>(s), <span style="color:#8be9fd;font-style:italic">len</span>(s)) <span style="color:#6272a4">//[10 0] 8 2
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In testslice, the last print of <code>len(s)</code> is 5, and the len printed in the main function is 2. In golang, the length exceeding len will be hidden.
+In fact, if you want to get it, you can also get it, you just need to</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#50fa7b">testslice</span>(s)
+</span></span><span style="display:flex;"><span>s = s[:<span style="color:#8be9fd;font-style:italic">cap</span>(s)]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In fact, the above problems are all caused by the capacity variable of the slice. Instead of remembering these rules, we also need to consider the code maintenance in the future. We can return the new slice directly.</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">testslice</span>(s []<span style="color:#8be9fd">int</span>) []<span style="color:#8be9fd">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#6272a4">// modify the slice value in the function
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	s = <span style="color:#8be9fd;font-style:italic">append</span>(s, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">3</span>, <span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>	s[<span style="color:#bd93f9">0</span>] = s[<span style="color:#bd93f9">0</span>] <span style="color:#ff79c6">+</span> <span style="color:#bd93f9">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">return</span> s
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	s <span style="color:#ff79c6">:=</span> <span style="color:#8be9fd;font-style:italic">make</span>([]<span style="color:#8be9fd">int</span>, <span style="color:#bd93f9">2</span>, <span style="color:#bd93f9">8</span>)
+</span></span><span style="display:flex;"><span>	s[<span style="color:#bd93f9">0</span>] = <span style="color:#bd93f9">10</span>
+</span></span><span style="display:flex;"><span>	s = <span style="color:#50fa7b">testslice</span>(s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>In this way, many problems can be avoided, and the code is easy to maintain. At this time, all the values ​​of s can be obtained!</p>
+<h2 id="summarize">Summarize</h2>
+<ol>
+<li>When the parameter of the function is a map or slice slice, you can use the value variable directly</li>
+<li>When the version slice is used as a parameter, it is necessary to consider the problem that the change of slice capacity will lead to the generation of new slices</li>
+</ol>
 
     </div>
     <footer class="post-footer">
@@ -728,7 +729,7 @@ For example using the above code, replace the copy command</p>
   <ul>
     <li class="post-copyright-title">
       <strong>Post Title:</strong>
-      Several ways to execute commands in the go language
+      function parameters of map and slice in golang
     </li>
     <li class="post-copyright-author">
       <strong>Post Author: </strong>
@@ -736,7 +737,7 @@ For example using the above code, replace the copy command</p>
     </li>
     <li class="post-copyright-link"> 
       <strong>Post Link:</strong>
-       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/exec_command_in_go.html" title="Several ways to execute commands in the go language">https://enblog.yangyanxing.com/article/exec_command_in_go.html</a>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/map-slice-in-func-params.html" title="function parameters of map and slice in golang">https://enblog.yangyanxing.com/article/map-slice-in-func-params.html</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright Notice: </strong>
@@ -769,13 +770,10 @@ For example using the above code, replace the copy command</p>
 </div>
 <div class="post-nav">
   <div class="post-nav-next post-nav-item">
-    <a href="https://enblog.yangyanxing.com/article/func_viriadic_in_go.html" rel="next" title="The problem of using indefinite parameters in functions in go language">
-      <i class="fa fa-chevron-left"></i> The problem of using indefinite parameters in functions in go language
-    </a>
   </div>
   <div class="post-nav-prev post-nav-item">
-    <a href="https://enblog.yangyanxing.com/article/new_make_in_go.html" rel="prev" title="new and make in go language">
-      new and make in go language
+    <a href="https://enblog.yangyanxing.com/article/create-map-in-golang.html" rel="prev" title="Creation and initialization of map in golang">
+      Creation and initialization of map in golang
       <i class="fa fa-chevron-right"></i>
     </a>
   </div>

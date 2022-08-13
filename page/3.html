@@ -135,7 +135,7 @@
   <nav class="site-state">
     <div class="site-state-item site-state-posts">
       <a href="/article.html">
-        <span class="site-state-item-count">78</span>
+        <span class="site-state-item-count">80</span>
         <span class="site-state-item-name">Posts</span>
       </a>
     </div>
@@ -223,6 +223,164 @@
     <div class="main-inner index posts-expand">
       
 
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/interface-in-golang.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Interface usage in golang">
+      <meta itemprop="description" content="The interface in golang is very different from the interface in other object-oriented.
+Definition of an interface
+
+
+1
+2
+3
+4
+
+
+//Define an interface, it has a run method
+type Runable interface {
+	run()
+}
+
+
+Define a Runable interface, which has a method, run() , which has no parameters and no return value
+A structure can define a method. If a structure defines the run() method, it means that the structure implements the Runable interface, which is not like a class in java or python, which is displayed when it is defined. Indicates which interface is inherited from.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/interface-in-golang.html" itemprop="url" class="post-title-link">Interface usage in golang</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-10-23 15:19:33 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2021-10-23 15:19:33 &#43;0800 CST">2021-10-23</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>The interface in golang is very different from the interface in other object-oriented.</p>
+<p>Definition of an interface</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#6272a4">//Define an interface, it has a run method
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span><span style="color:#8be9fd;font-style:italic">type</span> Runable <span style="color:#8be9fd;font-style:italic">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#50fa7b">run</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>Define a <code>Runable</code> interface, which has a method, run() , which has no parameters and no return value</p>
+<p>A structure can define a method. If a structure defines the <code>run()</code> method, it means that the structure implements the <code>Runable</code> interface, which is not like a class in java or python, which is displayed when it is defined. Indicates which interface is inherited from.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/interface-in-golang.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/golang-struct-methond-receiver.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Receiver type problem of structure method in golang">
+      <meta itemprop="description" content="The structure in golang can be regarded as a class in object-oriented programming. You can define methods for the structure. Note the difference between methods and functions here. The definition of a function has no receiver, and the method has a receiver. Here The receiver can be in instance pointer form or instance form, for performance reasons recv is most commonly a pointer to receiver_type, (because we don&rsquo;t want a copy of the instance, as it would be if call-by-value) , especially when the receiver type is a struct.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/golang-struct-methond-receiver.html" itemprop="url" class="post-title-link">Receiver type problem of structure method in golang</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2021-10-17 00:41:21 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2021-10-17 00:41:21 &#43;0800 CST">2021-10-17</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>The structure in golang can be regarded as a class in object-oriented programming. You can define methods for the structure. Note the difference between methods and functions here. The definition of a function has no receiver, and the method has a receiver. Here The receiver can be in instance pointer form or instance form, for performance reasons <code>recv</code> is most commonly a pointer to receiver_type, (because we don&rsquo;t want a copy of the instance, as it would be if call-by-value) , especially when the receiver type is a struct.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/golang-struct-methond-receiver.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
 <div class="post-block">
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/slice-in-go.html">
@@ -755,130 +913,6 @@ Use socketio in front-end vue to communicate with back-end
     </footer>
   </article>
 </div>
-<div class="post-block">
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/useage-partial.html">
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/imgs/xxxx.png">
-      <meta itemprop="name" content="KevinYang">
-    </span>
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KevinYang">
-      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
-    </span>
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="functools.partial usage in python">
-      <meta itemprop="description" content="I often see some code using functools.partial to wrap a function. I didn&rsquo;t know much about its usage before, but I just wrote it according to other people&rsquo;s code. I took a closer look at its usage today. The basic usage is still very simple. .">
-    </span>
-    <header class="post-header">
-       <h2 class="post-title" itemprop="name headline">
-  <a href="/article/useage-partial.html" itemprop="url" class="post-title-link">functools.partial usage in python</a> </h2> <div class="post-meta-container">
-  <div class="post-meta-items">
-    
-
-
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-calendar"></i>
-  </span>
-  <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2020-09-20 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2020-09-20 00:00:00 &#43;0000 UTC">2020-09-20</time>
-</span>
-    
-    
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-folder-open"></i>
-  </span>
-  <span class="post-meta-item-text">Classify at:</span>
-  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/python.html" itemprop="url" rel="index">
-      <span itemprop="name">python</span>
-    </a>
-  </span>
-</span>
-  </div>
-</div>
-
-    </header>
-    <div class="post-body" itemprop="articleBody">
-      
-  <p>I often see some code using <code>functools.partial</code> to wrap a function. I didn&rsquo;t know much about its usage before, but I just wrote it according to other people&rsquo;s code. I took a closer look at its usage today. The basic usage is still very simple. .</p>
-
-    </div>
-    <footer class="post-footer">
-      
-<div class="post-button">
-  <a class="btn" href="/article/useage-partial.html#more" rel="contents">
-    Read More &raquo;
-  </a>
-</div>
-<div class="post-eof"></div>
-    </footer>
-  </article>
-</div>
-<div class="post-block">
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/namespace-k8s.html">
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/imgs/xxxx.png">
-      <meta itemprop="name" content="KevinYang">
-    </span>
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KevinYang">
-      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
-    </span>
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Use dns to access services in kubernetes">
-      <meta itemprop="description" content="In the previous article Communication between pods in kubernetes , we use environment variables to resolve the IP of the service, but you can use environment variables such as A limitation, all pods must be in one namespace, that is to say, pods in the same namespace will share environment variables. How to access them if they are not in the same namespace? Let&rsquo;s take a python flask application as an example.">
-    </span>
-    <header class="post-header">
-       <h2 class="post-title" itemprop="name headline">
-  <a href="/article/namespace-k8s.html" itemprop="url" class="post-title-link">Use dns to access services in kubernetes</a> </h2> <div class="post-meta-container">
-  <div class="post-meta-items">
-    
-
-
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-calendar"></i>
-  </span>
-  <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2020-02-11 00:00:00 &#43;0000 UTC" itemprop="dateCreated datePublished" datetime="2020-02-11 00:00:00 &#43;0000 UTC">2020-02-11</time>
-</span>
-    
-    
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-folder-open"></i>
-  </span>
-  <span class="post-meta-item-text">Classify at:</span>
-  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/k8s.html" itemprop="url" rel="index">
-      <span itemprop="name">k8s</span>
-    </a>
-  </span>
-</span>
-  </div>
-</div>
-
-    </header>
-    <div class="post-body" itemprop="articleBody">
-      
-  In the previous article Communication between pods in kubernetes , we use environment variables to resolve the IP of the service, but you can use environment variables such as A limitation, all pods must be in one namespace, that is to say, pods in the same namespace will share environment variables. How to access them if they are not in the same namespace? Let&rsquo;s take a python flask application as an example.
-
-    </div>
-    <footer class="post-footer">
-      
-<div class="post-button">
-  <a class="btn" href="/article/namespace-k8s.html#more" rel="contents">
-    Read More &raquo;
-  </a>
-</div>
-<div class="post-eof"></div>
-    </footer>
-  </article>
-</div>
 <nav class="pagination">
   <a class="extend prev" rel="prev" href="/page/2.html">
     <i class="fa fa-angle-left"></i>
@@ -923,7 +957,7 @@ Use socketio in front-end vue to communicate with back-end
 
 
 
-<script type="text/javascript" src="/js/hugo-next.min.fecaee4ce78c0a2bd890f78ab6f3bbbdd405fdd1746fca9c2ddfd9ca82b73fd6.js" defer></script> 
+<script type="text/javascript" src="/js/hugo-next.min.4d6845f3c05c507503b924619adb98e0d97d6bda17dc63300f92d6ce9622857d.js" defer></script> 
 </body>
 
 </html>
