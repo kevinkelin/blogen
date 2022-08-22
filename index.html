@@ -135,7 +135,7 @@
   <nav class="site-state">
     <div class="site-state-item site-state-posts">
       <a href="/article.html">
-        <span class="site-state-item-count">80</span>
+        <span class="site-state-item-count">81</span>
         <span class="site-state-item-name">Posts</span>
       </a>
     </div>
@@ -223,6 +223,112 @@
     <div class="main-inner index posts-expand">
       
 
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/anonymous-struct-in-go.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Using anonymous struct in golang">
+      <meta itemprop="description" content="In some projects, we will use json to convert strings into structs, but in many cases, this struct will only be used once, and basically it will only be used for deserialization. For this struct that is only used once body, we can use anonymous structs.
+It is very useful when gin receives parameters. For example, the json parameter we will receive is
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+{
+  &#34;opt&#34;: &#34;left&#34;,
+  &#34;phoneinfo&#34;: [
+    {&#34;device_id&#34;: 64, &#34;sn&#34;: &#34;192.168.110.65:5555&#34;},
+    {&#34;device_id&#34;: 68, &#34;sn&#34;: &#34;192.168.110.164:5555&#34;}
+  ]
+}
+
+
+When we try to use the json.Unmarshal() function to convert a json string to a data struct in go, we can have the following ways">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/anonymous-struct-in-go.html" itemprop="url" class="post-title-link">Using anonymous struct in golang</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2022-08-22 22:38:38 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-08-22 22:38:38 &#43;0800 CST">2022-08-22</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>In some projects, we will use json to convert strings into structs, but in many cases, this struct will only be used once, and basically it will only be used for deserialization. For this struct that is only used once body, we can use anonymous structs.
+It is very useful when gin receives parameters. For example, the json parameter we will receive is</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;opt&#34;</span>: <span style="color:#f1fa8c">&#34;left&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;phoneinfo&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {<span style="color:#ff79c6">&#34;device_id&#34;</span>: <span style="color:#bd93f9">64</span>, <span style="color:#ff79c6">&#34;sn&#34;</span>: <span style="color:#f1fa8c">&#34;192.168.110.65:5555&#34;</span>},
+</span></span><span style="display:flex;"><span>    {<span style="color:#ff79c6">&#34;device_id&#34;</span>: <span style="color:#bd93f9">68</span>, <span style="color:#ff79c6">&#34;sn&#34;</span>: <span style="color:#f1fa8c">&#34;192.168.110.164:5555&#34;</span>}
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>When we try to use the <code>json.Unmarshal()</code> function to convert a json string to a data struct in go, we can have the following ways</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/anonymous-struct-in-go.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
 <div class="post-block">
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/map-slice-in-func-params.html">
@@ -862,68 +968,6 @@ Recently, I was looking at the source code of sanic and found that there are man
       
 <div class="post-button">
   <a class="btn" href="/article/gin-and-sanic-get-redis.html#more" rel="contents">
-    Read More &raquo;
-  </a>
-</div>
-<div class="post-eof"></div>
-    </footer>
-  </article>
-</div>
-<div class="post-block">
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/redis-too-many-connections.html">
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/imgs/xxxx.png">
-      <meta itemprop="name" content="KevinYang">
-    </span>
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KevinYang">
-      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
-    </span>
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="The solution to the too many connections error reported in redis">
-      <meta itemprop="description" content="Recently, when I stress tested an interface in the system, I found that there was a large number of errors reported in the redis query interface, so I checked the background log and found that aioredis reported Too many connections. At first, I thought it was because of the stress test. , because this interface needs to access redis data, and a large number of requests come in at the same time, it will cause a large number of requests to the redis server, and the redis server can&rsquo;t resist returning the Too many connections error, but this is not the case after investigation.">
-    </span>
-    <header class="post-header">
-       <h2 class="post-title" itemprop="name headline">
-  <a href="/article/redis-too-many-connections.html" itemprop="url" class="post-title-link">The solution to the too many connections error reported in redis</a> </h2> <div class="post-meta-container">
-  <div class="post-meta-items">
-    
-
-
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-calendar"></i>
-  </span>
-  <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2022-04-12 19:32:30 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-04-12 19:32:30 &#43;0800 CST">2022-04-12</time>
-</span>
-    
-    
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-folder-open"></i>
-  </span>
-  <span class="post-meta-item-text">Classify at:</span>
-  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/python.html" itemprop="url" rel="index">
-      <span itemprop="name">python</span>
-    </a>
-  </span>
-</span>
-  </div>
-</div>
-
-    </header>
-    <div class="post-body" itemprop="articleBody">
-      
-  <p>Recently, when I stress tested an interface in the system, I found that there was a large number of errors reported in the redis query interface, so I checked the background log and found that aioredis reported <code>Too many connections</code>. At first, I thought it was because of the stress test. , because this interface needs to access redis data, and a large number of requests come in at the same time, it will cause a large number of requests to the redis server, and the redis server can&rsquo;t resist returning the <code>Too many connections</code> error, but this is not the case after investigation.</p>
-
-    </div>
-    <footer class="post-footer">
-      
-<div class="post-button">
-  <a class="btn" href="/article/redis-too-many-connections.html#more" rel="contents">
     Read More &raquo;
   </a>
 </div>

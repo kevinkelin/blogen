@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/imgs/icons/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/imgs/icons/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="/imgs/icons/favicon.ico">
-<meta itemprop="name" content="In python, how to achieve the effect of abstract class?" />
+<meta itemprop="name" content="Using anonymous struct in golang" />
 <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management" />
 <meta itemprop="datePublished" ZgotmplZ />
 <meta itemprop="dateModified" ZgotmplZ />
@@ -18,18 +18,18 @@
 <meta itemprop="keywords" content="python,golang,java,android,blog,project management,python,Software Architecture" />
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content="In python, how to achieve the effect of abstract class?" />
+<meta property="og:title" content="Using anonymous struct in golang" />
 <meta property="og:description" content="Focus on python, Go language (golang), test development, project management" />
 <meta property="og:image" content="/imgs/xxxx.png" />
 <meta property="og:image:width" content="312" />
 <meta property="og:image:height" content="312" />
 <meta property="og:image:type" content="image/jpeg/png/svg/jpg" />
-<meta property="og:url" content="https://enblog.yangyanxing.com/article/interface-in-python.html"/>
+<meta property="og:url" content="https://enblog.yangyanxing.com/article/anonymous-struct-in-go.html"/>
 <meta property="og:site_name" content="KevinYang&#39;s blog" />
 <meta property="og:locale" content="zh-CN"/>
 <meta property="article:author" content="KevinYang" />
-<meta property="article:published_time" content="2022-07-14 21:59:53 &#43;0800 CST" />
-<meta property="article:modified_time" content="2022-07-14 21:59:53 &#43;0800 CST" />
+<meta property="article:published_time" content="2022-08-22 22:38:38 &#43;0800 CST" />
+<meta property="article:modified_time" content="2022-08-22 22:38:38 &#43;0800 CST" />
 
 
   <link rel="stylesheet" href="//unpkg.com/@fortawesome/fontawesome-free@6.1.1/css/all.min.css">
@@ -42,7 +42,7 @@
     }
   </style>
   
-  <title>In python, how to achieve the effect of abstract class? - KevinYang&#39;s blog</title>
+  <title>Using anonymous struct in golang - KevinYang&#39;s blog</title>
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
@@ -129,8 +129,9 @@
   <ul>
     <li>
       <ul>
-        <li><a href="#implementation-of-abstract-class">Implementation of abstract class</a></li>
-        <li><a href="#subclasses-that-implement-abstract-classes">Subclasses that implement abstract classes</a></li>
+        <li><a href="#convert-to-map">Convert to map</a></li>
+        <li><a href="#define-a-named-struct">define a named struct</a></li>
+        <li><a href="#define-anonymous-struct">define anonymous struct</a></li>
       </ul>
     </li>
   </ul>
@@ -238,7 +239,7 @@
       
   <div class="post-block">
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/interface-in-python.html">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/anonymous-struct-in-go.html">
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/imgs/xxxx.png">
       <meta itemprop="name" content="KevinYang">
@@ -248,11 +249,33 @@
       <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
     </span>
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="In python, how to achieve the effect of abstract class?">
-      <meta itemprop="description" content="We all know that there is the concept of interface in java. A class can implement multiple interfaces, but it must implement all the methods in the interface, but there is no concept of interface in python. Classes can inherit through multiple inheritance Since there are multiple classes, now if we want to implement the effect of the interface in java, it is mandatory that the subclass must implement some methods, how to do it?">
+      <meta itemprop="name" content="Using anonymous struct in golang">
+      <meta itemprop="description" content="In some projects, we will use json to convert strings into structs, but in many cases, this struct will only be used once, and basically it will only be used for deserialization. For this struct that is only used once body, we can use anonymous structs.
+It is very useful when gin receives parameters. For example, the json parameter we will receive is
+
+
+1
+2
+3
+4
+5
+6
+7
+
+
+{
+  &#34;opt&#34;: &#34;left&#34;,
+  &#34;phoneinfo&#34;: [
+    {&#34;device_id&#34;: 64, &#34;sn&#34;: &#34;192.168.110.65:5555&#34;},
+    {&#34;device_id&#34;: 68, &#34;sn&#34;: &#34;192.168.110.164:5555&#34;}
+  ]
+}
+
+
+When we try to use the json.Unmarshal() function to convert a json string to a data struct in go, we can have the following ways">
     </span>
     <header class="post-header">
-       <h1 class="post-title" itemprop="name headline">In python, how to achieve the effect of abstract class? </h1> <div class="post-meta-container">
+       <h1 class="post-title" itemprop="name headline">Using anonymous struct in golang </h1> <div class="post-meta-container">
   <div class="post-meta-items">
     
 
@@ -262,7 +285,7 @@
     <i class="far fa-calendar"></i>
   </span>
   <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2022-07-14 21:59:53 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-07-14 21:59:53 &#43;0800 CST">2022-07-14</time>
+  <time title="Publish:2022-08-22 22:38:38 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-08-22 22:38:38 &#43;0800 CST">2022-08-22</time>
 </span>
     
     
@@ -272,8 +295,8 @@
   </span>
   <span class="post-meta-item-text">Classify at:</span>
   <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/python.html" itemprop="url" rel="index">
-      <span itemprop="name">python</span>
+    <a href="/categories/go.html" itemprop="url" rel="index">
+      <span itemprop="name">Go</span>
     </a>
   </span>
 </span>
@@ -284,7 +307,7 @@
   <span class="post-meta-item-icon">
     <i class="far fa-file-word"></i>
   </span>
-  <span class="post-meta-item-text">Words:</span><span>636</span>
+  <span class="post-meta-item-text">Words:</span><span>523</span>
 </span>
     
 <span class="post-meta-item" title="Read">
@@ -306,41 +329,8 @@
     </header>
     <div class="post-body" itemprop="articleBody">
       
-  <p>We all know that there is the concept of interface in java. A class can implement multiple interfaces, but it must implement all the methods in the interface, but there is no concept of interface in python. Classes can inherit through multiple inheritance Since there are multiple classes, now if we want to implement the effect of the interface in java, it is mandatory that the subclass must implement some methods, how to do it?</p>
-<h2 id="implementation-of-abstract-class">Implementation of abstract class</h2>
-<p>Python has a <code>ABCMeta</code> class. If the metaclass is set to <code>ABCMeta</code> when the class is defined, and an abstract method is defined, the class cannot be initialized directly.</p>
-<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> abc
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Runable</span>(metaclass<span style="color:#ff79c6">=</span>abc<span style="color:#ff79c6">.</span>ABCMeta):
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    @abc<span style="color:#ff79c6">.</span>abstractmethod
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>r <span style="color:#ff79c6">=</span> Runable()
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>Above we defined a Runable class and set the metaclass to <code>abc.ABCMeta</code>, we defined a run method in this class and decorated it with <code>@abc.abstractmethod</code>, in this case, when trying to use <code> r = Runable()</code> to initialize an instance, an exception will be thrown
-<code>TypeError: Can't instantiate abstract class Runable with abstract method run</code></p>
-<p>But if the <code>@abc.abstractmethod</code> decorator is removed, it can be instantiated normally</p>
-<p>We can also define classes by inheriting from the <code>abc.ABC</code> class, the effect is the same as above, the abc.ABC class is a wrapper class</p>
+  <p>In some projects, we will use json to convert strings into structs, but in many cases, this struct will only be used once, and basically it will only be used for deserialization. For this struct that is only used once body, we can use anonymous structs.
+It is very useful when gin receives parameters. For example, the json parameter we will receive is</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
@@ -348,40 +338,22 @@
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">ABC</span>(metaclass<span style="color:#ff79c6">=</span>ABCMeta):
-</span></span><span style="display:flex;"><span>    <span style="color:#f1fa8c">&#34;&#34;&#34;Helper class that provides a standard way to create an ABC using
-</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    inheritance.
-</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">    &#34;&#34;&#34;</span>
-</span></span><span style="display:flex;"><span>    __slots__ <span style="color:#ff79c6">=</span> ()
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;opt&#34;</span>: <span style="color:#f1fa8c">&#34;left&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;phoneinfo&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {<span style="color:#ff79c6">&#34;device_id&#34;</span>: <span style="color:#bd93f9">64</span>, <span style="color:#ff79c6">&#34;sn&#34;</span>: <span style="color:#f1fa8c">&#34;192.168.110.65:5555&#34;</span>},
+</span></span><span style="display:flex;"><span>    {<span style="color:#ff79c6">&#34;device_id&#34;</span>: <span style="color:#bd93f9">68</span>, <span style="color:#ff79c6">&#34;sn&#34;</span>: <span style="color:#f1fa8c">&#34;192.168.110.164:5555&#34;</span>}
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
-<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
-</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
-</span></code></pre></td>
-<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Runable</span>(abc<span style="color:#ff79c6">.</span>ABC):
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;can run.....&#34;</span>)
-</span></span><span style="display:flex;"><span>       
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>If you neither inherit <code>abc.ABC</code> nor set <code>metaclass=ABCMeta</code> when defining the class, even if you add the <code>abstractmethod</code> decorator to the method, it will not play the role of an abstract class, or you can Normal initialization instance.
-But if no abstract method is defined, it can also be a normal instance</p>
-<p>So we come to the following conclusion, to achieve the effect of abstract class, that is, to meet two conditions</p>
-<ol>
-<li>The class inherits from <code>abc.ABC</code> or sets the metaclass to <code>abc.ABCMeta</code></li>
-<li>Define an abstract method in a class, that is, a method decorated with <code>abc.abstractmethod</code></li>
-</ol>
-<h2 id="subclasses-that-implement-abstract-classes">Subclasses that implement abstract classes</h2>
-<p>The original intention of an abstract class is to define rules that require subclasses to implement which methods. When a subclass inherits from an abstract class and implements all the methods in the abstract class, the class can be instantiated normally, otherwise it will not. can be instantiated</p>
+</div><p>When we try to use the <code>json.Unmarshal()</code> function to convert a json string to a data struct in go, we can have the following ways</p>
+<h2 id="convert-to-map">Convert to map</h2>
+<p>The map struct needs to define the type of key and value. For the key, it can be defined as a string, but for the value, as can be seen from the json struct above, there are strings and integers, which are not very well defined. Who Knowing whether there will be new types in the future, so we can convert json to <code>map[string]interface{}</code> without thinking</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -397,27 +369,48 @@ But if no abstract method is defined, it can also be a normal instance</p>
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Runable</span>(metaclass<span style="color:#ff79c6">=</span>abc<span style="color:#ff79c6">.</span>ABCMeta):
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;encoding/json&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    @abc<span style="color:#ff79c6">.</span>abstractmethod
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>str <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">`{
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	&#34;opt&#34;: &#34;left&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	&#34;phoneinfo&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">		{&#34;device_id&#34;: 64, &#34;sn&#34;: &#34;192.168.110.65:5555&#34;},
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">		{&#34;device_id&#34;: 68, &#34;sn&#34;: &#34;192.168.110.164:5555&#34;}
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	]
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">}`</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">var</span> s <span style="color:#8be9fd;font-style:italic">map</span>[<span style="color:#8be9fd">string</span>]<span style="color:#8be9fd;font-style:italic">interface</span>{}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    @abc<span style="color:#ff79c6">.</span>abstractmethod
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">walk</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Dog</span>(Runable):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;dog run &#34;</span>)
+</span></span><span style="display:flex;"><span>json.<span style="color:#50fa7b">Unmarshal</span>([]<span style="color:#8be9fd;font-style:italic">byte</span>(str), <span style="color:#ff79c6">&amp;</span>s)
+</span></span><span style="display:flex;"><span>fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%#v&#34;</span>, s)
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The above Dog class only implements the run method of Runable, and does not implement the walk method, so it still cannot be instantiated normally.</p>
-<p>There is a point to note here. The subclass does not necessarily require the same function signature as the abstract method for the abstract method in the parent class. This is really surprising.
-😂
-see the following code</p>
+</div><p>This can be converted, but if you want to use the data inside, it is more troublesome, you need to do type conversion of <code>interface{}</code>
+To get the opt parameter</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span>opt <span style="color:#ff79c6">:=</span> s[<span style="color:#f1fa8c">&#34;opt&#34;</span>].(<span style="color:#8be9fd">string</span>)
+</span></span><span style="display:flex;"><span>fmt.<span style="color:#50fa7b">Println</span>(opt)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="define-a-named-struct">define a named struct</h2>
+<p>Another way is to define a struct to receive parameters
+If you want to receive the above json string, you can define the following struct</p>
 <div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
 <table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
 <pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
@@ -440,33 +433,105 @@ see the following code</p>
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
 </span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
 </span></code></pre></td>
 <td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
-<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Runable</span>(metaclass<span style="color:#ff79c6">=</span>abc<span style="color:#ff79c6">.</span>ABCMeta):
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#ff79c6">package</span> main
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    @abc<span style="color:#ff79c6">.</span>abstractmethod
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">import</span> (
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;encoding/json&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f1fa8c">&#34;fmt&#34;</span>
+</span></span><span style="display:flex;"><span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    @abc<span style="color:#ff79c6">.</span>abstractmethod
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">walk</span>(self, name):
-</span></span><span style="display:flex;"><span>        <span style="color:#ff79c6">pass</span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> phoneinfo <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>	Device_id <span style="color:#8be9fd">int</span> <span style="color:#f1fa8c">`json:&#34;device_id&#34;`</span>
+</span></span><span style="display:flex;"><span>	Sn <span style="color:#8be9fd">string</span> <span style="color:#f1fa8c">`json:&#34;sn&#34;`</span>
+</span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff79c6">class</span> <span style="color:#50fa7b">Dog</span>(Runable):
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">run</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;dog run &#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">type</span> params <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>	Opt <span style="color:#8be9fd">string</span> <span style="color:#f1fa8c">`json:&#34;opt&#34;`</span>
+</span></span><span style="display:flex;"><span>	Phoneinfo []phoneinfo <span style="color:#f1fa8c">`json:&#34;phoneinfo&#34;`</span>
+</span></span><span style="display:flex;"><span>}
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">def</span> <span style="color:#50fa7b">walk</span>(self):
-</span></span><span style="display:flex;"><span>        <span style="color:#8be9fd;font-style:italic">print</span>(<span style="color:#f1fa8c">&#34;dog walk&#34;</span>)
-</span></span><span style="display:flex;"><span>        
-</span></span><span style="display:flex;"><span>d <span style="color:#ff79c6">=</span> Dog()
-</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>run()
-</span></span><span style="display:flex;"><span>d<span style="color:#ff79c6">.</span>walk()
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	str <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">`{
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">		&#34;opt&#34;: &#34;left&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">		&#34;phoneinfo&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">			{&#34;device_id&#34;: 64, &#34;sn&#34;: &#34;192.168.110.65:5555&#34;},
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">			{&#34;device_id&#34;: 68, &#34;sn&#34;: &#34;192.168.110.164:5555&#34;}
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">		]
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	}`</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> s params
+</span></span><span style="display:flex;"><span>	json.<span style="color:#50fa7b">Unmarshal</span>([]<span style="color:#8be9fd;font-style:italic">byte</span>(str), <span style="color:#ff79c6">&amp;</span>s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%#v\n&#34;</span>, s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s.Opt) <span style="color:#6272a4">//left
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>	fmt.<span style="color:#50fa7b">Println</span>(s.Phoneinfo[<span style="color:#bd93f9">0</span>].Sn) <span style="color:#6272a4">//192.168.110.65:5555
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4"></span>}
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>The signature of the walk method defined in the abstract class Runable is <code>def walk(self, name):</code> There needs to be a name parameter, but the subclass does not have this parameter when it is implemented. In python, it is considered to be implemented. the walk abstract method, but the IDE will give a warning
-<code>Signature of method 'Dog.walk()' does not match signature of base method in class 'Runable' </code>
-The above code can run normally, that is to say, the Dog class can be initialized normally, so don&rsquo;t complain about this!</p>
+</div><h2 id="define-anonymous-struct">define anonymous struct</h2>
+<p>Two structs are defined above, but obviously, these two structs are only used once here, and will not be used elsewhere, so we can also use anonymous structs at this time</p>
+<div class="highlight"><div style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">
+<table style="border-spacing:0;padding:0;margin:0;border:0;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="white-space:pre;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#8be9fd;font-style:italic">func</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>	str <span style="color:#ff79c6">:=</span> <span style="color:#f1fa8c">`{
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	&#34;opt&#34;: &#34;left&#34;,
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	&#34;phoneinfo&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	{&#34;device_id&#34;: 64, &#34;sn&#34;: &#34;192.168.110.65:5555&#34;},
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	{&#34;device_id&#34;: 68, &#34;sn&#34;: &#34;192.168.110.164:5555&#34;}
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	]
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c">	}`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#8be9fd;font-style:italic">var</span> s <span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>		Opt <span style="color:#8be9fd">string</span> <span style="color:#f1fa8c">`json:&#34;opt&#34;`</span>
+</span></span><span style="display:flex;"><span>		Phoneinfo []<span style="color:#8be9fd;font-style:italic">struct</span> {
+</span></span><span style="display:flex;"><span>			Device_id <span style="color:#8be9fd">int</span> <span style="color:#f1fa8c">`json:&#34;device_id&#34;`</span>
+</span></span><span style="display:flex;"><span>			Sn <span style="color:#8be9fd">string</span> <span style="color:#f1fa8c">`json:&#34;sn&#34;`</span>
+</span></span><span style="display:flex;"><span>		} <span style="color:#f1fa8c">`json:&#34;phoneinfo&#34;`</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	json.<span style="color:#50fa7b">Unmarshal</span>([]<span style="color:#8be9fd;font-style:italic">byte</span>(str), <span style="color:#ff79c6">&amp;</span>s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Printf</span>(<span style="color:#f1fa8c">&#34;%#v\n&#34;</span>, s)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s.Opt)
+</span></span><span style="display:flex;"><span>	fmt.<span style="color:#50fa7b">Println</span>(s.Phoneinfo[<span style="color:#bd93f9">0</span>].Sn)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>An anonymous struct variable is initialized directly by <code>var variable name struct {} </code>, but if this struct needs to be used in multiple places, it is better to define a named struct separately.</p>
 
     </div>
     <footer class="post-footer">
@@ -474,8 +539,8 @@ The above code can run normally, that is to say, the Dog class can be initialize
 
 <div class="post-tags">
   
-    <a href="/tags/python.html">
-    python
+    <a href="/tags/go.html">
+    Go
   </a>
 </div>
 
@@ -488,7 +553,7 @@ The above code can run normally, that is to say, the Dog class can be initialize
   <ul>
     <li class="post-copyright-title">
       <strong>Post Title:</strong>
-      In python, how to achieve the effect of abstract class?
+      Using anonymous struct in golang
     </li>
     <li class="post-copyright-author">
       <strong>Post Author: </strong>
@@ -496,7 +561,7 @@ The above code can run normally, that is to say, the Dog class can be initialize
     </li>
     <li class="post-copyright-link"> 
       <strong>Post Link:</strong>
-       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/interface-in-python.html" title="In python, how to achieve the effect of abstract class?">https://enblog.yangyanxing.com/article/interface-in-python.html</a>
+       <a id="post-cr-link" href="https://enblog.yangyanxing.com/article/anonymous-struct-in-go.html" title="Using anonymous struct in golang">https://enblog.yangyanxing.com/article/anonymous-struct-in-go.html</a>
     </li>
     <li class="post-copyright-license">
       <strong>Copyright Notice: </strong>
@@ -529,13 +594,10 @@ The above code can run normally, that is to say, the Dog class can be initialize
 </div>
 <div class="post-nav">
   <div class="post-nav-next post-nav-item">
-    <a href="https://enblog.yangyanxing.com/article/socketio-gin-experience.html" rel="next" title="The pit that Socket.io stepped on in gin">
-      <i class="fa fa-chevron-left"></i> The pit that Socket.io stepped on in gin
-    </a>
   </div>
   <div class="post-nav-prev post-nav-item">
-    <a href="https://enblog.yangyanxing.com/article/slot-in-python.html" rel="prev" title="Usage of __slots__ in python">
-      Usage of __slots__ in python
+    <a href="https://enblog.yangyanxing.com/article/map-slice-in-func-params.html" rel="prev" title="function parameters of map and slice in golang">
+      function parameters of map and slice in golang
       <i class="fa fa-chevron-right"></i>
     </a>
   </div>

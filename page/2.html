@@ -135,7 +135,7 @@
   <nav class="site-state">
     <div class="site-state-item site-state-posts">
       <a href="/article.html">
-        <span class="site-state-item-count">80</span>
+        <span class="site-state-item-count">81</span>
         <span class="site-state-item-name">Posts</span>
       </a>
     </div>
@@ -223,6 +223,68 @@
     <div class="main-inner index posts-expand">
       
 
+<div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/redis-too-many-connections.html">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/imgs/xxxx.png">
+      <meta itemprop="name" content="KevinYang">
+    </span>
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KevinYang">
+      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
+    </span>
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="The solution to the too many connections error reported in redis">
+      <meta itemprop="description" content="Recently, when I stress tested an interface in the system, I found that there was a large number of errors reported in the redis query interface, so I checked the background log and found that aioredis reported Too many connections. At first, I thought it was because of the stress test. , because this interface needs to access redis data, and a large number of requests come in at the same time, it will cause a large number of requests to the redis server, and the redis server can&rsquo;t resist returning the Too many connections error, but this is not the case after investigation.">
+    </span>
+    <header class="post-header">
+       <h2 class="post-title" itemprop="name headline">
+  <a href="/article/redis-too-many-connections.html" itemprop="url" class="post-title-link">The solution to the too many connections error reported in redis</a> </h2> <div class="post-meta-container">
+  <div class="post-meta-items">
+    
+
+
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-calendar"></i>
+  </span>
+  <span class="post-meta-item-text">Publish:</span>
+  <time title="Publish:2022-04-12 19:32:30 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2022-04-12 19:32:30 &#43;0800 CST">2022-04-12</time>
+</span>
+    
+    
+<span class="post-meta-item">
+  <span class="post-meta-item-icon">
+    <i class="far fa-folder-open"></i>
+  </span>
+  <span class="post-meta-item-text">Classify at:</span>
+  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+    <a href="/categories/python.html" itemprop="url" rel="index">
+      <span itemprop="name">python</span>
+    </a>
+  </span>
+</span>
+  </div>
+</div>
+
+    </header>
+    <div class="post-body" itemprop="articleBody">
+      
+  <p>Recently, when I stress tested an interface in the system, I found that there was a large number of errors reported in the redis query interface, so I checked the background log and found that aioredis reported <code>Too many connections</code>. At first, I thought it was because of the stress test. , because this interface needs to access redis data, and a large number of requests come in at the same time, it will cause a large number of requests to the redis server, and the redis server can&rsquo;t resist returning the <code>Too many connections</code> error, but this is not the case after investigation.</p>
+
+    </div>
+    <footer class="post-footer">
+      
+<div class="post-button">
+  <a class="btn" href="/article/redis-too-many-connections.html#more" rel="contents">
+    Read More &raquo;
+  </a>
+</div>
+<div class="post-eof"></div>
+    </footer>
+  </article>
+</div>
 <div class="post-block">
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/orm-sql-performance.html">
@@ -778,70 +840,6 @@ On github, https://github.com/go-sql-driver/mysql has the largest number of star
       
 <div class="post-button">
   <a class="btn" href="/article/query-mysql-in-go-base.html#more" rel="contents">
-    Read More &raquo;
-  </a>
-</div>
-<div class="post-eof"></div>
-    </footer>
-  </article>
-</div>
-<div class="post-block">
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://enblog.yangyanxing.com/article/choice-between-mutex-and-channel.html">
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/imgs/xxxx.png">
-      <meta itemprop="name" content="KevinYang">
-    </span>
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="KevinYang">
-      <meta itemprop="description" content="Focus on python, Go language (golang), test development, project management">
-    </span>
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="The choice of lock Mutex and channel channel in golang">
-      <meta itemprop="description" content="Both Mutex and channel can protect resources in a concurrent environment and avoid race conditions. Channel has always been sought after in golang, but since both can solve the problem, why do you need two things?
-Looking at some articles, I found that sometimes channels are too sought after. Sometimes you should use Mutex or Mutex, don&rsquo;t use channel just to use channel, you need to distinguish between different scenarios">
-    </span>
-    <header class="post-header">
-       <h2 class="post-title" itemprop="name headline">
-  <a href="/article/choice-between-mutex-and-channel.html" itemprop="url" class="post-title-link">The choice of lock Mutex and channel channel in golang</a> </h2> <div class="post-meta-container">
-  <div class="post-meta-items">
-    
-
-
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-calendar"></i>
-  </span>
-  <span class="post-meta-item-text">Publish:</span>
-  <time title="Publish:2021-10-23 21:47:12 &#43;0800 CST" itemprop="dateCreated datePublished" datetime="2021-10-23 21:47:12 &#43;0800 CST">2021-10-23</time>
-</span>
-    
-    
-<span class="post-meta-item">
-  <span class="post-meta-item-icon">
-    <i class="far fa-folder-open"></i>
-  </span>
-  <span class="post-meta-item-text">Classify at:</span>
-  <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-    <a href="/categories/go.html" itemprop="url" rel="index">
-      <span itemprop="name">Go</span>
-    </a>
-  </span>
-</span>
-  </div>
-</div>
-
-    </header>
-    <div class="post-body" itemprop="articleBody">
-      
-  <p>Both Mutex and channel can protect resources in a concurrent environment and avoid race conditions. Channel has always been sought after in golang, but since both can solve the problem, why do you need two things?</p>
-<p>Looking at some articles, I found that sometimes channels are too sought after. Sometimes you should use Mutex or Mutex, don&rsquo;t use channel just to use channel, you need to distinguish between different scenarios</p>
-
-    </div>
-    <footer class="post-footer">
-      
-<div class="post-button">
-  <a class="btn" href="/article/choice-between-mutex-and-channel.html#more" rel="contents">
     Read More &raquo;
   </a>
 </div>
